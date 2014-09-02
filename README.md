@@ -9,14 +9,16 @@ Usage
 
 For a example, you have a README.md like this:
 
-  * https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md
+  * [README.md without TOC](https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md)
 
-And you want to generate TOC for it. Here you go:
+And you want to generate TOC for it.
+There is nothing easier:
 
 ```bash
-➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md
+➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/.../README.md
+
 Table of Contents
------------------
+=================
   * [envirius](#envirius)
     * [Idea](#idea)
     * [Features](#features)
@@ -53,10 +55,10 @@ Table of Contents
   * [README in another language](#readme-in-another-language)
 ```
 
-That's all! Now all you need — is copy/paste result from cosonle into original
-README.md. And here is a result:
+That's all! Now all you need — is copy/paste result from cosonle into original README.md.
+And here is a result:
 
-  * https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md
+  * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
 
 Dependency
 ==========
