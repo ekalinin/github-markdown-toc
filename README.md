@@ -12,6 +12,7 @@ For a example, you have a README.md like this:
   * [README.md without TOC](https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md)
 
 And you want to generate TOC for it.
+
 There is nothing easier:
 
 ```bash
@@ -56,6 +57,7 @@ Table of Contents
 ```
 
 That's all! Now all you need — is copy/paste result from cosonle into original README.md.
+
 And here is a result:
 
   * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
