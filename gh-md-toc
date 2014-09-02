@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+#
+# Steps:
+#
+#  1. Download coresponding html file for some README.md:
+#       curl -s $1
+#
+#  2. Discard rows where no substring 'user-content-' (github's markup):
+#       awk '/user-content-/ { ...
+#
+#  3. Get header level and insert corresponding number of spaces before '*':
+#       sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ")
+#
+#  4. Find head's text and insert it inside "* [ ... ]":
+#       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+#
+#  5. Find anchor and insert it inside "(...)":
+#       substr($4, 7)
+#
+
+echo "Table of Contents"
+echo "================="
+curl -s $1 | awk '/user-content-/ {print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'

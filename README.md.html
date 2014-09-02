@@ -1,0 +1,1078 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="   ">
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    
+    
+    <title>envirius/README.md at f939d3b6882bfb6ecb28ef7b6e62862f934ba945 · ekalinin/envirius · GitHub</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png">
+    <meta property="fb:app_id" content="1401488693436528">
+
+      <meta content="@github" name="twitter:site" /><meta content="summary" name="twitter:card" /><meta content="ekalinin/envirius" name="twitter:title" /><meta content="envirius - universal virtual environments manager" name="twitter:description" /><meta content="https://avatars3.githubusercontent.com/u/234891?v=2&amp;s=400" name="twitter:image:src" />
+<meta content="GitHub" property="og:site_name" /><meta content="object" property="og:type" /><meta content="https://avatars3.githubusercontent.com/u/234891?v=2&amp;s=400" property="og:image" /><meta content="ekalinin/envirius" property="og:title" /><meta content="https://github.com/ekalinin/envirius" property="og:url" /><meta content="envirius - universal virtual environments manager" property="og:description" />
+
+    <link rel="assets" href="https://assets-cdn.github.com/">
+    <link rel="conduit-xhr" href="https://ghconduit.com:25035">
+    
+
+    <meta name="msapplication-TileImage" content="/windows-tile.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="selected-link" value="repo_source" data-pjax-transient>
+      <meta name="google-analytics" content="UA-3769691-2">
+
+    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="5F6CADB3:0872:1D1BC52B:5405C6A5" name="octolytics-dimension-request_id" />
+    
+
+    
+    
+    <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+
+
+    <meta content="authenticity_token" name="csrf-param" />
+<meta content="0Knf297EfzAt/IWc+yE06ewm6PpqYhFPZNGkfrL3jFOcL9yWMQtl6PmaSgIjBQw8u/BWVJP/t4QmFi7+BYAFvA==" name="csrf-token" />
+
+    <link href="https://assets-cdn.github.com/assets/github-e514a3d6b3842e83531f5cc06a973c8ddb2f1735.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://assets-cdn.github.com/assets/github2-bd1d16204c9d8b7092836e4709c50ae7cc341da4.css" media="all" rel="stylesheet" type="text/css" />
+    
+
+
+    <meta http-equiv="x-pjax-version" content="7830eebc4e12bd518daae39a0025d605">
+
+      
+  <meta name="description" content="envirius - universal virtual environments manager">
+  <meta name="go-import" content="github.com/ekalinin/envirius git https://github.com/ekalinin/envirius.git">
+
+  <meta content="234891" name="octolytics-dimension-user_id" /><meta content="ekalinin" name="octolytics-dimension-user_login" /><meta content="16817419" name="octolytics-dimension-repository_id" /><meta content="ekalinin/envirius" name="octolytics-dimension-repository_nwo" /><meta content="true" name="octolytics-dimension-repository_public" /><meta content="false" name="octolytics-dimension-repository_is_fork" /><meta content="16817419" name="octolytics-dimension-repository_network_root_id" /><meta content="ekalinin/envirius" name="octolytics-dimension-repository_network_root_nwo" />
+  <link href="https://github.com/ekalinin/envirius/commits/f939d3b6882bfb6ecb28ef7b6e62862f934ba945.atom" rel="alternate" title="Recent Commits to envirius:f939d3b6882bfb6ecb28ef7b6e62862f934ba945" type="application/atom+xml">
+
+  </head>
+
+
+  <body class="logged_out  env-production  vis-public page-blob">
+    <a href="#start-of-content" tabindex="1" class="accessibility-aid js-skip-to-content">Skip to content</a>
+    <div class="wrapper">
+      
+      
+      
+      
+
+
+      
+      <div class="header header-logged-out">
+  <div class="container clearfix">
+
+    <a class="header-logo-wordmark" href="https://github.com/">
+      <span class="mega-octicon octicon-logo-github"></span>
+    </a>
+
+    <div class="header-actions">
+        <a class="button primary" href="/join">Sign up</a>
+      <a class="button signin" href="/login?return_to=%2Fekalinin%2Fenvirius%2Fblob%2Ff939d3b6882bfb6ecb28ef7b6e62862f934ba945%2FREADME.md">Sign in</a>
+    </div>
+
+    <div class="site-search repo-scope js-site-search">
+      <form accept-charset="UTF-8" action="/ekalinin/envirius/search" class="js-site-search-form" data-global-search-url="/search" data-repo-search-url="/ekalinin/envirius/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+  <input type="text"
+    class="js-site-search-field is-clearable"
+    data-hotkey="s"
+    name="q"
+    placeholder="Search"
+    data-global-scope-placeholder="Search GitHub"
+    data-repo-scope-placeholder="Search"
+    tabindex="1"
+    autocapitalize="off">
+  <div class="scope-badge">This repository</div>
+</form>
+    </div>
+
+      <ul class="header-nav left">
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/explore">Explore</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/features">Features</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="https://enterprise.github.com/">Enterprise</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/blog">Blog</a>
+          </li>
+      </ul>
+
+  </div>
+</div>
+
+
+
+      <div id="start-of-content" class="accessibility-aid"></div>
+          <div class="site" itemscope itemtype="http://schema.org/WebPage">
+    <div id="js-flash-container">
+      
+    </div>
+    <div class="pagehead repohead instapaper_ignore readability-menu">
+      <div class="container">
+        
+<ul class="pagehead-actions">
+
+
+  <li>
+      <a href="/login?return_to=%2Fekalinin%2Fenvirius"
+    class="minibutton with-count star-button tooltipped tooltipped-n"
+    aria-label="You must be signed in to star a repository" rel="nofollow">
+    <span class="octicon octicon-star"></span>
+    Star
+  </a>
+
+    <a class="social-count js-social-count" href="/ekalinin/envirius/stargazers">
+      203
+    </a>
+
+  </li>
+
+    <li>
+      <a href="/login?return_to=%2Fekalinin%2Fenvirius"
+        class="minibutton with-count js-toggler-target fork-button tooltipped tooltipped-n"
+        aria-label="You must be signed in to fork a repository" rel="nofollow">
+        <span class="octicon octicon-repo-forked"></span>
+        Fork
+      </a>
+      <a href="/ekalinin/envirius/network" class="social-count">
+        10
+      </a>
+    </li>
+</ul>
+
+        <h1 itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
+          <span class="mega-octicon octicon-repo"></span>
+          <span class="author"><a href="/ekalinin" class="url fn" itemprop="url" rel="author"><span itemprop="title">ekalinin</span></a></span><!--
+       --><span class="path-divider">/</span><!--
+       --><strong><a href="/ekalinin/envirius" class="js-current-repository js-repo-home-link">envirius</a></strong>
+
+          <span class="page-context-loader">
+            <img alt="" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+          </span>
+
+        </h1>
+      </div><!-- /.container -->
+    </div><!-- /.repohead -->
+
+    <div class="container">
+      <div class="repository-with-sidebar repo-container new-discussion-timeline  ">
+        <div class="repository-sidebar clearfix">
+            
+<div class="sunken-menu vertical-right repo-nav js-repo-nav js-repository-container-pjax js-octicon-loaders" data-issue-count-url="/ekalinin/envirius/issues/counts">
+  <div class="sunken-menu-contents">
+    <ul class="sunken-menu-group">
+      <li class="tooltipped tooltipped-w" aria-label="Code">
+        <a href="/ekalinin/envirius" aria-label="Code" class="selected js-selected-navigation-item sunken-menu-item" data-hotkey="g c" data-pjax="true" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches /ekalinin/envirius">
+          <span class="octicon octicon-code"></span> <span class="full-word">Code</span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>      </li>
+
+        <li class="tooltipped tooltipped-w" aria-label="Issues">
+          <a href="/ekalinin/envirius/issues" aria-label="Issues" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-hotkey="g i" data-selected-links="repo_issues repo_labels repo_milestones /ekalinin/envirius/issues">
+            <span class="octicon octicon-issue-opened"></span> <span class="full-word">Issues</span>
+            <span class="js-issue-replace-counter"></span>
+            <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>        </li>
+
+      <li class="tooltipped tooltipped-w" aria-label="Pull Requests">
+        <a href="/ekalinin/envirius/pulls" aria-label="Pull Requests" class="js-selected-navigation-item sunken-menu-item js-disable-pjax" data-hotkey="g p" data-selected-links="repo_pulls /ekalinin/envirius/pulls">
+            <span class="octicon octicon-git-pull-request"></span> <span class="full-word">Pull Requests</span>
+            <span class="js-pull-replace-counter"></span>
+            <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>      </li>
+
+
+    </ul>
+    <div class="sunken-menu-separator"></div>
+    <ul class="sunken-menu-group">
+
+      <li class="tooltipped tooltipped-w" aria-label="Pulse">
+        <a href="/ekalinin/envirius/pulse/weekly" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="pulse /ekalinin/envirius/pulse/weekly">
+          <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>      </li>
+
+      <li class="tooltipped tooltipped-w" aria-label="Graphs">
+        <a href="/ekalinin/envirius/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-pjax="true" data-selected-links="repo_graphs repo_contributors /ekalinin/envirius/graphs">
+          <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif" width="16" />
+</a>      </li>
+    </ul>
+
+
+  </div>
+</div>
+
+              <div class="only-with-full-nav">
+                
+  
+<div class="clone-url open"
+  data-protocol-type="http"
+  data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=clone">
+  <h3><span class="text-emphasized">HTTPS</span> clone URL</h3>
+  <div class="input-group">
+    <input type="text" class="input-mini input-monospace js-url-field"
+           value="https://github.com/ekalinin/envirius.git" readonly="readonly">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard minibutton zeroclipboard-button" data-clipboard-text="https://github.com/ekalinin/envirius.git" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+  
+<div class="clone-url "
+  data-protocol-type="subversion"
+  data-url="/users/set_protocol?protocol_selector=subversion&amp;protocol_type=clone">
+  <h3><span class="text-emphasized">Subversion</span> checkout URL</h3>
+  <div class="input-group">
+    <input type="text" class="input-mini input-monospace js-url-field"
+           value="https://github.com/ekalinin/envirius" readonly="readonly">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard minibutton zeroclipboard-button" data-clipboard-text="https://github.com/ekalinin/envirius" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+
+<p class="clone-options">You can clone with
+      <a href="#" class="js-clone-selector" data-protocol="http">HTTPS</a>
+      or <a href="#" class="js-clone-selector" data-protocol="subversion">Subversion</a>.
+  <a href="https://help.github.com/articles/which-remote-url-should-i-use" class="help tooltipped tooltipped-n" aria-label="Get help on which URL is right for you.">
+    <span class="octicon octicon-question"></span>
+  </a>
+</p>
+
+
+
+                <a href="/ekalinin/envirius/archive/f939d3b6882bfb6ecb28ef7b6e62862f934ba945.zip"
+                   class="minibutton sidebar-button"
+                   aria-label="Download ekalinin/envirius as a zip file"
+                   title="Download ekalinin/envirius as a zip file"
+                   rel="nofollow">
+                  <span class="octicon octicon-cloud-download"></span>
+                  Download ZIP
+                </a>
+              </div>
+        </div><!-- /.repository-sidebar -->
+
+        <div id="js-repo-pjax-container" class="repository-content context-loader-container" data-pjax-container>
+          
+
+<a href="/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md" class="hidden js-permalink-shortcut" data-hotkey="y">Permalink</a>
+
+<!-- blob contrib key: blob_contributors:v21:8f68f7b907ab9d72447290ee4337b619 -->
+
+<div class="file-navigation">
+  
+<div class="select-menu js-menu-container js-select-menu left">
+  <span class="minibutton select-menu-button js-menu-target css-truncate" data-hotkey="w"
+    data-master-branch="master"
+    data-ref=""
+    title=""
+    role="button" aria-label="Switch branches or tags" tabindex="0" aria-haspopup="true">
+    <span class="octicon octicon-git-branch"></span>
+    <i>tree:</i>
+    <span class="js-select-button css-truncate-target">f939d3b688</span>
+  </span>
+
+  <div class="select-menu-modal-holder js-menu-content js-navigation-container" data-pjax aria-hidden="true">
+
+    <div class="select-menu-modal">
+      <div class="select-menu-header">
+        <span class="select-menu-title">Switch branches/tags</span>
+        <span class="octicon octicon-x js-menu-close" role="button" aria-label="Close"></span>
+      </div> <!-- /.select-menu-header -->
+
+      <div class="select-menu-filters">
+        <div class="select-menu-text-filter">
+          <input type="text" aria-label="Filter branches/tags" id="context-commitish-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter branches/tags">
+        </div>
+        <div class="select-menu-tabs">
+          <ul>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="branches" class="js-select-menu-tab">Branches</a>
+            </li>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="tags" class="js-select-menu-tab">Tags</a>
+            </li>
+          </ul>
+        </div><!-- /.select-menu-tabs -->
+      </div><!-- /.select-menu-filters -->
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="branches">
+
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/blob/master/README.md"
+                 data-name="master"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="master">master</a>
+            </div> <!-- /.select-menu-item -->
+        </div>
+
+          <div class="select-menu-no-results">Nothing to show</div>
+      </div> <!-- /.select-menu-list -->
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tags">
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.7.2/README.md"
+                 data-name="0.7.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.7.2">0.7.2</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.7.1/README.md"
+                 data-name="0.7.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.7.1">0.7.1</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.7.0/README.md"
+                 data-name="0.7.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.7.0">0.7.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.6.2/README.md"
+                 data-name="0.6.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.6.2">0.6.2</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.6.1/README.md"
+                 data-name="0.6.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.6.1">0.6.1</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.6.0/README.md"
+                 data-name="0.6.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.6.0">0.6.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.5.2/README.md"
+                 data-name="0.5.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.5.2">0.5.2</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.5.1/README.md"
+                 data-name="0.5.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.5.1">0.5.1</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.5.0/README.md"
+                 data-name="0.5.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.5.0">0.5.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.4.0/README.md"
+                 data-name="0.4.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.4.0">0.4.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.3.0/README.md"
+                 data-name="0.3.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.3.0">0.3.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.2.1/README.md"
+                 data-name="0.2.1"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.2.1">0.2.1</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.2.0/README.md"
+                 data-name="0.2.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.2.0">0.2.0</a>
+            </div> <!-- /.select-menu-item -->
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/ekalinin/envirius/tree/0.1.0/README.md"
+                 data-name="0.1.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.1.0">0.1.0</a>
+            </div> <!-- /.select-menu-item -->
+        </div>
+
+        <div class="select-menu-no-results">Nothing to show</div>
+      </div> <!-- /.select-menu-list -->
+
+    </div> <!-- /.select-menu-modal -->
+  </div> <!-- /.select-menu-modal-holder -->
+</div> <!-- /.select-menu -->
+
+  <div class="button-group right">
+    <a href="/ekalinin/envirius/find/f939d3b6882bfb6ecb28ef7b6e62862f934ba945"
+          class="js-show-file-finder minibutton empty-icon tooltipped tooltipped-s"
+          data-pjax
+          data-hotkey="t"
+          aria-label="Quickly jump between files">
+      <span class="octicon octicon-list-unordered"></span>
+    </a>
+    <button class="js-zeroclipboard minibutton zeroclipboard-button"
+          data-clipboard-text="README.md"
+          aria-label="Copy to clipboard"
+          data-copied-hint="Copied!">
+      <span class="octicon octicon-clippy"></span>
+    </button>
+  </div>
+
+  <div class="breadcrumb">
+    <span class='repo-root js-repo-root'><span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/ekalinin/envirius/tree/f939d3b6882bfb6ecb28ef7b6e62862f934ba945" class="" data-branch="f939d3b6882bfb6ecb28ef7b6e62862f934ba945" data-direction="back" data-pjax="true" itemscope="url" rel="nofollow"><span itemprop="title">envirius</span></a></span></span><span class="separator"> / </span><strong class="final-path">README.md</strong>
+  </div>
+</div>
+
+
+  <div class="commit file-history-tease">
+    <div class="file-history-tease-header">
+        <img alt="Eugene Kalinin" class="avatar" data-user="234891" height="24" src="https://avatars2.githubusercontent.com/u/234891?v=2&amp;s=48" width="24" />
+        <span class="author"><a href="/ekalinin" rel="author">ekalinin</a></span>
+        <time datetime="2014-04-25T11:14:16+04:00" is="relative-time">April 25, 2014</time>
+        <div class="commit-title">
+            <a href="/ekalinin/envirius/commit/f939d3b6882bfb6ecb28ef7b6e62862f934ba945" class="message" data-pjax="true" title="update CHANGELOG/README">update CHANGELOG/README</a>
+        </div>
+    </div>
+
+    <div class="participation">
+      <p class="quickstat">
+        <a href="#blob_contributors_box" rel="facebox">
+          <strong>1</strong>
+           contributor
+        </a>
+      </p>
+      
+    </div>
+    <div id="blob_contributors_box" style="display:none">
+      <h2 class="facebox-header">Users who have contributed to this file</h2>
+      <ul class="facebox-user-list">
+          <li class="facebox-user-list-item">
+            <img alt="Eugene Kalinin" data-user="234891" height="24" src="https://avatars2.githubusercontent.com/u/234891?v=2&amp;s=48" width="24" />
+            <a href="/ekalinin">ekalinin</a>
+          </li>
+      </ul>
+    </div>
+  </div>
+
+<div class="file-box">
+  <div class="file">
+    <div class="meta clearfix">
+      <div class="info file-name">
+          <span>435 lines (333 sloc)</span>
+          <span class="meta-divider"></span>
+        <span>10.028 kb</span>
+      </div>
+      <div class="actions">
+        <div class="button-group">
+          <a href="/ekalinin/envirius/raw/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md" class="minibutton " id="raw-url">Raw</a>
+            <a href="/ekalinin/envirius/blame/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md" class="minibutton js-update-url-with-hash">Blame</a>
+          <a href="/ekalinin/envirius/commits/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md" class="minibutton " rel="nofollow">History</a>
+        </div><!-- /.button-group -->
+
+
+            <a class="octicon-button disabled tooltipped tooltipped-w" href="#"
+               aria-label="You must be signed in to make or propose changes"><span class="octicon octicon-pencil"></span></a>
+
+          <a class="octicon-button danger disabled tooltipped tooltipped-w" href="#"
+             aria-label="You must be signed in to make or propose changes">
+          <span class="octicon octicon-trashcan"></span>
+        </a>
+      </div><!-- /.actions -->
+    </div>
+        <div id="readme" class="blob instapaper_body">
+    <article class="markdown-body entry-content" itemprop="mainContentOfPage"><h1>
+<a name="user-content-envirius" class="anchor" href="#envirius" aria-hidden="true"><span class="octicon octicon-link"></span></a>envirius</h1>
+
+<p><code>envirius</code> — universal virtual environments manager.</p>
+
+<h2>
+<a name="user-content-idea" class="anchor" href="#idea" aria-hidden="true"><span class="octicon octicon-link"></span></a>Idea</h2>
+
+<p>Usually this kind of tools narrowly specialized for a particular
+programming language. For example:</p>
+
+<ul class="task-list">
+<li>
+<a href="https://github.com/pypa/virtualenv/">virtualenv</a> for python</li>
+<li>
+<a href="https://github.com/wayneeseguin/rvm/">rvm</a> for ruby</li>
+<li>
+<a href="https://github.com/spawngrid/kerl/">kerl</a> for erlang</li>
+<li>
+<a href="https://github.com/creationix/nvm">nvm</a>/<a href="https://github.com/ekalinin/nodeenv/">nodeenv</a> for node.js</li>
+<li>and so on</li>
+</ul><p>But there are many cases when in the same environment you must have more
+than one programming language. For example, to create an environment with
+<code>python2.6</code> and <code>node.js 0.10.24</code>. This idea underlies <code>envirius</code>.</p>
+
+<p>Support for new programming languages are implemented as plug-ins (see below).</p>
+
+<h2>
+<a name="user-content-features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul class="task-list">
+<li>clean design</li>
+<li>easy extensible</li>
+<li>test coverage</li>
+</ul><h1>
+<a name="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>At first:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>git clone https://github.com/ekalinin/envirius.git
+<span class="nv">$ </span><span class="nb">cd </span>envirius
+<span class="nv">$ </span>make install
+</pre></div>
+
+<p>Then youd need to add into your <code>.bashrc</code> the following:</p>
+
+<div class="highlight highlight-bash"><pre><span class="o">[</span> -f <span class="s2">"$HOME/.envirius/nv"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> . ~/.envirius/nv
+</pre></div>
+
+<h1>
+<a name="user-content-uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstallation</h1>
+
+<p>Just do the following:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span><span class="nb">cd </span>envirius
+<span class="nv">$ </span>make uninstall
+</pre></div>
+
+<p>Cache and previously created environments will not be deleted.</p>
+
+<h1>
+<a name="user-content-available-plugins" class="anchor" href="#available-plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Available plugins</h1>
+
+<p>You can create environments for the following programming languages:</p>
+
+<ul class="task-list">
+<li><a href="http://erlang.org/">erlang</a></li>
+<li><a href="http://rust-lang.org/">rust</a></li>
+<li><a href="http://elixir-lang.org/">elixir</a></li>
+<li><a href="http://julialang.org/">julia</a></li>
+<li><a href="http://nodejs.org/">node.js</a></li>
+<li><a href="https://www.python.org/">python</a></li>
+<li><a href="http://golang.org/">go</a></li>
+<li><a href="http://haskell.org/">haskell</a></li>
+<li><a href="http://scala-lang.org/">scala</a></li>
+</ul><p>New languages can be added as plugins (see below).</p>
+
+<h1>
+<a name="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<h2>
+<a name="user-content-check-available-plugins" class="anchor" href="#check-available-plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check available plugins</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv ls-plugins
+elixir
+elixir-prebuilt
+erlang
+go-prebuilt
+haskell
+haskell-prebuilt
+julia
+node
+node-prebuilt
+python
+rust
+rust-prebuilt
+scala
+</pre></div>
+
+<p>Here you can see two types of plugins:</p>
+
+<ul class="task-list">
+<li>which downloads &amp; builds from source (<code>elixir</code>, <code>erlang</code>, …)</li>
+<li>which just downloads prebuilt packages (<code>elixir-prebuilt</code>, <code>node-prebuilt</code>, …)</li>
+</ul><p>It's obviously that work with the second option will be much faster because
+compiling may takes huge amount of time.</p>
+
+<p>Unfortunately, not all languages is available in prebuilt binaries.</p>
+
+<h2>
+<a name="user-content-check-available-versions-for-each-plugin" class="anchor" href="#check-available-versions-for-each-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check available versions for each plugin</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv ls-versions --rust --erlang
+* rust:
+0.1         0.2         0.3         0.4         0.5
+0.6         0.7         0.8         0.9
+* erlang:
+R10B-0    R10B-10   R10B-1a   R10B-2    R10B-3    R10B-4
+R10B-5    R10B-6    R10B-7    R10B-8    R10B-9    R11B-0
+R11B-1    R11B-2    R11B-3    R11B-4    R11B-5    R12B-0
+R12B-1    R12B-2    R12B-3    R12B-4    R12B-5    R13A
+R13B      R13B01    R13B02-1  R13B02    R13B03    R13B04
+R14A      R14B      R14B01    R14B02    R14B03    R14B04
+R15B      R15B01    R15B02    R15B02    R15B03-1  R15B03
+R16A      R16B      R16B01    R16B02    R16B03-1  R16B03
+17.0-rc1
+</pre></div>
+
+<h2>
+<a name="user-content-create-an-environment" class="anchor" href="#create-an-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create an environment</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv mk mixed-rust-erlang --rust<span class="o">=</span>0.9 --erlang<span class="o">=</span>17.0-rc1
+Creating environment: mixed-rust-erlang ...
+ * installing <span class="nv">rust</span><span class="o">==</span>0.9 ...
+ * <span class="k">done</span> <span class="o">(</span>in <span class="m">5</span> secs.<span class="o">)</span>
+ * installing <span class="nv">erlang</span><span class="o">==</span>17.0-rc1 ...
+ * <span class="k">done</span> <span class="o">(</span>in <span class="m">11</span> secs.<span class="o">)</span>
+</pre></div>
+
+<p>If you want to activate new environment just right after it creation, then do
+the following:</p>
+
+<div class="highlight highlight-bash"><pre>➥ nv mk mixed-rust-erlang --rust<span class="o">=</span>0.9 --erlang<span class="o">=</span>17.0-rc1 --on
+Creating environment: mixed-rust-erlang ...
+....
+Environment mixed-rust-erlang activated.
+<span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥ 
+</pre></div>
+
+<h2>
+<a name="user-content-activatedeactivate-environment" class="anchor" href="#activatedeactivate-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activate/deactivate environment</h2>
+
+<h3>
+<a name="user-content-activating-in-a-new-shell" class="anchor" href="#activating-in-a-new-shell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activating in a new shell</h3>
+
+<p>By default activating environment executes in a new shell:</p>
+
+<div class="highlight highlight-bash"><pre>➥ <span class="nb">echo</span> <span class="nv">$$</span>
+112
+➥ nv on mixed-rust-erlang
+Environment mixed-rust-erlang activated.
+<span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥  <span class="nb">echo</span> <span class="nv">$$</span>
+3437
+</pre></div>
+
+<p>So for exit just do <code>exit</code>:</p>
+
+<div class="highlight highlight-bash"><pre><span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥  <span class="nb">echo</span> <span class="nv">$$</span>
+3437
+<span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥  <span class="nb">exit</span>
+➥ <span class="nb">echo</span> <span class="nv">$$</span>
+112
+</pre></div>
+
+<p>Since version <a href="https://github.com/ekalinin/envirius/releases/tag/0.7.2">0.7.2</a>
+you can use <code>nv off</code> in all cases to exit from environment.</p>
+
+<h3>
+<a name="user-content-activating-in-the-same-shell" class="anchor" href="#activating-in-the-same-shell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activating in the same shell</h3>
+
+<p>If you want to activate environment in the same shell do the following:</p>
+
+<div class="highlight highlight-bash"><pre>➥ <span class="nb">echo</span> <span class="nv">$$</span>
+5099
+➥ nv on --same-shell mixed-rust-erlang
+Environment mixed-rust-erlang activated.
+<span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥  <span class="nb">echo</span> <span class="nv">$$</span>
+5099
+</pre></div>
+
+<p>To deactivate this shell don't use <code>exit</code>, use <code>nv off</code>:</p>
+
+<div class="highlight highlight-bash"><pre><span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥  <span class="nb">echo</span> <span class="nv">$$</span>
+5099
+<span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥ nv off
+Environment mixed-rust-erlang was deactivated.
+➥  <span class="nb">echo</span> <span class="nv">$$</span>
+5099
+</pre></div>
+
+<h2>
+<a name="user-content-get-list-of-environments" class="anchor" href="#get-list-of-environments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get list of environments</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv ls
+Available environment<span class="o">(</span>s<span class="o">)</span>:
+mixed-rust-erlang
+rust-0.9
+erl-17-rc1
+</pre></div>
+
+<h2>
+<a name="user-content-get-current-activated-environment" class="anchor" href="#get-current-activated-environment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get current activated environment</h2>
+
+<div class="highlight highlight-bash"><pre><span class="o">(</span>mixed-rust-erlang<span class="o">)</span> ➥ nv current
+mixed-rust-erlang
+</pre></div>
+
+<p>It will return empty, if environment is not activated:</p>
+
+<div class="highlight highlight-bash"><pre>➥ nv current
+➥ 
+</pre></div>
+
+<h2>
+<a name="user-content-do-something-in-environment-without-enabling-it" class="anchor" href="#do-something-in-environment-without-enabling-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Do something in environment without enabling it</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv <span class="k">do</span> node-0.10.26 <span class="s1">'npm -g ls'</span>
+</pre></div>
+
+<h2>
+<a name="user-content-get-help" class="anchor" href="#get-help" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get help</h2>
+
+<div class="highlight highlight-bash"><pre>➥ nv --help
+</pre></div>
+
+<h2>
+<a name="user-content-get-help-for-a-command" class="anchor" href="#get-help-for-a-command" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get help for a command</h2>
+
+<p>For example, for <code>do</code> command:</p>
+
+<div class="highlight highlight-bash"><pre>➥ nv <span class="k">do</span> --help
+</pre></div>
+
+<h1>
+<a name="user-content-how-to-add-a-plugin" class="anchor" href="#how-to-add-a-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to add a plugin?</h1>
+
+<p>All plugins are in the directory
+<a href="https://github.com/ekalinin/envirius/tree/master/src/nv-plugins">nv-plugins</a>.
+If you need to add support for a new language you should add it as plugin
+inside this directory.</p>
+
+<h2>
+<a name="user-content-mandatory-elements" class="anchor" href="#mandatory-elements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mandatory elements</h2>
+
+<p>If you create a plugin which builds all stuff from source then In a simplest
+case you need to implement 2 functions in the plugin's body:</p>
+
+<h3>
+<a name="user-content-plug_list_versions" class="anchor" href="#plug_list_versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>plug_list_versions</h3>
+
+<p>This function should return list of available versions of the plugin.
+For example:</p>
+
+<div class="highlight highlight-bash"><pre>plug_list_versions<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">versions</span><span class="o">=</span><span class="k">$(</span>curl -s <span class="s2">"http://nodejs.org/dist"</span> <span class="p">|</span> <span class="se">\</span>
+                grep -v <span class="s2">"node-"</span> <span class="p">|</span> <span class="se">\</span>
+                egrep -o <span class="s1">'[0-9]+\.[0-9]+\.[0-9]+'</span> <span class="p">|</span> <span class="se">\</span>
+                sort -u -k 1,1n -k 2,2n -k 3,3n -t .<span class="k">)</span>
+    <span class="nb">echo</span> <span class="nv">$versions</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3>
+<a name="user-content-plug_url_for_download" class="anchor" href="#plug_url_for_download" aria-hidden="true"><span class="octicon octicon-link"></span></a>plug_url_for_download</h3>
+
+<p>This function should return full url for downloading tarball.
+For example:</p>
+
+<div class="highlight highlight-bash"><pre>plug_url_for_download<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">version</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nb">echo</span> <span class="s2">"http://nodejs.org/dist/v${version}/node-v${version}.tar.gz"</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3>
+<a name="user-content-plug_build" class="anchor" href="#plug_build" aria-hidden="true"><span class="octicon octicon-link"></span></a>plug_build</h3>
+
+<p>This function is only need for <code>*-prebuilt</code>-like plugins. It overrides default
+building proccess. All we need in case of <code>*-prebuilt</code>-like plugin is only
+copy binaries. For example:</p>
+
+<div class="highlight highlight-bash"><pre>plug_build<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">src_path</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nb">local </span><span class="nv">build_path</span><span class="o">=</span><span class="nv">$2</span>
+    cp -r <span class="s2">"$src_path"</span>/*/* <span class="s2">"$build_path"</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>Typical language installation listed in
+<a href="https://github.com/ekalinin/envirius/blob/master/src/nv-commands/mk#L155">plug_install_default</a>
+function in <code>mk</code> command.</p>
+
+<p>If installation is not typical then you should implement <code>plug_install</code>
+function with yourself. For example: 
+<a href="https://github.com/ekalinin/envirius/blob/master/src/nv-plugins/julia">julia</a>.</p>
+
+<h2>
+<a name="user-content-optional-elements" class="anchor" href="#optional-elements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Optional elements</h2>
+
+<h3>
+<a name="user-content-variables" class="anchor" href="#variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Variables</h3>
+
+<ul class="task-list">
+<li>
+<code>plug_list_versions_columns_count</code> — number of the columns in the
+output of the <code>nv ls-version</code> for each plugin</li>
+<li>
+<code>plug_list_versions_columns_size</code> — each column width in chars in
+the output of the <code>nv ls-version</code> for each plugin</li>
+<li>
+<code>plug_state</code> — if == <code>disabled</code> then plugin is not active and will not
+be account in the commands:
+
+<ul class="task-list">
+<li>mk</li>
+<li>ls-versions</li>
+<li>ls-plugins</li>
+</ul>
+</li>
+</ul><h3>
+<a name="user-content-functions" class="anchor" href="#functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Functions</h3>
+
+<p>In execute order:</p>
+
+<ul class="task-list">
+<li>
+<code>plug_check_deps</code> — check dependencies before plugin building. If it returns
+not empty string then environment creation stops. Example is in
+<a href="https://github.com/ekalinin/envirius/blob/master/src/nv-plugins/haskell#L20">haskell</a>
+plugin</li>
+<li>
+<code>plug_install</code>  — overrides the whole installation process</li>
+<li>
+<code>plug_download</code> — overrides default downloading sources (archive)</li>
+<li>
+<code>plug_unpack</code> — overrides default <code>tar xzf &lt;archive-with-source&gt;</code>
+</li>
+<li>
+<code>plug_configure</code> — overrides default <code>configure --prefix=&lt;path-to-env&gt;</code>
+</li>
+<li>
+<code>plug_build</code> — overrides default <code>make &amp;&amp; make install</code>
+</li>
+<li>
+<code>plug_build_env</code> — overrides copying binaries into new environment</li>
+<li>
+<code>plug_post_install_actions</code> — executes after installation. For example
+<code>pip</code> installation in the
+<a href="https://github.com/ekalinin/envirius/blob/master/src/nv-plugins/python">python</a>
+plugin</li>
+</ul><h2>
+<a name="user-content-examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<ul class="task-list">
+<li>Simple: <a href="https://github.com/ekalinin/envirius/blob/master/src/nv-plugins/erlang">erlang</a>
+</li>
+<li>Own impementation: <a href="https://github.com/ekalinin/envirius/blob/master/src/nv-plugins/julia">julia</a>
+</li>
+</ul><h1>
+<a name="user-content-example-of-the-usage" class="anchor" href="#example-of-the-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example of the usage</h1>
+
+<p>Here is an example of building <a href="https://github.com/spf13/hugo">hugo</a> static
+site generator under envirius with <code>go</code> plugin:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nv">$ </span>whereis go
+go:
+<span class="nv">$ </span>nv mk go-hugo-test --go<span class="o">=</span>1.2.1
+Creating environment: go-hugo-test ...
+ * installing <span class="nv">go</span><span class="o">==</span>1.2.1 ...
+ * <span class="k">done</span> <span class="o">(</span>in <span class="m">8</span> secs.<span class="o">)</span>
+<span class="nv">$ </span>nv ls 
+Available environment<span class="o">(</span>s<span class="o">)</span>:
+go-hugo-test <span class="o">(</span><span class="nv">go</span><span class="o">==</span>1.2.1<span class="o">)</span>
+<span class="nv">$ </span>nv on go-hugo-test
+<span class="o">(</span>go-hugo-test<span class="o">)</span> <span class="nv">$ </span>go get github.com/spf13/hugo
+<span class="o">(</span>go-hugo-test<span class="o">)</span> <span class="nv">$ </span><span class="nb">cd</span> <span class="nv">$GOPATH</span>/src/github.com/spf13/hugo
+<span class="o">(</span>go-hugo-test<span class="o">)</span> <span class="nv">$ </span>go build -o hugo main.go
+<span class="o">(</span>go-hugo-test<span class="o">)</span> <span class="nv">$ </span>hugo version
+Hugo Static Site Generator v0.11-dev
+</pre></div>
+
+<h1>
+<a name="user-content-dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h1>
+
+<ul class="task-list">
+<li>bash / zsh (very basic support)</li>
+<li>curl / wget</li>
+<li>tar</li>
+<li>git</li>
+<li>gcc</li>
+<li>bats</li>
+</ul><h1>
+<a name="user-content-supported-os" class="anchor" href="#supported-os" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported OS</h1>
+
+<ul class="task-list">
+<li>ubuntu</li>
+</ul><h1>
+<a name="user-content-tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h1>
+
+<p>Most of the code is covered by tests. For testing
+<a href="https://github.com/sstephenson/bats">bats</a> was used.
+To run tests:</p>
+
+<div class="highlight highlight-bash"><pre>➥ make tests
+</pre></div>
+
+<p>With hot cache on <code>Intel(R) Core(TM) i7-3517U CPU @ 1.90GHz</code> with 4 GB of RAM
+on Ubuntu 13.10 (32-bits) tests takes:</p>
+
+<div class="highlight highlight-bash"><pre>➥ <span class="nb">time </span>make tests
+...
+
+<span class="m">100</span> tests, <span class="m">0</span> failure
+
+real    8m26.572s
+user    1m17.428s
+sys     2m25.352s
+</pre></div>
+
+<h1>
+<a name="user-content-version-history" class="anchor" href="#version-history" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version History</h1>
+
+<p>See <a href="https://github.com/ekalinin/envirius/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</p>
+
+<h1>
+<a name="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>See <a href="https://github.com/ekalinin/envirius/blob/master/LICENSE">LICENSE</a>.</p>
+
+<h1>
+<a name="user-content-readme-in-another-language" class="anchor" href="#readme-in-another-language" aria-hidden="true"><span class="octicon octicon-link"></span></a>README in another language</h1>
+
+<p><a href="https://github.com/ekalinin/envirius/blob/master/README.ru.md">RU</a></p></article>
+  </div>
+
+  </div>
+</div>
+
+<a href="#jump-to-line" rel="facebox[.linejump]" data-hotkey="l" style="display:none">Jump to Line</a>
+<div id="jump-to-line" style="display:none">
+  <form accept-charset="UTF-8" class="js-jump-to-line-form">
+    <input class="linejump-input js-jump-to-line-field" type="text" placeholder="Jump to line&hellip;" autofocus>
+    <button type="submit" class="button">Go</button>
+  </form>
+</div>
+
+        </div>
+
+      </div><!-- /.repo-container -->
+      <div class="modal-backdrop"></div>
+    </div><!-- /.container -->
+  </div><!-- /.site -->
+
+
+    </div><!-- /.wrapper -->
+
+      <div class="container">
+  <div class="site-footer">
+    <ul class="site-footer-links right">
+      <li><a href="https://status.github.com/">Status</a></li>
+      <li><a href="http://developer.github.com">API</a></li>
+      <li><a href="http://training.github.com">Training</a></li>
+      <li><a href="http://shop.github.com">Shop</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/about">About</a></li>
+
+    </ul>
+
+    <a href="/" aria-label="Homepage">
+      <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+    </a>
+
+    <ul class="site-footer-links">
+      <li>&copy; 2014 <span title="0.02102s from github-fe134-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+        <li><a href="/site/terms">Terms</a></li>
+        <li><a href="/site/privacy">Privacy</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+  </div><!-- /.site-footer -->
+</div><!-- /.container -->
+
+
+    <div class="fullscreen-overlay js-fullscreen-overlay" id="fullscreen_overlay">
+  <div class="fullscreen-container js-suggester-container">
+    <div class="textarea-wrap">
+      <textarea name="fullscreen-contents" id="fullscreen-contents" class="fullscreen-contents js-fullscreen-contents js-suggester-field" placeholder=""></textarea>
+    </div>
+  </div>
+  <div class="fullscreen-sidebar">
+    <a href="#" class="exit-fullscreen js-exit-fullscreen tooltipped tooltipped-w" aria-label="Exit Zen Mode">
+      <span class="mega-octicon octicon-screen-normal"></span>
+    </a>
+    <a href="#" class="theme-switcher js-theme-switcher tooltipped tooltipped-w"
+      aria-label="Switch themes">
+      <span class="octicon octicon-color-mode"></span>
+    </a>
+  </div>
+</div>
+
+
+
+    <div id="ajax-error-message" class="flash flash-error">
+      <span class="octicon octicon-alert"></span>
+      <a href="#" class="octicon octicon-x close js-ajax-error-dismiss" aria-label="Dismiss error"></a>
+      Something went wrong with that request. Please try again.
+    </div>
+
+
+      <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/frameworks-bc28a4f6b05fd6cd91bbc92310bbbc53e54c6ec2.js" type="text/javascript"></script>
+      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-46193212c1e9feb8753d1ecfdfcfad0a23a015d2.js" type="text/javascript"></script>
+      
+      
+        <script async src="https://www.google-analytics.com/analytics.js"></script>
+  </body>
+</html>
+
