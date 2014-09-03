@@ -19,6 +19,69 @@
 #       substr($4, 7)
 #
 
-echo "Table of Contents"
-echo "================="
-curl -s $1 | awk '/user-content-/ {print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'
+gh_toc_version="0.1.0"
+
+#
+# Download rendered into html README.md by it's url.
+#
+#
+gh_toc_load() {
+    local gh_url=$1
+    local gh_user_agent=$2
+
+    if type curl &>/dev/null; then
+        curl --user-agent "$gh_user_agent" -s "$gh_url"
+    elif type wget &>/dev/null; then
+        wget --user-agent="$user_agent" -qO- "$gh_url"
+    else
+        echo "Please, install 'curl' or 'wget' and try again."
+        exit 1
+    fi
+}
+
+#
+# TOC generator
+#
+gh_toc(){
+    local gh_url=$1
+    local gh_user_agent=${2:-"gh-md-toc"}
+
+    if [ "$gh_url" = "" ]; then
+        echo "Please, enter URL for a README.md"
+        exit 1
+    fi
+
+    echo "Table of Contents"
+    echo "================="
+    gh_toc_load "$gh_url" "$gh_user_agent" | \
+        awk '/user-content-/ {print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'
+}
+
+#
+# Options hendlers
+#
+gh_toc_app() {
+    local app_name=${0/\.\//}
+
+    if [ "$1" = '--help' ]; then
+        echo "GitHub TOC generator ($app_name): $gh_toc_version"
+        echo ""
+        echo "Usage:"
+        echo "  $app_name <url>         Create TOC for passed url of a README file"
+        echo "  $app_name --help        Show help"
+        echo "  $app_name --version     Show help"
+        return
+    fi
+
+    if [ "$1" = '--version' ]; then
+        echo "$gh_toc_version"
+        return
+    fi
+
+    gh_toc "$1" "$app_name"
+}
+
+#
+# Entry point
+#
+gh_toc_app "$@"
