@@ -56,7 +56,7 @@ Table of Contents
   * [README in another language](#readme-in-another-language)
 ```
 
-That's all! Now all you need — is copy/paste result from cosonle into original
+That's all! Now all you need — is copy/paste result from console into original
 README.md.
 
 And here is a result:
