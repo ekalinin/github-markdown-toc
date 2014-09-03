@@ -19,7 +19,7 @@
 #       substr($4, 7)
 #
 
-gh_toc_version="0.1.0"
+gh_toc_version="0.1.1"
 
 #
 # Download rendered into html README.md by it's url.
@@ -32,7 +32,7 @@ gh_toc_load() {
     if type curl &>/dev/null; then
         curl --user-agent "$gh_user_agent" -s "$gh_url"
     elif type wget &>/dev/null; then
-        wget --user-agent="$user_agent" -qO- "$gh_url"
+        wget --user-agent="$gh_user_agent" -qO- "$gh_url"
     else
         echo "Please, install 'curl' or 'wget' and try again."
         exit 1
