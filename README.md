@@ -1,8 +1,8 @@
 gh-md-toc
 =========
 
-gh-md-toc — is for you if you want to generate TOC for README.md and don't want
-to install any additional software.
+gh-md-toc — is for you if you **want to generate TOC** for README.md and
+**don't want to install any additional software**.
 
 Usage
 =====
@@ -16,7 +16,7 @@ And you want to generate TOC for it.
 There is nothing easier:
 
 ```bash
-➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/.../README.md
+➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/master/README.md
 
 Table of Contents
 =================
@@ -56,7 +56,8 @@ Table of Contents
   * [README in another language](#readme-in-another-language)
 ```
 
-That's all! Now all you need — is copy/paste result from cosonle into original README.md.
+That's all! Now all you need — is copy/paste result from cosonle into original
+README.md.
 
 And here is a result:
 
@@ -65,5 +66,5 @@ And here is a result:
 Dependency
 ==========
 
-  * curl
+  * curl or wget
   * awk
