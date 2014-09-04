@@ -4,6 +4,14 @@ gh-md-toc
 gh-md-toc — is for you if you **want to generate TOC** for README.md and
 **don't want to install any additional software**.
 
+Installation
+============
+
+```bash
+$ wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc
+$ chmod a+x gh-md-toc
+```
+
 Usage
 =====
 
