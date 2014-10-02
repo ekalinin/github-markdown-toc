@@ -19,7 +19,7 @@
 #       substr($4, 7)
 #
 
-gh_toc_version="0.1.1"
+gh_toc_version="0.2.0"
 
 #
 # Download rendered into html README.md by it's url.
@@ -45,16 +45,40 @@ gh_toc_load() {
 gh_toc(){
     local gh_url=$1
     local gh_user_agent=${2:-"gh-md-toc"}
+    local gh_count=$3
 
     if [ "$gh_url" = "" ]; then
         echo "Please, enter URL for a README.md"
         exit 1
     fi
 
-    echo "Table of Contents"
-    echo "================="
-    gh_toc_load "$gh_url" "$gh_user_agent" | \
-        awk '/user-content-/ {print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'
+    if [ "$gh_count" = "1" ]; then
+
+        echo "Table of Contents"
+        echo "================="
+        echo ""
+
+        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab_single
+    else
+        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab_multi
+    fi
+}
+
+gh_toc_grab_single() {
+    awk -v "gh_url=$gh_url" '/user-content-/ {
+    print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'
+}
+
+gh_toc_grab_multi() {
+    awk -v "gh_url=$gh_url" '/user-content-/ {
+    print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($4, 7, length($4)-7) ")"}'
+}
+
+#
+# Returns filename only from full path or url
+#
+gh_toc_get_filename() {
+    echo "${1##*/}"
 }
 
 #
@@ -78,7 +102,12 @@ gh_toc_app() {
         return
     fi
 
-    gh_toc "$1" "$app_name"
+    for md in "$@"
+    do
+        echo ""
+        gh_toc "$md" "$app_name" "$#"
+    done
+
 }
 
 #
