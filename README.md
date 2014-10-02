@@ -4,6 +4,14 @@ gh-md-toc
 gh-md-toc — is for you if you **want to generate TOC** for README.md and
 **don't want to install any additional software**.
 
+Table of contents
+=================
+
+  * [gh-md-toc](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#gh-md-toc)
+  * [Installation](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#installation)
+  * [Usage](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#usage)
+  * [Dependency](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#dependency)
+
 Installation
 ============
 
