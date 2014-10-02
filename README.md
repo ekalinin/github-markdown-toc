@@ -28,6 +28,7 @@ There is nothing easier:
 
 Table of Contents
 =================
+
   * [envirius](#envirius)
     * [Idea](#idea)
     * [Features](#features)
@@ -70,6 +71,30 @@ README.md.
 And here is a result:
 
   * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
+
+
+It supports multiple files as well:
+
+```bash
+➥ ./gh-md-toc \
+    https://github.com/aminb/rust-for-c/blob/master/hello_world/README.md \
+    https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md \
+    https://github.com/aminb/rust-for-c/blob/master/primitive_types_and_operators/README.md \
+    https://github.com/aminb/rust-for-c/blob/master/unique_pointers/README.md
+
+  * [Hello world](https://github.com/aminb/rust-for-c/blob/master/hello_world/README.md#hello-world)
+
+  * [Control Flow](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#control-flow)
+    * [If](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#if)
+    * [Loops](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#loops)
+    * [For loops](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#for-loops)
+    * [Switch/Match](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#switchmatch)
+    * [Method call](https://github.com/aminb/rust-for-c/blob/master/control_flow/README.md#method-call)
+
+  * [Primitive Types and Operators](https://github.com/aminb/rust-for-c/blob/master/primitive_types_and_operators/README.md#primitive-types-and-operators)
+
+  * [Unique Pointers](https://github.com/aminb/rust-for-c/blob/master/unique_pointers/README.md#unique-pointers)
+```
 
 Dependency
 ==========
