@@ -102,6 +102,9 @@ gh_toc_app() {
         echo ""
         gh_toc "$md" "$app_name" "$#"
     done
+
+    echo ""
+    echo "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
 #
