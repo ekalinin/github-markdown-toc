@@ -19,7 +19,7 @@
 #       substr($4, 7)
 #
 
-gh_toc_version="0.2.0"
+gh_toc_version="0.2.1"
 
 #
 # Download rendered into html README.md by it's url.
