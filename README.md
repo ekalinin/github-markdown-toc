@@ -109,3 +109,5 @@ Dependency
 
   * curl or wget
   * awk
+
+Tested on Ubuntu 14.04 in bash/zsh.
