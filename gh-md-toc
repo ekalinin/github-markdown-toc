@@ -58,19 +58,14 @@ gh_toc(){
         echo "================="
         echo ""
 
-        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab_single
+        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab ""
     else
-        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab_multi
+        gh_toc_load "$gh_url" "$gh_user_agent" | gh_toc_grab "$gh_url"
     fi
 }
 
-gh_toc_grab_single() {
-    awk -v "gh_url=$gh_url" '/user-content-/ {
-    print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" substr($4, 7, length($4)-7) ")"}'
-}
-
-gh_toc_grab_multi() {
-    awk -v "gh_url=$gh_url" '/user-content-/ {
+gh_toc_grab() {
+    awk -v "gh_url=$1" '/user-content-/ {
     print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($4, 7, length($4)-7) ")"}'
 }
 
@@ -107,7 +102,6 @@ gh_toc_app() {
         echo ""
         gh_toc "$md" "$app_name" "$#"
     done
-
 }
 
 #
