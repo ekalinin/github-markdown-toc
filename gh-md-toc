@@ -3,7 +3,7 @@
 #
 # Steps:
 #
-#  1. Download coresponding html file for some README.md:
+#  1. Download corresponding html file for some README.md:
 #       curl -s $1
 #
 #  2. Discard rows where no substring 'user-content-' (github's markup):
@@ -22,7 +22,7 @@
 gh_toc_version="0.2.1"
 
 #
-# Download rendered into html README.md by it's url.
+# Download rendered into html README.md by its url.
 #
 #
 gh_toc_load() {
