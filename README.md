@@ -4,6 +4,11 @@ gh-md-toc
 gh-md-toc — is for you if you **want to generate TOC** for README.md and
 **don't want to install any additional software**.
 
+gh-md-toc is able to proccess:
+
+  * local files (markdown files in local file system)
+  * remote files (html files on github.com)
+
 Table of contents
 =================
 
@@ -23,7 +28,30 @@ $ chmod a+x gh-md-toc
 Usage
 =====
 
-For a example, you have a README.md like this:
+
+Local files
+-----------
+
+Here's an example of TOC creating for a local README.md:
+
+```bash
+➥ ./gh-md-toc ~/projects/Dockerfile.vim/README.md                                                                                                                                                Вс. марта 22 22:51:46 MSK 2015
+
+Table of Contents
+=================
+
+  * [Dockerfile.vim](#dockerfilevim)
+  * [Screenshot](#screenshot)
+  * [Installation](#installation)
+        * [OR using Pathogen:](#or-using-pathogen)
+        * [OR using Vundle:](#or-using-vundle)
+  * [License](#license)
+```
+
+Remote files
+------------
+
+And here's an example, when you have a README.md like this:
 
   * [README.md without TOC](https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md)
 
@@ -104,10 +132,35 @@ It supports multiple files as well:
   * [Unique Pointers](https://github.com/aminb/rust-for-c/blob/master/unique_pointers/README.md#unique-pointers)
 ```
 
+Combo
+-----
+
+You can easily combine both ways:
+
+```bash
+➥ ./gh-md-toc \
+    ~/projects/Dockerfile.vim/README.md \
+    https://github.com/ekalinin/sitemap.js/blob/master/README.md                                                                                  Вс. марта 22 22:53:15 MSK 2015
+
+  * [Dockerfile.vim](~/projects/Dockerfile.vim/README.md#dockerfilevim)
+  * [Screenshot](~/projects/Dockerfile.vim/README.md#screenshot)
+  * [Installation](~/projects/Dockerfile.vim/README.md#installation)
+        * [OR using Pathogen:](~/projects/Dockerfile.vim/README.md#or-using-pathogen)
+        * [OR using Vundle:](~/projects/Dockerfile.vim/README.md#or-using-vundle)
+  * [License](~/projects/Dockerfile.vim/README.md#license)
+
+  * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/master/README.md#sitemapjs)
+    * [Installation](https://github.com/ekalinin/sitemap.js/blob/master/README.md#installation)
+    * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)
+    * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+```
+
 Dependency
 ==========
 
   * curl or wget
   * awk
 
-Tested on Ubuntu 14.04 in bash/zsh.
+Tested on Ubuntu 14.04/14.10 in bash/zsh.
