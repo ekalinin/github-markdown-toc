@@ -12,10 +12,15 @@ gh-md-toc is able to proccess:
 Table of contents
 =================
 
-  * [gh-md-toc](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#gh-md-toc)
-  * [Installation](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#installation)
-  * [Usage](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#usage)
-  * [Dependency](https://github.com/ekalinin/github-markdown-toc/blob/master/README.md#dependency)
+  * [gh-md-toc](#gh-md-toc)
+  * [Table of contents](#table-of-contents)
+  * [Installation](#installation)
+  * [Usage](#usage)
+    * [Local files](#local-files)
+    * [Remote files](#remote-files)
+    * [Combo](#combo)
+  * [Dependency](#dependency)
+
 
 Installation
 ============
