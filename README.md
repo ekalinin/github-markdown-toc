@@ -4,6 +4,10 @@ gh-md-toc
 gh-md-toc — is for you if you **want to generate TOC** for README.md and
 **don't want to install any additional software**.
 
+It's my try to fix a problem:
+
+  * [github/issues/215](https://github.com/isaacs/github/issues/215)
+
 gh-md-toc is able to proccess:
 
   * local files (markdown files in local file system)
