@@ -116,7 +116,7 @@ gh_toc_get_filename() {
 # Options hendlers
 #
 gh_toc_app() {
-    local app_name=${0/\.\//}
+    local app_name="gh-md-toc"
 
     if [ "$1" = '--help' ]; then
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
