@@ -17,8 +17,9 @@ load test_helper
     assert_equal "${lines[7]}"  "    * [Local files](#local-files)"
     assert_equal "${lines[8]}"  "    * [Remote files](#remote-files)"
     assert_equal "${lines[9]}"  "    * [Combo](#combo)"
-    assert_equal "${lines[10]}" "  * [Dependency](#dependency)"
-    assert_equal "${lines[11]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[10]}" "  * [Tests](#tests)"
+    assert_equal "${lines[11]}" "  * [Dependency](#dependency)"
+    assert_equal "${lines[12]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 
 }
 
@@ -49,12 +50,13 @@ load test_helper
     assert_equal "${lines[5]}"   "    * [Local files](README.md#local-files)"
     assert_equal "${lines[6]}"   "    * [Remote files](README.md#remote-files)"
     assert_equal "${lines[7]}"   "    * [Combo](README.md#combo)"
-    assert_equal "${lines[8]}"   "  * [Dependency](README.md#dependency)"
-    assert_equal "${lines[9]}"   "  * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/master/README.md#sitemapjs)"
-    assert_equal "${lines[10]}"  "    * [Installation](https://github.com/ekalinin/sitemap.js/blob/master/README.md#installation)"
-    assert_equal "${lines[11]}"  "    * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)"
-    assert_equal "${lines[12]}"  "    * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)"
-    assert_equal "${lines[13]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[8]}"   "  * [Tests](README.md#tests)"
+    assert_equal "${lines[9]}"   "  * [Dependency](README.md#dependency)"
+    assert_equal "${lines[10]}"  "  * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/master/README.md#sitemapjs)"
+    assert_equal "${lines[11]}"  "    * [Installation](https://github.com/ekalinin/sitemap.js/blob/master/README.md#installation)"
+    assert_equal "${lines[12]}"  "    * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)"
+    assert_equal "${lines[13]}"  "    * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)"
+    assert_equal "${lines[14]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
 @test "TOC for markdown from stdin" {
@@ -69,7 +71,8 @@ load test_helper
         assert_equal "${lines[5]}"  "    * [Local files](#local-files)"
         assert_equal "${lines[6]}"  "    * [Remote files](#remote-files)"
         assert_equal "${lines[7]}"  "    * [Combo](#combo)"
-        assert_equal "${lines[8]}"  "  * [Dependency](#dependency)"
+        assert_equal "${lines[8]}"  "  * [Tests](#tests)"
+        assert_equal "${lines[9]}"  "  * [Dependency](#dependency)"
     }
 }
 

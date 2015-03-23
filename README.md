@@ -183,6 +183,30 @@ You can easily combine both ways:
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 ```
 
+Tests
+=====
+
+Done with [bats](https://github.com/sstephenson/bats).
+Useful articles:
+
+  * https://blog.engineyard.com/2014/bats-test-command-line-tools
+  * http://blog.spike.cx/post/60548255435/testing-bash-scripts-with-bats
+
+
+How to run tests:
+
+```bash
+➥ make test                                                                                                                                                                                                      Пн. марта 23 13:59:27 MSK 2015
+ ✓ TOC for local README.md
+ ✓ TOC for remote README.md
+ ✓ TOC for mixed README.md (remote/local)
+ ✓ TOC for markdown from stdin
+ ✓ --help
+ ✓ --version
+
+6 tests, 0 failures
+```
+
 Dependency
 ==========
 
