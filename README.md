@@ -10,6 +10,7 @@ It's my try to fix a problem:
 
 gh-md-toc is able to proccess:
 
+  * stdin
   * local files (markdown files in local file system)
   * remote files (html files on github.com)
 
@@ -20,6 +21,7 @@ Table of contents
   * [Table of contents](#table-of-contents)
   * [Installation](#installation)
   * [Usage](#usage)
+    * [STDIN](#stdin)
     * [Local files](#local-files)
     * [Remote files](#remote-files)
     * [Combo](#combo)
@@ -37,6 +39,21 @@ $ chmod a+x gh-md-toc
 Usage
 =====
 
+
+STDIN
+-----
+
+Here's an example of TOC creating for markdown from STDIN:
+
+```
+➥ cat ~/projects/Dockerfile.vim/README.md | ./gh-md-toc -
+  * [Dockerfile.vim](#dockerfilevim)
+  * [Screenshot](#screenshot)
+  * [Installation](#installation)
+        * [OR using Pathogen:](#or-using-pathogen)
+        * [OR using Vundle:](#or-using-vundle)
+  * [License](#license)
+```
 
 Local files
 -----------
@@ -149,7 +166,7 @@ You can easily combine both ways:
 ```bash
 ➥ ./gh-md-toc \
     ~/projects/Dockerfile.vim/README.md \
-    https://github.com/ekalinin/sitemap.js/blob/master/README.md                                                                                  Вс. марта 22 22:53:15 MSK 2015
+    https://github.com/ekalinin/sitemap.s/blob/master/README.md
 
   * [Dockerfile.vim](~/projects/Dockerfile.vim/README.md#dockerfilevim)
   * [Screenshot](~/projects/Dockerfile.vim/README.md#screenshot)

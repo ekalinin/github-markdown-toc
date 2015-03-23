@@ -20,6 +20,7 @@
 #
 
 gh_toc_version="0.3.0"
+gh_user_agent="gh-md-toc v$gh_toc_version"
 
 #
 # Download rendered into html README.md by its url.
@@ -124,6 +125,7 @@ gh_toc_app() {
         echo ""
         echo "Usage:"
         echo "  $app_name src [src]     Create TOC for a README file (url or local path)"
+        echo "  $app_name -             Create TOC for markdown from STDIN"
         echo "  $app_name --help        Show help"
         echo "  $app_name --version     Show help"
         return
@@ -131,6 +133,15 @@ gh_toc_app() {
 
     if [ "$1" = '--version' ]; then
         echo "$gh_toc_version"
+        return
+    fi
+
+    if [ "$1" = "-" ]; then
+        local gh_tmp_md=$(mktemp)
+        while read input; do
+            echo $input >> $gh_tmp_md
+        done
+        gh_toc_md2html "$gh_tmp_md" "$gh_user_agent" | gh_toc_grab ""
         return
     fi
 
