@@ -19,7 +19,8 @@
 #       substr($4, 7)
 #
 
-gh_toc_version="0.3.0"
+gh_toc_version="0.4.0"
+
 gh_user_agent="gh-md-toc v$gh_toc_version"
 
 #
@@ -28,7 +29,6 @@ gh_user_agent="gh-md-toc v$gh_toc_version"
 #
 gh_toc_load() {
     local gh_url=$1
-    local gh_user_agent=$2
 
     if type curl &>/dev/null; then
         curl --user-agent "$gh_user_agent" -s "$gh_url"
@@ -47,7 +47,6 @@ gh_toc_load() {
 # <p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>'"
 gh_toc_md2html() {
     local gh_file_md=$1
-    local gh_user_agent=$2
     curl -s --user-agent "$gh_user_agent" \
         --data-binary @$gh_file_md -H "Content-Type:text/plain" \
         https://api.github.com/markdown/raw
@@ -70,8 +69,7 @@ gh_is_url() {
 gh_toc(){
     local gh_src=$1
     local gh_src_copy=$1
-    local gh_user_agent=${2:-"gh-md-toc"}
-    local gh_ttl_docs=$3
+    local gh_ttl_docs=$2
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -90,9 +88,9 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url $gh_src)" == "yes" ]; then
-        gh_toc_load "$gh_src" "$gh_user_agent" | gh_toc_grab "$gh_src_copy"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
     else
-        gh_toc_md2html "$gh_src" "$gh_user_agent" | gh_toc_grab "$gh_src_copy"
+        gh_toc_md2html "$gh_src" | gh_toc_grab "$gh_src_copy"
     fi
 }
 
@@ -141,14 +139,14 @@ gh_toc_app() {
         while read input; do
             echo $input >> $gh_tmp_md
         done
-        gh_toc_md2html "$gh_tmp_md" "$gh_user_agent" | gh_toc_grab ""
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab ""
         return
     fi
 
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$app_name" "$#"
+        gh_toc "$md" "$#"
     done
 
     echo ""
