@@ -25,6 +25,7 @@ Table of contents
     * [Local files](#local-files)
     * [Remote files](#remote-files)
     * [Combo](#combo)
+  * [Tests](#tests)
   * [Dependency](#dependency)
 
 
@@ -212,5 +213,6 @@ Dependency
 
   * curl or wget
   * awk
+  * bats (for unit tests)
 
 Tested on Ubuntu 14.04/14.10 in bash/zsh.
