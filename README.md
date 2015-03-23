@@ -14,6 +14,8 @@ gh-md-toc is able to proccess:
   * local files (markdown files in local file system)
   * remote files (html files on github.com)
 
+[![Build Status](https://travis-ci.org/ekalinin/github-markdown-toc.svg?branch=master)](https://travis-ci.org/ekalinin/github-markdown-toc)
+
 Table of contents
 =================
 
