@@ -24,7 +24,7 @@ load test_helper
 }
 
 @test "TOC for remote README.md" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc https://github.com/ekalinin/sitemap.js/blob/master/README.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md
     assert_success
 
     assert_equal "${lines[0]}"  "Table of Contents"
@@ -39,7 +39,7 @@ load test_helper
 @test "TOC for mixed README.md (remote/local)" {
     run $BATS_TEST_DIRNAME/../gh-md-toc \
         README.md \
-        https://github.com/ekalinin/sitemap.js/blob/master/README.md
+        https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md
     assert_success
 
     assert_equal "${lines[0]}"   "  * [gh-md-toc](README.md#gh-md-toc)"
@@ -52,10 +52,10 @@ load test_helper
     assert_equal "${lines[7]}"   "    * [Combo](README.md#combo)"
     assert_equal "${lines[8]}"   "  * [Tests](README.md#tests)"
     assert_equal "${lines[9]}"   "  * [Dependency](README.md#dependency)"
-    assert_equal "${lines[10]}"  "  * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/master/README.md#sitemapjs)"
-    assert_equal "${lines[11]}"  "    * [Installation](https://github.com/ekalinin/sitemap.js/blob/master/README.md#installation)"
-    assert_equal "${lines[12]}"  "    * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)"
-    assert_equal "${lines[13]}"  "    * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)"
+    assert_equal "${lines[10]}"  "  * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
+    assert_equal "${lines[11]}"  "    * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
+    assert_equal "${lines[12]}"  "    * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
+    assert_equal "${lines[13]}"  "    * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
     assert_equal "${lines[14]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
@@ -79,7 +79,7 @@ load test_helper
 @test "--help" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --help
     assert_success
-    assert_equal "${lines[0]}" "GitHub TOC generator (gh-md-toc): 0.4.0"
+    assert_equal "${lines[0]}" "GitHub TOC generator (gh-md-toc): 0.4.1"
     assert_equal "${lines[1]}" "Usage:"
     assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
     assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
@@ -90,7 +90,7 @@ load test_helper
 @test "no arguments" {
     run $BATS_TEST_DIRNAME/../gh-md-toc
     assert_success
-    assert_equal "${lines[0]}" "GitHub TOC generator (gh-md-toc): 0.4.0"
+    assert_equal "${lines[0]}" "GitHub TOC generator (gh-md-toc): 0.4.1"
     assert_equal "${lines[1]}" "Usage:"
     assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
     assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
@@ -101,5 +101,5 @@ load test_helper
 @test "--version" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --version
     assert_success
-    assert_equal "${lines[0]}" "0.4.0"
+    assert_equal "${lines[0]}" "0.4.1"
 }
