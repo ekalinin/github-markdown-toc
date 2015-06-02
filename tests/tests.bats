@@ -87,6 +87,17 @@ load test_helper
     assert_equal "${lines[5]}" "  gh-md-toc --version     Show help"
 }
 
+@test "no arguments" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc
+    assert_success
+    assert_equal "${lines[0]}" "GitHub TOC generator (gh-md-toc): 0.4.0"
+    assert_equal "${lines[1]}" "Usage:"
+    assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
+    assert_equal "${lines[4]}" "  gh-md-toc --help        Show help"
+    assert_equal "${lines[5]}" "  gh-md-toc --version     Show help"
+}
+
 @test "--version" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --version
     assert_success
