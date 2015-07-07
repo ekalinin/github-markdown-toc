@@ -105,8 +105,8 @@ gh_toc(){
 # It's need if TOC is generated for multiple documents.
 #
 gh_toc_grab() {
-    awk -v "gh_url=$1" '/user-content-/ {
-    print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\".*\" ")+6, RLENGTH-8) ")"}'
+    echo -e "$(awk -v "gh_url=$1" '/user-content-/ {
+    print sprintf("%*s", substr($NF, length($NF)-1, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\".*\" ")+6, RLENGTH-8) ")"}' | sed 'y/+/ /; s/%/\\x/g')"
 }
 
 #
