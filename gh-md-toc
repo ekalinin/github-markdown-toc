@@ -23,7 +23,7 @@
 #       substr($0, match($0, "href=\".*\" ")+5, RLENGTH-6)
 #
 
-gh_toc_version="0.4.1"
+gh_toc_version="0.4.2"
 
 gh_user_agent="gh-md-toc v$gh_toc_version"
 
