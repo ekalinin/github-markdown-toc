@@ -103,3 +103,34 @@ load test_helper
     assert_success
     assert_equal "${lines[0]}" "0.4.1"
 }
+
+@test "TOC for non-english chars, #6, #10" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc \
+        https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.ru.md 
+    assert_success
+
+    assert_equal "${lines[2]}"   "  * [envirius](#envirius)"
+    assert_equal "${lines[3]}"   "    * [Идея](#Идея)"
+    assert_equal "${lines[4]}"   "    * [Особенности](#Особенности)"
+    assert_equal "${lines[5]}"   "  * [Установка](#Установка)"
+
+
+    run $BATS_TEST_DIRNAME/../gh-md-toc \
+        https://github.com/jlevy/the-art-of-command-line/blob/217da3b4fa751014ecc122fd9fede2328a7eeb3e/README-zh.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "  * [命令行的艺术](#命令行的艺术)"
+    assert_equal "${lines[3]}"   "    * [必读](#必读)"
+    assert_equal "${lines[4]}"   "    * [基础](#基础)"
+    assert_equal "${lines[5]}"   "    * [日常使用](#日常使用)"
+
+
+    run $BATS_TEST_DIRNAME/../gh-md-toc \
+        https://github.com/jlevy/the-art-of-command-line/blob/217da3b4fa751014ecc122fd9fede2328a7eeb3e/README-pt.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "  * [A arte da linha de comando](#a-arte-da-linha-de-comando)"
+    assert_equal "${lines[3]}"   "    * [Meta](#meta)"
+    assert_equal "${lines[4]}"   "    * [Básico](#básico)"
+    assert_equal "${lines[5]}"   "    * [Uso diário](#uso-diário)"
+}
