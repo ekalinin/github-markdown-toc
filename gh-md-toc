@@ -139,7 +139,12 @@ gh_toc_app() {
     fi
 
     if [ "$1" = "-" ]; then
-        local gh_tmp_md=$(mktemp)
+        if [ -z "$TMPDIR" ]; then
+            TMPDIR="/tmp"
+        elif [ -n "$TMPDIR" -a ! -d "$TMPDIR" ]; then
+            mkdir -p "$TMPDIR"
+        fi
+        local gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
         while read input; do
             echo $input >> $gh_tmp_md
         done
