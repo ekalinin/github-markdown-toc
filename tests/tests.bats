@@ -84,7 +84,7 @@ load test_helper
     assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
     assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
     assert_equal "${lines[4]}" "  gh-md-toc --help        Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version     Show help"
+    assert_equal "${lines[5]}" "  gh-md-toc --version     Show version"
 }
 
 @test "no arguments" {
@@ -95,7 +95,7 @@ load test_helper
     assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
     assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
     assert_equal "${lines[4]}" "  gh-md-toc --help        Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version     Show help"
+    assert_equal "${lines[5]}" "  gh-md-toc --version     Show version"
 }
 
 @test "--version" {
