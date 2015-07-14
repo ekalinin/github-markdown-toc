@@ -54,7 +54,7 @@ STDIN
 
 Here's an example of TOC creating for markdown from STDIN:
 
-```
+```bash
 ➥ cat ~/projects/Dockerfile.vim/README.md | ./gh-md-toc -
   * [Dockerfile.vim](#dockerfilevim)
   * [Screenshot](#screenshot)
