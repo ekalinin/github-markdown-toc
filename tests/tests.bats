@@ -134,3 +134,14 @@ load test_helper
     assert_equal "${lines[4]}"   "    * [Básico](#básico)"
     assert_equal "${lines[5]}"   "    * [Uso diário](#uso-diário)"
 }
+
+@test "TOC for text with backquote, #13" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test_backquote.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "  * [The command foo1 ](#the-command-foo1)"
+    assert_equal "${lines[3]}"   "    * [The command foo2 is better](#the-command-foo2-is-better)"
+    assert_equal "${lines[4]}"   "  * [The command bar1 ](#the-command-bar1)"
+    assert_equal "${lines[5]}"   "    * [The command bar2 is better](#the-command-bar2-is-better)"
+    assert_equal "${lines[6]}"   "      * [The command bar3 is the best](#the-command-bar3-is-the-best)"
+}
