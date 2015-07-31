@@ -1,8 +1,8 @@
 gh-md-toc
 =========
 
-gh-md-toc — is for you if you **want to generate TOC** for README.md and
-**don't want to install any additional software**.
+gh-md-toc — is for you if you **want to generate TOC** for README.md or
+GitHub's wiki page and **don't want to install any additional software**.
 
 It's my try to fix a problem:
 
@@ -18,7 +18,8 @@ Here's a golang based implementation:
 
   * [github-markdown-toc.go](https://github.com/ekalinin/github-markdown-toc.go)
 
-It's more solid and reliable. And absolutely without dependencies.
+It's more solid, reliable and with ability of a parallel processing. And
+absolutely without dependencies.
 
 [![Build Status](https://travis-ci.org/ekalinin/github-markdown-toc.svg?branch=master)](https://travis-ci.org/ekalinin/github-markdown-toc)
 
@@ -32,6 +33,7 @@ Table of contents
     * [STDIN](#stdin)
     * [Local files](#local-files)
     * [Remote files](#remote-files)
+    * [Multiple files](#multiple-files)
     * [Combo](#combo)
   * [Tests](#tests)
   * [Dependency](#dependency)
@@ -143,6 +145,21 @@ And here is a result:
 
   * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
 
+Moreover, it's able to work with GitHub's wiki pages:
+
+```bash
+➥ ./gh-md-toc https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv
+
+Table of Contents
+=================
+
+  * [Who Uses Nodeenv?](#who-uses-nodeenv)
+    * [OpenStack](#openstack)
+    * [pre-commit.com](#pre-commitcom)
+```
+
+Multiple files
+--------------
 
 It supports multiple files as well:
 
