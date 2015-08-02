@@ -98,6 +98,11 @@ gh_toc(){
     fi
 }
 
+GH_GREP="grep -E --null-data --text -o"
+if [ "$uname" = "Darwin" ]; then
+    GH_GREP="grep -E --text -o"
+fi
+
 #
 # Grabber of the TOC from rendered html
 #
@@ -106,7 +111,7 @@ gh_toc(){
 #
 gh_toc_grab() {
     # find strings that corresponds to template
-    grep -E --null-data --text -o \
+    $GH_GREP \
     '<h[1-6]>\s*<a\s*id="user-content-[^"]*"\s*class="anchor"\s*href="[^"]*"[^>]*>\s*<span[^<*]*</span>\s*</a>.*?\s*</h' | \
     # replace all new lines except last one
     sed 's/h$/h\nendd/g' | tr '\n' ' ' | sed 's/h endd/\h\n/g' | \
