@@ -99,7 +99,7 @@ gh_toc(){
 }
 
 GH_GREP="grep -E --null-data --text -o"
-if [ "$uname" = "Darwin" ]; then
+if [ "`uname`" = "Darwin" ]; then
     GH_GREP="grep -E --text -o"
 fi
 
