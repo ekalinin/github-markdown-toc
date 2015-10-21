@@ -8,7 +8,7 @@ It's my try to fix a problem:
 
   * [github/issues/215](https://github.com/isaacs/github/issues/215)
 
-gh-md-toc is able to proccess:
+gh-md-toc is able to process:
 
   * stdin
   * local files (markdown files in local file system)
