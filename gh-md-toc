@@ -52,7 +52,7 @@ gh_toc_load() {
 gh_toc_md2html() {
     local gh_file_md=$1
     curl -s --user-agent "$gh_user_agent" \
-        --data-binary @$gh_file_md -H "Content-Type:text/plain" \
+        --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
         https://api.github.com/markdown/raw
 }
 
@@ -91,7 +91,7 @@ gh_toc(){
 
     fi
 
-    if [ "$(gh_is_url $gh_src)" == "yes" ]; then
+    if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
         gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
     else
         gh_toc_md2html "$gh_src" | gh_toc_grab "$gh_src_copy"
@@ -99,7 +99,7 @@ gh_toc(){
 }
 
 GH_GREP="grep -E --null-data --text -o"
-if [ "`uname`" = "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
     GH_GREP="grep -E --text -o"
 fi
 
@@ -162,9 +162,10 @@ gh_toc_app() {
         elif [ -n "$TMPDIR" -a ! -d "$TMPDIR" ]; then
             mkdir -p "$TMPDIR"
         fi
-        local gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
+        local gh_tmp_md
+        gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
         while read input; do
-            echo $input >> $gh_tmp_md
+            echo "$input" >> "$gh_tmp_md"
         done
         gh_toc_md2html "$gh_tmp_md" | gh_toc_grab ""
         return
