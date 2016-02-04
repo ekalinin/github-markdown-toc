@@ -20,7 +20,7 @@
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
 #
 #  5. Find anchor and insert it inside "(...)":
-#       substr($0, match($0, "href=\".*\" ")+5, RLENGTH-6)
+#       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
 #
 
 gh_toc_version="0.4.6"
@@ -44,7 +44,7 @@ gh_toc_load() {
     fi
 }
 
-# 
+#
 # Converts local md file into html by GitHub
 #
 # ➥ curl -X POST --data '{"text": "Hello world github/linguist#1 **cool**, and #1!"}' https://api.github.com/markdown
@@ -125,7 +125,7 @@ gh_toc_grab() {
     # format result line
     echo -e "$(awk -v "gh_url=$1" '{
     print sprintf("%*s", substr($1, 3, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8) ")"}' | sed 'y/+/ /; s/%/\\x/g')"
-} 
+}
 
 #
 # Returns filename only from full path or url
