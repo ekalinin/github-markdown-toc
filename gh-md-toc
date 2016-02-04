@@ -20,7 +20,7 @@
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
 #
 #  5. Find anchor and insert it inside "(...)":
-#       substr($0, match($0, "href=\".*\" ")+5, RLENGTH-6)
+#       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
 #
 
 gh_toc_version="0.4.6"
