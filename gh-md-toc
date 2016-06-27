@@ -98,11 +98,6 @@ gh_toc(){
     fi
 }
 
-GH_GREP="grep -E --null-data --text -o"
-if [ "$(uname)" = "Darwin" ]; then
-    GH_GREP="grep -E --text -o"
-fi
-
 #
 # Grabber of the TOC from rendered html
 #
@@ -110,21 +105,22 @@ fi
 # It's need if TOC is generated for multiple documents.
 #
 gh_toc_grab() {
+	# if closed <h[1-6]> is on the new line, then move it on the prev line
+	# for example:
+	# 	was: The command <code>foo1</code>
+	# 		 </h1>
+	# 	became: The command <code>foo1</code></h1>
+    sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
     # find strings that corresponds to template
-    #'<h[1-6]>\s*<a\s*id="user-content-[^"]*"\s*class="anchor"\s*href="[^"]*"[^>]*>\s*<span[^<*]*</span>\s*</a>.*?\s*</h' | \
-    $GH_GREP \
-    '<h[1-6]>\s*<a\s*id="user-content-[^"]*"\s*class="anchor"\s*href="[^"]*"[^>]*>.*?</a>.*?\s*</h' | \
-    # replace all new lines except last one
-    sed 's/h$/h\nendd/g' | tr '\n' ' ' | sed 's/h endd/\h\n/g' | \
-    # trim head spaces
-    sed 's/^\s*//' |
+    grep -E -o '<a\s*id="user-content-[^"]*".*</h[1-6]' |
     # remove code tags
     sed 's/<code>//' | sed 's/<\/code>//' |
     # now all rows are like:
-    #   <h1> <a id="user-content-..." href="..."><span ...></span></a> ... </h
+    #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
     # format result line
+    #   * $0 — whole string
     echo -e "$(awk -v "gh_url=$1" '{
-    print sprintf("%*s", substr($1, 3, 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8) ")"}' | sed 'y/+/ /; s/%/\\x/g')"
+    print sprintf("%*s", substr($0, length($0), 1)*2, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8) ")"}' | sed 'y/+/ /; s/%/\\x/g')"
 }
 
 #
