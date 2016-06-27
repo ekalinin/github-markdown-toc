@@ -238,7 +238,7 @@ Dependency
 ==========
 
   * curl or wget
-  * awk
+  * awk (mawk, gawk is not supported)
   * grep
   * sed
   * bats (for unit tests)
