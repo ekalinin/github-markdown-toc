@@ -14,7 +14,7 @@
 #       substr($0, length($0), 1)
 #
 #  3.2 Get level from 3.1 and insert corresponding number of spaces before '*':
-#       sprintf("%*s", substr($0, length($0), 1)*2, " ")
+#       sprintf("%*s", substr($0, length($0), 1)*3, " ")
 #
 #  4. Find head's text and insert it inside "* [ ... ]":
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
