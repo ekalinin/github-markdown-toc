@@ -60,11 +60,12 @@ gh_toc_md2html() {
 # Is passed string url
 #
 gh_is_url() {
-    if [[ $1 == https* || $1 == http* ]]; then
-        echo "yes"
-    else
-        echo "no"
-    fi
+    case $1 in
+        https* | http*) 
+            echo "yes";;
+        *)
+            echo "no";;
+    esac
 }
 
 #
