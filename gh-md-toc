@@ -51,9 +51,14 @@ gh_toc_load() {
 # <p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>'"
 gh_toc_md2html() {
     local gh_file_md=$1
+    URL=https://api.github.com/markdown/raw
+    TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+    if [ -f "$TOKEN" ]; then
+        URL="$URL?access_token=$(cat $TOKEN)"
+    fi
     curl -s --user-agent "$gh_user_agent" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
-        https://api.github.com/markdown/raw
+        $URL
 }
 
 #
