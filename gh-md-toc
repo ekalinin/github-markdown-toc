@@ -61,7 +61,7 @@ gh_toc_md2html() {
 #
 gh_is_url() {
     case $1 in
-        https* | http*) 
+        https* | http*)
             echo "yes";;
         *)
             echo "no";;
