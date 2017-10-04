@@ -112,7 +112,7 @@ gh_toc_grab() {
 	# 	became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
     # find strings that corresponds to template
-    grep -E -o '<a\s*id="user-content-[^"]*".*</h[1-6]' |
+    grep -E -o '<a.*id="user-content-[^"]*".*</h[1-6]' |
     # remove code tags
     sed 's/<code>//' | sed 's/<\/code>//' |
     # now all rows are like:
