@@ -14,7 +14,7 @@
 #       substr($0, length($0), 1)
 #
 #  3.2 Get level from 3.1 and insert corresponding number of spaces before '*':
-#       sprintf("%*s", substr($0, length($0), 1)*2, " ")
+#       sprintf("%*s", substr($0, length($0), 1)*3, " ")
 #
 #  4. Find head's text and insert it inside "* [ ... ]":
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
@@ -51,20 +51,26 @@ gh_toc_load() {
 # <p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>'"
 gh_toc_md2html() {
     local gh_file_md=$1
+    URL=https://api.github.com/markdown/raw
+    TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+    if [ -f "$TOKEN" ]; then
+        URL="$URL?access_token=$(cat $TOKEN)"
+    fi
     curl -s --user-agent "$gh_user_agent" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
-        https://api.github.com/markdown/raw
+        $URL
 }
 
 #
 # Is passed string url
 #
 gh_is_url() {
-    if [[ $1 == https* || $1 == http* ]]; then
-        echo "yes"
-    else
-        echo "no"
-    fi
+    case $1 in
+        https* | http*)
+            echo "yes";;
+        *)
+            echo "no";;
+    esac
 }
 
 #
