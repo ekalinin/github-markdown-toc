@@ -14,7 +14,7 @@ gh-md-toc is able to process:
   * local files (markdown files in local file system)
   * remote files (html files on github.com)
 
-gh-md-toc tested on Ubuntu only. If you want it on Mac OS X or Windows you
+gh-md-toc tested on Ubuntu, and macOS High Sierra (gh-md-toc release 0.4.9). If you want it on Windows, you
 better to use a golang based implementation:
 
   * [github-markdown-toc.go](https://github.com/ekalinin/github-markdown-toc.go)
