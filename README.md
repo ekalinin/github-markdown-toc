@@ -27,17 +27,20 @@ absolutely without dependencies.
 Table of contents
 =================
 
-  * [gh-md-toc](#gh-md-toc)
-  * [Table of contents](#table-of-contents)
-  * [Installation](#installation)
-  * [Usage](#usage)
-    * [STDIN](#stdin)
-    * [Local files](#local-files)
-    * [Remote files](#remote-files)
-    * [Multiple files](#multiple-files)
-    * [Combo](#combo)
-  * [Tests](#tests)
-  * [Dependency](#dependency)
+<!--ts-->
+   * [gh-md-toc](#gh-md-toc)
+   * [Table of contents](#table-of-contents)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [STDIN](#stdin)
+      * [Local files](#local-files)
+      * [Remote files](#remote-files)
+      * [Multiple files](#multiple-files)
+      * [Combo](#combo)
+      * [Auto insert and update TOC](#auto-insert-and-update-toc)
+   * [Tests](#tests)
+   * [Dependency](#dependency)
+<!--te-->
 
 
 Installation
@@ -209,6 +212,70 @@ You can easily combine both ways:
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 ```
+
+Auto insert and update TOC
+--------------------------
+
+Just put into a file these two lines:
+
+```
+<!--ts-->
+<!--te-->
+```
+
+And run:
+
+```bash
+$ ./gh-md-toc --insert README.test.md
+
+Table of Contents
+=================
+
+   * [gh-md-toc](#gh-md-toc)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [STDIN](#stdin)
+      * [Local files](#local-files)
+      * [Remote files](#remote-files)
+      * [Multiple files](#multiple-files)
+      * [Combo](#combo)
+   * [Tests](#tests)
+   * [Dependency](#dependency)
+
+!! TOC was added into: 'README.test.md'
+!! Origin version of the file: 'README.test.md.orig.2018-02-04_192655'
+!! TOC added into a separate file: 'README.test.md.toc.2018-02-04_192655'
+
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+```
+
+Now check the same file:
+
+```bash
+➜ grep -A15 "<\!\-\-ts" README.test.md
+<!--ts-->
+   * [gh-md-toc](#gh-md-toc)
+   * [Table of contents](#table-of-contents)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [STDIN](#stdin)
+      * [Local files](#local-files)
+      * [Remote files](#remote-files)
+      * [Multiple files](#multiple-files)
+      * [Combo](#combo)
+      * [Auto insert and update TOC](#auto-insert-and-update-toc)
+   * [Tests](#tests)
+   * [Dependency](#dependency)
+
+<!-- Added by: <your-user>, at: 2018-02-04T19:38+03:00 -->
+
+<!--te-->
+```
+
+Next time when your file will be changed just repeat the command (`./gh-md-toc
+--insert ...`) and TOC will be refreshed again.
+
 
 Tests
 =====

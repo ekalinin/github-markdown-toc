@@ -18,9 +18,10 @@ load test_helper
     assert_equal "${lines[8]}"  "      * [Remote files](#remote-files)"
     assert_equal "${lines[9]}"  "      * [Multiple files](#multiple-files)"
     assert_equal "${lines[10]}" "      * [Combo](#combo)"
-    assert_equal "${lines[11]}" "   * [Tests](#tests)"
-    assert_equal "${lines[12]}" "   * [Dependency](#dependency)"
-    assert_equal "${lines[13]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[11]}" "      * [Auto insert and update TOC](#auto-insert-and-update-toc)"
+    assert_equal "${lines[12]}" "   * [Tests](#tests)"
+    assert_equal "${lines[13]}" "   * [Dependency](#dependency)"
+    assert_equal "${lines[14]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 
 }
 
@@ -52,13 +53,14 @@ load test_helper
     assert_equal "${lines[6]}"   "      * [Remote files](README.md#remote-files)"
     assert_equal "${lines[7]}"   "      * [Multiple files](README.md#multiple-files)"
     assert_equal "${lines[8]}"   "      * [Combo](README.md#combo)"
-    assert_equal "${lines[9]}"   "   * [Tests](README.md#tests)"
-    assert_equal "${lines[10]}"  "   * [Dependency](README.md#dependency)"
-    assert_equal "${lines[11]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
-    assert_equal "${lines[12]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
-    assert_equal "${lines[13]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
-    assert_equal "${lines[14]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
-    assert_equal "${lines[15]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[9]}"   "      * [Auto insert and update TOC](README.md#auto-insert-and-update-toc)"
+    assert_equal "${lines[10]}"  "   * [Tests](README.md#tests)"
+    assert_equal "${lines[11]}"  "   * [Dependency](README.md#dependency)"
+    assert_equal "${lines[12]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
+    assert_equal "${lines[13]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
+    assert_equal "${lines[14]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
+    assert_equal "${lines[15]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
+    assert_equal "${lines[16]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
 @test "TOC for markdown from stdin" {
@@ -74,8 +76,9 @@ load test_helper
         assert_equal "${lines[6]}"  "      * [Remote files](#remote-files)"
         assert_equal "${lines[7]}"  "      * [Multiple files](#multiple-files)"
         assert_equal "${lines[8]}"  "      * [Combo](#combo)"
-        assert_equal "${lines[9]}"  "   * [Tests](#tests)"
-        assert_equal "${lines[10]}" "   * [Dependency](#dependency)"
+        assert_equal "${lines[9]}"  "      * [Auto insert and update TOC](#auto-insert-and-update-toc)"
+        assert_equal "${lines[10]}" "   * [Tests](#tests)"
+        assert_equal "${lines[11]}" "   * [Dependency](#dependency)"
     }
 }
 
@@ -83,20 +86,20 @@ load test_helper
     run $BATS_TEST_DIRNAME/../gh-md-toc --help
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
-    assert_equal "${lines[4]}" "  gh-md-toc --help        Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version     Show version"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[4]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[5]}" "  gh-md-toc --version             Show version"
 }
 
 @test "no arguments" {
     run $BATS_TEST_DIRNAME/../gh-md-toc
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc src [src]     Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc -             Create TOC for markdown from STDIN"
-    assert_equal "${lines[4]}" "  gh-md-toc --help        Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version     Show version"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[4]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[5]}" "  gh-md-toc --version             Show version"
 }
 
 @test "--version" {

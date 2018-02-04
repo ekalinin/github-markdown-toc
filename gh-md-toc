@@ -80,6 +80,7 @@ gh_toc(){
     local gh_src=$1
     local gh_src_copy=$1
     local gh_ttl_docs=$2
+    local need_replace=$3
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -99,8 +100,36 @@ gh_toc(){
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
         gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
+        if [ "$need_replace" = "yes" ]; then
+            echo
+            echo "!! '$gh_src' is not a local file"
+            echo "!! Can't insert the TOC into it."
+            echo
+        fi
     else
-        gh_toc_md2html "$gh_src" | gh_toc_grab "$gh_src_copy"
+        local toc=`gh_toc_md2html "$gh_src" | gh_toc_grab "$gh_src_copy"`
+        echo "$toc"
+        if [ "$need_replace" = "yes" ]; then
+            local ts="\<\!--ts--\>"
+            local te="\<\!--te--\>"
+            local dt=`date +'%F_%H%M%S'`
+            local ext=".orig.${dt}"
+            local toc_path="${gh_src}.toc.${dt}"
+            local toc_footer="<!-- Added by: `whoami`, at: `date --iso-8601='minutes'` -->"
+            # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
+            # clear old TOC
+            sed -i "${ext}" -e "/${ts}/,/${te}/ {//!d;}" "$gh_src"
+            # create toc file
+            echo "${toc}" > "${toc_path}"
+            echo -e "\n${toc_footer}\n" >> "$toc_path"
+            # insert toc file
+            sed -i "" -e "/${ts}/r ${toc_path}" "$gh_src"
+            echo
+            echo "!! TOC was added into: '$gh_src'"
+            echo "!! Origin version of the file: '${gh_src}${ext}'"
+            echo "!! TOC added into a separate file: '${toc_path}'"
+            echo
+        fi
     fi
 }
 
@@ -141,15 +170,16 @@ gh_toc_get_filename() {
 #
 gh_toc_app() {
     local app_name="gh-md-toc"
+    local need_replace="no"
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name src [src]     Create TOC for a README file (url or local path)"
-        echo "  $app_name -             Create TOC for markdown from STDIN"
-        echo "  $app_name --help        Show help"
-        echo "  $app_name --version     Show version"
+        echo "  $app_name [--insert] src [src]  Create TOC for a README file (url or local path)"
+        echo "  $app_name -                     Create TOC for markdown from STDIN"
+        echo "  $app_name --help                Show help"
+        echo "  $app_name --version             Show version"
         return
     fi
 
@@ -173,10 +203,15 @@ gh_toc_app() {
         return
     fi
 
+    if [ "$1" = '--insert' ]; then
+        need_replace="yes"
+        shift
+    fi
+
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#"
+        gh_toc "$md" "$#" "$need_replace"
     done
 
     echo ""
