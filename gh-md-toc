@@ -118,12 +118,16 @@ gh_toc(){
             local toc_footer="<!-- Added by: `whoami`, at: `date --iso-8601='minutes'` -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
-            sed -i${ext} "/${ts}/,/${te}/{//!d}" "$gh_src"
+            sed -i${ext} "/${ts}/,/${te}/{//!d;}" "$gh_src"
             # create toc file
             echo "${toc}" > "${toc_path}"
             echo -e "\n${toc_footer}\n" >> "$toc_path"
             # insert toc file
-            sed -i "/${ts}/r ${toc_path}" "$gh_src"
+            if [[ "`uname`" == "Darwin" ]]; then
+                sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
+            else
+                sed -i "/${ts}/r ${toc_path}" "$gh_src"
+            fi
             echo
             echo "!! TOC was added into: '$gh_src'"
             echo "!! Origin version of the file: '${gh_src}${ext}'"
