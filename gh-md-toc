@@ -59,6 +59,9 @@ gh_toc_md2html() {
     curl -s --user-agent "$gh_user_agent" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
         $URL
+    if [ "$?" != "0" ]; then
+        echo "XXNetworkErrorXX"
+    fi
 }
 
 #
@@ -100,6 +103,11 @@ gh_toc(){
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
         gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
+        if [ "${PIPESTATUS[0]}" != "0" ]; then
+            echo "Could not load remote document."
+            echo "Please check your url or network connectivity"
+            exit 1
+        fi
         if [ "$need_replace" = "yes" ]; then
             echo
             echo "!! '$gh_src' is not a local file"
@@ -107,7 +115,13 @@ gh_toc(){
             echo
         fi
     else
-        local toc=`gh_toc_md2html "$gh_src" | gh_toc_grab "$gh_src_copy"`
+        local rawhtml=$(gh_toc_md2html "$gh_src")
+        if [ "$rawhtml" == "XXNetworkErrorXX" ]; then
+             echo "Parsing local markdown file requires access to github API"
+             echo "Please make sure curl is installed and check your network connectivity"
+             exit 1
+        fi
+        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             local ts="<\!--ts-->"
