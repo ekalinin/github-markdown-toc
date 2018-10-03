@@ -145,6 +145,8 @@ Table of Contents
 That's all! Now all you need — is copy/paste result from console into original
 README.md.
 
+If you do not want to copy from console you can add `> YOURFILENAME.md` at the end of the command like `./gh-md-toc https://github.com/ekalinin/envirius/blob/master/README.md > table-of-contents.md` and this will store the table of contents to a file named table-of-contents.md in your current folder. 
+
 And here is a result:
 
   * [README.md with TOC](https://github.com/ekalinin/envirius/blob/24ea3be0d3cc03f4235fa4879bb33dc122d0ae29/README.md)
