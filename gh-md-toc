@@ -187,7 +187,7 @@ gh_toc_get_filename() {
 # Options hendlers
 #
 gh_toc_app() {
-    local app_name="gh-md-toc"
+    local app_name=$(basename $0)
     local need_replace="no"
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
