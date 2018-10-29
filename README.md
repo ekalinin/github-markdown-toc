@@ -1,4 +1,5 @@
 gh-md-toc
+just for a free t shirt haha
 =========
 
 gh-md-toc — is for you if you **want to generate TOC** for README.md or
