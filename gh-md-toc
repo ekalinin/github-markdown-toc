@@ -204,7 +204,7 @@ gh_toc_app() {
     local need_replace="no"
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
-		local app_name=$(basename "$0")
+        local app_name=$(basename "$0")
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
