@@ -186,7 +186,7 @@ gh_toc_grab() {
     # find strings that corresponds to template
     grep -E -o '<a.*id="user-content-[^"]*".*</h[1-6]' |
     # remove code tags
-    sed 's/<code>//' | sed 's/<\/code>//' |
+    sed 's/<code>//g' | sed 's/<\/code>//g' |
     # now all rows are like:
     #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
     # format result line
