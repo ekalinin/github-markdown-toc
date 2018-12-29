@@ -186,8 +186,13 @@ gh_toc_grab() {
     #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
     # format result line
     #   * $0 — whole string
+    #   * last element of each row: "</hN" where N in (1,2,3,...)
     echo -e "$(awk -v "gh_url=$1" '{
-    print sprintf("%*s", substr($0, length($0), 1)*3, " ") "* [" substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)"](" gh_url substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8) ")"}' | sed 'y/+/ /; s/%/\\x/g')"
+    level = substr($0, length($0), 1)
+    text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+    href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
+    print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")" }' |
+        sed 'y/+/ /; s/%/\\x/g')"
 }
 
 #

@@ -114,9 +114,9 @@ load test_helper
     assert_success
 
     assert_equal "${lines[2]}"   "   * [envirius](#envirius)"
-    assert_equal "${lines[3]}"   "      * [Идея](#Идея)"
-    assert_equal "${lines[4]}"   "      * [Особенности](#Особенности)"
-    assert_equal "${lines[5]}"   "   * [Установка](#Установка)"
+    assert_equal "${lines[3]}"   "      * [Идея](#идея)"
+    assert_equal "${lines[4]}"   "      * [Особенности](#особенности)"
+    assert_equal "${lines[5]}"   "   * [Установка](#установка)"
 
 
     run $BATS_TEST_DIRNAME/../gh-md-toc \
