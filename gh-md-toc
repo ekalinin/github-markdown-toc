@@ -52,10 +52,15 @@ gh_toc_load() {
 gh_toc_md2html() {
     local gh_file_md=$1
     URL=https://api.github.com/markdown/raw
-    TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+    if [ -z "$GH_TOC_TOKEN" ]; then
+        TOKEN=$GH_TOC_TOKEN
+    else
+        TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+    fi
     if [ -f "$TOKEN" ]; then
         URL="$URL?access_token=$(cat $TOKEN)"
     fi
+    # echo $URL 1>&2
     OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
         $URL)"
