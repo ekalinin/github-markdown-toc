@@ -228,12 +228,13 @@ gh_toc_app() {
     if [ "$1" = '--version' ]; then
         echo "$gh_toc_version"
         echo
-        echo "Kernel:"
-        echo "    `uname -a`"
-        for tool in curl wget grep awk sed; do
+        echo "os:     `lsb_release -d | cut -f 2`"
+        echo "kernel: `cat /proc/version`"
+        echo "shell:  `$SHELL --version`"
         echo
-        echo "$tool:"
-        echo "    `$tool --version | head -n 3`"
+        for tool in curl wget grep awk sed; do
+            printf "%-5s: " $tool
+            echo `$tool --version | head -n 1`
         done
         return
     fi
