@@ -105,7 +105,7 @@ load test_helper
 @test "--version" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --version
     assert_success
-    assert_equal "${lines[0]}" "0.5.1"
+    assert_equal "${lines[0]}" "0.6.0"
 }
 
 @test "TOC for non-english chars, #6, #10" {
