@@ -38,6 +38,7 @@ Table of contents
       * [Multiple files](#multiple-files)
       * [Combo](#combo)
       * [Auto insert and update TOC](#auto-insert-and-update-toc)
+      * [Github token](#github-token)
    * [Tests](#tests)
    * [Dependency](#dependency)
 <!--te-->
@@ -285,6 +286,51 @@ Now check the same file:
 Next time when your file will be changed just repeat the command (`./gh-md-toc
 --insert ...`) and TOC will be refreshed again.
 
+Github token
+------------
+
+All your tokents are [here](https://github.com/settings/tokens).
+
+You will need them if you get an error like this:
+
+```
+Parsing local markdown file requires access to github API
+Error: You exceeded the hourly limit. See: https://developer.github.com/v3/#rate-limiting
+or place github auth token here: ./token.txt
+```
+
+A token can be used as an env variable:
+
+```bash
+➥ GH_TOC_TOKEN=2a2dab...563 ./gh-md-toc README.md
+
+Table of Contents
+=================
+
+* [github\-markdown\-toc](#github-markdown-toc)
+* [Table of Contents](#table-of-contents)
+* [Installation](#installation)
+* [Tests](#tests)
+* [Usage](#usage)
+* [LICENSE](#license)
+```
+
+Or from a file:
+
+```bash
+➥ echo "2a2dab...563" > ./token.txt
+➥ ./gh-md-toc README.md
+
+Table of Contents
+=================
+
+* [github\-markdown\-toc](#github-markdown-toc)
+* [Table of Contents](#table-of-contents)
+* [Installation](#installation)
+* [Tests](#tests)
+* [Usage](#usage)
+* [LICENSE](#license)
+```
 
 Tests
 =====
