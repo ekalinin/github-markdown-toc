@@ -52,7 +52,7 @@ gh_toc_load() {
 gh_toc_md2html() {
     local gh_file_md=$1
     URL=https://api.github.com/markdown/raw
-    if [ -z "$GH_TOC_TOKEN" ]; then
+    if [ ! -z "$GH_TOC_TOKEN" ]; then
         TOKEN=$GH_TOC_TOKEN
     else
         TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
