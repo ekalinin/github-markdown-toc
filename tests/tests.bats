@@ -19,9 +19,10 @@ load test_helper
     assert_equal "${lines[9]}"  "      * [Multiple files](#multiple-files)"
     assert_equal "${lines[10]}" "      * [Combo](#combo)"
     assert_equal "${lines[11]}" "      * [Auto insert and update TOC](#auto-insert-and-update-toc)"
-    assert_equal "${lines[12]}" "   * [Tests](#tests)"
-    assert_equal "${lines[13]}" "   * [Dependency](#dependency)"
-    assert_equal "${lines[14]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[12]}" "      * [Github token](#github-token)"
+    assert_equal "${lines[13]}" "   * [Tests](#tests)"
+    assert_equal "${lines[14]}" "   * [Dependency](#dependency)"
+    assert_equal "${lines[15]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 
 }
 
@@ -54,13 +55,14 @@ load test_helper
     assert_equal "${lines[7]}"   "      * [Multiple files](README.md#multiple-files)"
     assert_equal "${lines[8]}"   "      * [Combo](README.md#combo)"
     assert_equal "${lines[9]}"   "      * [Auto insert and update TOC](README.md#auto-insert-and-update-toc)"
-    assert_equal "${lines[10]}"  "   * [Tests](README.md#tests)"
-    assert_equal "${lines[11]}"  "   * [Dependency](README.md#dependency)"
-    assert_equal "${lines[12]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
-    assert_equal "${lines[13]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
-    assert_equal "${lines[14]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
-    assert_equal "${lines[15]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
-    assert_equal "${lines[16]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[10]}"  "      * [Github token](README.md#github-token)"
+    assert_equal "${lines[11]}"  "   * [Tests](README.md#tests)"
+    assert_equal "${lines[12]}"  "   * [Dependency](README.md#dependency)"
+    assert_equal "${lines[13]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
+    assert_equal "${lines[14]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
+    assert_equal "${lines[15]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
+    assert_equal "${lines[16]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
+    assert_equal "${lines[17]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
 @test "TOC for markdown from stdin" {
@@ -77,8 +79,9 @@ load test_helper
         assert_equal "${lines[7]}"  "      * [Multiple files](#multiple-files)"
         assert_equal "${lines[8]}"  "      * [Combo](#combo)"
         assert_equal "${lines[9]}"  "      * [Auto insert and update TOC](#auto-insert-and-update-toc)"
-        assert_equal "${lines[10]}" "   * [Tests](#tests)"
-        assert_equal "${lines[11]}" "   * [Dependency](#dependency)"
+        assert_equal "${lines[10]}" "      * [Github token](#github-token)"
+        assert_equal "${lines[11]}" "   * [Tests](#tests)"
+        assert_equal "${lines[12]}" "   * [Dependency](#dependency)"
     }
 }
 
