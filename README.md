@@ -289,7 +289,7 @@ Next time when your file will be changed just repeat the command (`./gh-md-toc
 Github token
 ------------
 
-All your tokents are [here](https://github.com/settings/tokens).
+All your tokens are [here](https://github.com/settings/tokens).
 
 You will need them if you get an error like this:
 
