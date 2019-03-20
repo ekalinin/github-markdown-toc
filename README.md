@@ -38,7 +38,7 @@ Table of contents
       * [Multiple files](#multiple-files)
       * [Combo](#combo)
       * [Auto insert and update TOC](#auto-insert-and-update-toc)
-      * [Github token](#github-token)
+      * [GitHub token](#github-token)
    * [Tests](#tests)
    * [Dependency](#dependency)
 <!--te-->
@@ -286,7 +286,7 @@ Now check the same file:
 Next time when your file will be changed just repeat the command (`./gh-md-toc
 --insert ...`) and TOC will be refreshed again.
 
-Github token
+GitHub token
 ------------
 
 All your tokens are [here](https://github.com/settings/tokens).
