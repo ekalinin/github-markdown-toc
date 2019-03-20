@@ -148,7 +148,7 @@ gh_toc(){
             local dt=`date +'%F_%H%M%S'`
             local ext=".orig.${dt}"
             local toc_path="${gh_src}.toc.${dt}"
-            local toc_footer="<!-- Added by: `whoami`, at: `date --iso-8601='minutes'` -->"
+            local toc_footer="<!-- Added by: `whoami`, at: `date` -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
             sed -i${ext} "/${ts}/,/${te}/{//!d;}" "$gh_src"
