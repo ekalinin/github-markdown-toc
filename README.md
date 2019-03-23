@@ -366,3 +366,25 @@ Dependency
   * bats (for unit tests)
 
 Tested on Ubuntu 14.04/14.10 in bash/zsh.
+
+Docker
+==========
+
+* Build
+
+```shell
+docker build -t markdown-toc-generator .
+```
+
+* Run on an URL
+
+```shell
+docker run -it markdown-toc-generator https://github.com/ekalinin/envirius/blob/master/README.md
+```
+
+* Run on a local file (need to share volume with docker)
+
+```shell
+docker run -it -v /data/ekalinin/envirius:/data markdown-toc-generator /data/README.md
+```
+
