@@ -376,13 +376,13 @@ Docker
 docker build -t markdown-toc-generator .
 ```
 
-* Run on URL
+* Run on an URL
 
 ```shell
 docker run -it markdown-toc-generator https://github.com/ekalinin/envirius/blob/master/README.md
 ```
 
-* Run on local (need to share volume with docker)
+* Run on a local file (need to share volume with docker)
 
 ```shell
 docker run -it -v /data/ekalinin/envirius:/data markdown-toc-generator /data/README.md
