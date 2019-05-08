@@ -143,6 +143,12 @@ gh_toc(){
         local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
+            if grep -Fxq "<!--ts-->" $gh_src && grep -Fxq "<!--te-->" $gh_src; then
+                echo "Found markers"
+            else
+                echo "You don't have <!--ts--> or <!--te--> in your file...exiting"
+                exit 1
+            fi
             local ts="<\!--ts-->"
             local te="<\!--te-->"
             local dt=`date +'%F_%H%M%S'`
