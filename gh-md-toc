@@ -96,6 +96,7 @@ gh_toc(){
     local gh_src_copy=$1
     local gh_ttl_docs=$2
     local need_replace=$3
+    local insert_added_by=$4
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -160,7 +161,9 @@ gh_toc(){
             sed -i${ext} "/${ts}/,/${te}/{//!d;}" "$gh_src"
             # create toc file
             echo "${toc}" > "${toc_path}"
-            echo -e "\n${toc_footer}\n" >> "$toc_path"
+            if [ "$insert_added_by" = "yes" ]; then
+                echo -e "\n${toc_footer}\n" >> "$toc_path"
+            fi
             # insert toc file
             if [[ "`uname`" == "Darwin" ]]; then
                 sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
@@ -262,6 +265,12 @@ gh_toc_app() {
 
     if [ "$1" = '--insert' ]; then
         need_replace="yes"
+        shift
+    fi
+
+
+    if [ "$1" = '--insert-added-by' ]; then
+        insert_added_by="yes"
         shift
     fi
 
