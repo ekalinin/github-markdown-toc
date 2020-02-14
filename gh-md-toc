@@ -58,11 +58,11 @@ gh_toc_md2html() {
         TOKEN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
     fi
     if [ -f "$TOKEN" ]; then
-        URL="$URL?access_token=$(cat $TOKEN)"
+        AUTH_HEADER=("-H" "Authorization: token $(cat $TOKEN)")
     fi
     # echo $URL 1>&2
     OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
-        --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
+        --data-binary @"$gh_file_md" -H "Content-Type:text/plain" "${AUTH_HEADER[@]}" \
         $URL)"
 
     if [ "$?" != "0" ]; then
