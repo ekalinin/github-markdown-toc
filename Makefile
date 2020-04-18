@@ -5,5 +5,6 @@ release: test lint
 test:
 	@bats tests
 
+
 lint:
 	@shellcheck -e SC2008 gh-md-toc
