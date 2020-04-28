@@ -174,7 +174,7 @@ gh_toc(){
             fi
             echo "!! TOC was added into: '$gh_src'"
             if [ -z $no_backup ]; then
-		echo "!! Origin version of the file: '${gh_src}${ext}'"
+                echo "!! Origin version of the file: '${gh_src}${ext}'"
                 echo "!! TOC added into a separate file: '${toc_path}'"
 	    fi
             echo
@@ -274,7 +274,7 @@ gh_toc_app() {
 
     if [ "$1" = '--no-backup' ]; then
         need_replace="yes"
-	no_backup="yes"
+        no_backup="yes"
         shift
     fi
     for md in "$@"
