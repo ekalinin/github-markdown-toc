@@ -92,9 +92,10 @@ load test_helper
     assert_success
     assert_equal "${lines[1]}" "Usage:"
     assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[4]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version             Show version"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
 }
 
 @test "no arguments" {
@@ -102,9 +103,10 @@ load test_helper
     assert_success
     assert_equal "${lines[1]}" "Usage:"
     assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[4]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[5]}" "  gh-md-toc --version             Show version"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
 }
 
 @test "--version" {
