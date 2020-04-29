@@ -104,12 +104,6 @@ gh_toc(){
     local need_replace=$3
     local no_backup=$4
 
-    if [ "$gh_src" = "" ]; then
-        echo "Please, enter URL or local path for a README.md"
-        exit 1
-    fi
-
-
     # Show "TOC" string only if working with one document
     if [ "$gh_ttl_docs" = "1" ]; then
 
@@ -182,7 +176,7 @@ gh_toc(){
             if [ -z $no_backup ]; then
                 echo "!! Origin version of the file: '${gh_src}${ext}'"
                 echo "!! TOC added into a separate file: '${toc_path}'"
-	    fi
+            fi
             echo
         fi
     fi
@@ -195,11 +189,11 @@ gh_toc(){
 # It's need if TOC is generated for multiple documents.
 #
 gh_toc_grab() {
-	# if closed <h[1-6]> is on the new line, then move it on the prev line
-	# for example:
-	# 	was: The command <code>foo1</code>
-	# 		 </h1>
-	# 	became: The command <code>foo1</code></h1>
+        # if closed <h[1-6]> is on the new line, then move it on the prev line
+        # for example:
+        #     was: The command <code>foo1</code>
+        #          </h1>
+    #     became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
     # find strings that corresponds to template
     grep -E -o '<a.*id="user-content-[^"]*".*</h[1-6]' |
@@ -275,6 +269,7 @@ gh_toc_app() {
 
     if [ "$1" = '--insert' ]; then
         need_replace="yes"
+        no_backup="yes"
         shift
     fi
 
@@ -283,12 +278,18 @@ gh_toc_app() {
         no_backup="yes"
         shift
     fi
-    for md in "$@"
-    do
+    if [ -z $@ ]; then
+        echo "No file or URL specified defaulting to local README.md"
+        md="README.md"
         echo ""
         gh_toc "$md" "$#" "$need_replace" "$no_backup"
-    done
-
+    else
+        for md in "$@"
+        do
+            echo ""
+            gh_toc "$md" "$#" "$need_replace" "$no_backup"
+        done
+    fi
     echo ""
     echo "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
