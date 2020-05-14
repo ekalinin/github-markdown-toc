@@ -90,7 +90,8 @@ Local files
 Here's an example of TOC creating for a local README.md:
 
 ```bash
-➥ ./gh-md-toc ~/projects/Dockerfile.vim/README.md                                                                                                                                                Вс. марта 22 22:51:46 MSK 2015
+➥ ./gh-md-toc ~/projects/Dockerfile.vim/README.md
+
 
 Table of Contents
 =================
@@ -351,7 +352,8 @@ Useful articles:
 How to run tests:
 
 ```bash
-➥ make test                                                                                                                                                                                                      Пн. марта 23 13:59:27 MSK 2015
+➥ make test                                                                                                                 
+
  ✓ TOC for local README.md
  ✓ TOC for remote README.md
  ✓ TOC for mixed README.md (remote/local)
