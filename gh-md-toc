@@ -62,18 +62,12 @@ gh_toc_md2html() {
         fi
     fi
     if [ ! -z "${TOKEN}" ]; then
-        AUTH_TOKEN_STRING="Authorization: token ${TOKEN}"
-        # echo $URL 1>&2
-        OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
-            --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
-            -H "${AUTH_TOKEN_STRING}" \
-            $URL)"
-    else
-        # echo $URL 1>&2
-        OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
-            --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
-            $URL)"
+        AUTHORIZATION=("-H" "Authorization: token ${TOKEN}")
     fi
+    OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
+        --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
+        "${AUTHORIZATION[@]}" \
+        $URL)"
 
     if [ "$?" != "0" ]; then
         echo "XXNetworkErrorXX"
