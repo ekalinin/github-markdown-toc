@@ -64,7 +64,7 @@ gh_toc_md2html() {
     if [ ! -z "${TOKEN}" ]; then
         AUTHORIZATION=("-H" "Authorization: token ${TOKEN}")
     fi
-    OUTPUT="$(curl -v -s "${gh_user_agent[@]}" \
+    OUTPUT="$(curl -s "${gh_user_agent[@]}" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
         "${AUTHORIZATION[@]}" \
         $URL)"
