@@ -25,7 +25,7 @@
 
 gh_toc_version="0.6.2"
 
-gh_user_agent="\"gh-md-toc v$gh_toc_version\""
+gh_user_agent=("--user-agent" "gh-md-toc v${gh_toc_version}")
 
 #
 # Download rendered into html README.md by its url.
@@ -35,9 +35,9 @@ gh_toc_load() {
     local gh_url=$1
 
     if type curl &>/dev/null; then
-        curl --user-agent "$gh_user_agent" -s "$gh_url"
+        curl "${gh_user_agent[@]}" -s "$gh_url"
     elif type wget &>/dev/null; then
-        wget --user-agent="$gh_user_agent" -qO- "$gh_url"
+        wget "${gh_user_agent[@]}" -qO- "$gh_url"
     else
         echo "Please, install 'curl' or 'wget' and try again."
         exit 1
@@ -64,11 +64,10 @@ gh_toc_md2html() {
     if [ ! -z "${TOKEN}" ]; then
         AUTHORIZATION=("-H" "Authorization: token ${TOKEN}")
     fi
-    OUTPUT="$(curl -s --user-agent "$gh_user_agent" \
+    OUTPUT="$(curl -v -s "${gh_user_agent[@]}" \
         --data-binary @"$gh_file_md" -H "Content-Type:text/plain" \
         "${AUTHORIZATION[@]}" \
         $URL)"
-
     if [ "$?" != "0" ]; then
         echo "XXNetworkErrorXX"
     fi
