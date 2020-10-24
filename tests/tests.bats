@@ -160,3 +160,10 @@ load test_helper
     assert_equal "${lines[5]}"   "      * [The command bar2 is better](#the-command-bar2-is-better)"
     assert_equal "${lines[6]}"   "         * [The command bar3 is the best](#the-command-bar3-is-the-best)"
 }
+
+@test "TOC for text with plus signs, #100" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test_plussign.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "   * [C vs C++](#c-vs-c)"
+}
