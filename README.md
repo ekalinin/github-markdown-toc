@@ -59,6 +59,11 @@ $ curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-
 $ chmod a+x gh-md-toc
 ```
 
+Linux or MacOS (using [homebrew](https://brew.sh/))
+```bash
+$ brew install github-markdown-toc
+```
+
 Linux or macOS (using [Basher](https://github.com/basherpm/basher))
 ```bash
 $ basher install ekalinin/github-markdown-toc
