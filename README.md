@@ -42,6 +42,8 @@ Table of contents
    * [Tests](#tests)
    * [Dependency](#dependency)
    * [Docker](#docker)
+     * [Local](#local)
+     * [Public](#public)
 <!--te-->
 
 
