@@ -47,7 +47,7 @@ gh_toc_load() {
 #
 # Converts local md file into html by GitHub
 #
-# ➥ curl -X POST --data '{"text": "Hello world github/linguist#1 **cool**, and #1!"}' https://api.github.com/markdown
+# -> curl -X POST --data '{"text": "Hello world github/linguist#1 **cool**, and #1!"}' https://api.github.com/markdown
 # <p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>'"
 gh_toc_md2html() {
     local gh_file_md=$1
@@ -184,7 +184,7 @@ gh_toc(){
             if [ -z $no_backup ]; then
                 echo "!! Origin version of the file: '${gh_src}${ext}'"
                 echo "!! TOC added into a separate file: '${toc_path}'"
-	    fi
+        fi
             echo
         fi
     fi
@@ -193,31 +193,50 @@ gh_toc(){
 #
 # Grabber of the TOC from rendered html
 #
-# $1 — a source url of document.
+# $1 - a source url of document.
 # It's need if TOC is generated for multiple documents.
 #
 gh_toc_grab() {
-	# if closed <h[1-6]> is on the new line, then move it on the prev line
-	# for example:
-	# 	was: The command <code>foo1</code>
-	# 		 </h1>
-	# 	became: The command <code>foo1</code></h1>
+    if [ `uname -s` == "OS/390" ]; then
+        grepcmd="pcregrep -o"
+        echoargs=""
+        awkscript='{
+                     level = substr($0, length($0), 1)
+                     text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+                     href = substr($0, match($0, "href=\"([^\"]+)?\"")+6, RLENGTH-7)
+                     print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")"
+                   }'
+    else
+        grepcmd="grep -Eo"
+        echoargs="-e"
+        awkscript='{
+                     level = substr($0, length($0), 1)
+                     text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+                     href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
+                     print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")"
+                   }'
+    fi
+    href_regex='href=\"[^\"]+?\"'
+
+    # if closed <h[1-6]> is on the new line, then move it on the prev line
+    # for example:
+    #   was: The command <code>foo1</code>
+    #        </h1>
+    #   became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
+    
     # find strings that corresponds to template
-    grep -E -o '<a.*id="user-content-[^"]*".*</h[1-6]' |
+    $grepcmd '<a.*id="user-content-[^"]*".*</h[1-6]' |
+    
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
+    
     # now all rows are like:
     #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
     # format result line
-    #   * $0 — whole string
+    #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo -e "$(awk -v "gh_url=$1" '{
-    level = substr($0, length($0), 1)
-    text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
-    href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
-    print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")" }' |
-        sed 'y/+/ /; s/%/\\x/g')"
+    echo $echoargs "$(awk -v "gh_url=$1" "$awkscript" | sed 'y/+/ /; s/%/\\x/g')"
 }
 
 #
@@ -267,7 +286,12 @@ gh_toc_app() {
             mkdir -p "$TMPDIR"
         fi
         local gh_tmp_md
-        gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
+        if [ `uname -s` == "OS/390" ]; then
+            local timestamp=$(date +%m%d%Y%H%M%S)
+            gh_tmp_md="$TMPDIR/tmp.$timestamp"
+        else
+            gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
+        fi
         while read input; do
             echo "$input" >> "$gh_tmp_md"
         done
@@ -299,3 +323,4 @@ gh_toc_app() {
 # Entry point
 #
 gh_toc_app "$@"
+
