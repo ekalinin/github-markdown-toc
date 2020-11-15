@@ -230,6 +230,9 @@ gh_toc_grab() {
     
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
+
+    # remove g-emoji
+    sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
     
     # now all rows are like:
     #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
