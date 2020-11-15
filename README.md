@@ -41,6 +41,7 @@ Table of contents
       * [GitHub token](#github-token)
    * [Tests](#tests)
    * [Dependency](#dependency)
+   * [Docker](#docker)
 <!--te-->
 
 
@@ -381,23 +382,38 @@ Dependency
 Tested on Ubuntu 14.04/14.10 in bash/zsh.
 
 Docker
-==========
+======
+
+Local
+-----
 
 * Build
 
 ```shell
-docker build -t markdown-toc-generator .
+$ docker build -t markdown-toc-generator .
 ```
 
 * Run on an URL
 
 ```shell
-docker run -it markdown-toc-generator https://github.com/ekalinin/envirius/blob/master/README.md
+$ docker run -it markdown-toc-generator https://github.com/ekalinin/envirius/blob/master/README.md
 ```
 
 * Run on a local file (need to share volume with docker)
 
 ```shell
-docker run -it -v /data/ekalinin/envirius:/data markdown-toc-generator /data/README.md
+$ docker run -it -v /data/ekalinin/envirius:/data markdown-toc-generator /data/README.md
 ```
 
+Public
+-------
+
+```shell
+$ docker pull evkalinin/gh-md-toc:0.7.0
+
+$ docker images | grep toc
+evkalinin/gh-md-toc                       0.7.0 0b8db6aed298        11 minutes ago      147MB
+
+$ docker run -it evkalinin/gh-md-toc:0.7.0 \
+    https://github.com/ekalinin/envirius/blob/master/README.md
+```
