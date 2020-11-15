@@ -23,7 +23,9 @@ load test_helper
     assert_equal "${lines[13]}" "   * [Tests](#tests)"
     assert_equal "${lines[14]}" "   * [Dependency](#dependency)"
     assert_equal "${lines[15]}" "   * [Docker](#docker)"
-    assert_equal "${lines[16]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[16]}" "      * [Local](#local)"
+    assert_equal "${lines[17]}" "      * [Public](#public)"
+    assert_equal "${lines[18]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 
 }
 
@@ -60,11 +62,13 @@ load test_helper
     assert_equal "${lines[11]}"  "   * [Tests](README.md#tests)"
     assert_equal "${lines[12]}"  "   * [Dependency](README.md#dependency)"
     assert_equal "${lines[13]}"  "   * [Docker](README.md#docker)"
-    assert_equal "${lines[14]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
-    assert_equal "${lines[15]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
-    assert_equal "${lines[16]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
-    assert_equal "${lines[17]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
-    assert_equal "${lines[18]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[14]}" "      * [Local](README.md#local)"
+    assert_equal "${lines[15]}" "      * [Public](README.md#public)"
+    assert_equal "${lines[16]}"  "   * [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)"
+    assert_equal "${lines[17]}"  "      * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
+    assert_equal "${lines[18]}"  "      * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
+    assert_equal "${lines[19]}"  "      * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
+    assert_equal "${lines[20]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
 }
 
 @test "TOC for markdown from stdin" {
