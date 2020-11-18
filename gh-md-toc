@@ -197,6 +197,25 @@ gh_toc(){
 # It's need if TOC is generated for multiple documents.
 #
 gh_toc_grab() {
+    common_awk_script='
+                     modified_href = ""
+                     split(href, chars, "")
+                     for (i=1;i <= length(href); i++) {
+                         c = chars[i]
+                         res = ""
+                         if (c == "+") {
+                             res = " "
+                         } else {
+                             if (c == "%") {
+                                 res = "\\\\x"
+                             } else {
+                                 res = c ""
+                             }
+                         }
+                         modified_href = modified_href res
+                    }
+                    print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  modified_href ")"
+                    '
     if [ `uname -s` == "OS/390" ]; then
         grepcmd="pcregrep -o"
         echoargs=""
@@ -204,8 +223,8 @@ gh_toc_grab() {
                      level = substr($0, length($0), 1)
                      text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
                      href = substr($0, match($0, "href=\"([^\"]+)?\"")+6, RLENGTH-7)
-                     print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")"
-                   }'
+                     '"$common_awk_script"'
+                }'
     else
         grepcmd="grep -Eo"
         echoargs="-e"
@@ -213,8 +232,8 @@ gh_toc_grab() {
                      level = substr($0, length($0), 1)
                      text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
                      href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
-                     print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  href ")"
-                   }'
+                     '"$common_awk_script"'
+                }'
     fi
     href_regex='href=\"[^\"]+?\"'
 
@@ -239,8 +258,10 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" "$awkscript" | sed 'y/+/ /; s/%/\\x/g')"
+    echo $echoargs "$(awk -v "gh_url=$1" "$awkscript")"
 }
+
+        # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
 
 #
 # Returns filename only from full path or url
