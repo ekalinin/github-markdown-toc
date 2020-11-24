@@ -39,6 +39,7 @@ Table of contents
       * [Combo](#combo)
       * [Auto insert and update TOC](#auto-insert-and-update-toc)
       * [GitHub token](#github-token)
+      * [TOC generation with Github Actions](#toc-generation-with-github-actions)
    * [Tests](#tests)
    * [Dependency](#dependency)
    * [Docker](#docker)
@@ -340,6 +341,32 @@ Table of Contents
 * [Tests](#tests)
 * [Usage](#usage)
 * [LICENSE](#license)
+```
+
+TOC generation with Github Actions
+----------------------------------
+
+Config:
+
+```yaml
+on:
+  push:
+    branches: [main]
+    paths: ['foo.md']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
+          chmod a+x gh-md-toc
+          ./gh-md-toc --insert --no-backup foo.md
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Auto update markdown TOC
 ```
 
 Tests
