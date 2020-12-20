@@ -57,13 +57,13 @@ $ wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-
 $ chmod a+x gh-md-toc
 ```
 
-macOS (manual installation)
+MacOS (manual installation)
 ```bash
 $ curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
 $ chmod a+x gh-md-toc
 ```
 
-Linux or macOS (using [Basher](https://github.com/basherpm/basher))
+Linux or MacOS (using [Basher](https://github.com/basherpm/basher))
 ```bash
 $ basher install ekalinin/github-markdown-toc
 # `gh-md-toc` will automatically be available in the PATH
