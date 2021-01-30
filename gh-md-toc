@@ -177,11 +177,11 @@ gh_toc(){
                 sed -i "/${ts}/r ${toc_path}" "$gh_src"
             fi
             echo
-            if [ $no_backup = "yes" ]; then
+            if [ "${no_backup}" = "yes" ]; then
                 rm ${toc_path} ${gh_src}${ext}
             fi
             echo "!! TOC was added into: '$gh_src'"
-            if [ -z $no_backup ]; then
+            if [ -z "${no_backup}" ]; then
                 echo "!! Origin version of the file: '${gh_src}${ext}'"
                 echo "!! TOC added into a separate file: '${toc_path}'"
         fi
