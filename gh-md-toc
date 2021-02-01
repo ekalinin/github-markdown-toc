@@ -207,7 +207,7 @@ gh_toc_grab() {
                              res = " "
                          } else {
                              if (c == "%") {
-                                 res = "\\\\x"
+                                 res = "\\x"
                              } else {
                                  res = c ""
                              }
