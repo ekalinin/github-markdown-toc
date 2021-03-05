@@ -105,6 +105,7 @@ gh_toc(){
     local gh_ttl_docs=$2
     local need_replace=$3
     local no_backup=$4
+    local no_footer=$5
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -169,7 +170,10 @@ gh_toc(){
             sed -i${ext} "/${ts}/,/${te}/{//!d;}" "$gh_src"
             # create toc file
             echo "${toc}" > "${toc_path}"
-            echo -e "\n${toc_footer}\n" >> "$toc_path"
+            if [ "${no_footer}" != "yes" ]; then
+                echo -e "\n${toc_footer}\n" >> "$toc_path"
+            fi
+
             # insert toc file
             if [[ "`uname`" == "Darwin" ]]; then
                 sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
@@ -281,8 +285,8 @@ gh_toc_app() {
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name [--insert] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [--insert] [--hide-footer] src [src]  Create TOC for a README file (url or local path)"
+        echo "  $app_name [--no-backup] [--hide-footer] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
@@ -333,10 +337,17 @@ gh_toc_app() {
         no_backup="yes"
         shift
     fi
+
+    if [ "$1" = '--hide-footer' ]; then
+        need_replace="yes"
+        no_footer="yes"
+        shift
+    fi
+
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer"
     done
 
     echo ""
