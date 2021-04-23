@@ -218,7 +218,7 @@ gh_toc_grab() {
                          }
                          modified_href = modified_href res
                     }
-                    print sprintf("%*s", level*3, " ") "* [" text "](" gh_url  modified_href ")"
+                    print sprintf("%*s", (level-1)*3, "") "* [" text "](" gh_url  modified_href ")"
                     '
     if [ `uname -s` == "OS/390" ]; then
         grepcmd="pcregrep -o"
