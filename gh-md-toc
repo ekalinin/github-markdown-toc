@@ -14,7 +14,7 @@
 #       substr($0, length($0), 1)
 #
 #  3.2 Get level from 3.1 and insert corresponding number of spaces before '*':
-#       sprintf("%*s", substr($0, length($0), 1)*3, " ")
+#       sprintf("%*s", (level-1)*'"$nb_spaces"', "")
 #
 #  4. Find head's text and insert it inside "* [ ... ]":
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
@@ -22,6 +22,8 @@
 #  5. Find anchor and insert it inside "(...)":
 #       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
 #
+
+#set -x
 
 gh_toc_version="0.7.0"
 
@@ -106,6 +108,7 @@ gh_toc(){
     local need_replace=$3
     local no_backup=$4
     local no_footer=$5
+    local indent=$6
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -150,7 +153,7 @@ gh_toc(){
              echo "or place GitHub auth token here: ${TOKEN_FILE}"
              exit 1
         fi
-        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy"`
+        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" $gh_src && grep -Fxq "<!--te-->" $gh_src; then
@@ -198,7 +201,8 @@ gh_toc(){
 # Grabber of the TOC from rendered html
 #
 # $1 - a source url of document.
-# It's need if TOC is generated for multiple documents.
+#      It's need if TOC is generated for multiple documents.
+# $2 - number of spaces used to indent.
 #
 gh_toc_grab() {
     common_awk_script='
@@ -218,7 +222,7 @@ gh_toc_grab() {
                          }
                          modified_href = modified_href res
                     }
-                    print sprintf("%*s", (level-1)*3, "") "* [" text "](" gh_url  modified_href ")"
+                    print sprintf("%*s", (level-1)*'"$2"', "") "* [" text "](" gh_url  modified_href ")"
                     '
     if [ `uname -s` == "OS/390" ]; then
         grepcmd="pcregrep -o"
@@ -279,14 +283,15 @@ gh_toc_get_filename() {
 #
 gh_toc_app() {
     local need_replace="no"
+    local indent=3
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         local app_name=$(basename "$0")
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name [--insert] [--hide-footer] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] [--hide-footer] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [--insert] [--hide-footer] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
+        echo "  $app_name [--no-backup] [--hide-footer] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
@@ -344,10 +349,16 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--indent' ]; then
+        indent="$2"
+        shift 2
+    fi
+    echo "indent: $indent"
+
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent"
     done
 
     echo ""
