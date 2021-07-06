@@ -28,8 +28,6 @@ Table of contents
 =================
 
 <!--ts-->
-   * [gh-md-toc](#gh-md-toc)
-   * [Table of contents](#table-of-contents)
    * [Installation](#installation)
    * [Usage](#usage)
       * [STDIN](#stdin)
