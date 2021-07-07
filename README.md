@@ -1,8 +1,8 @@
 gh-md-toc
 =========
 
-gh-md-toc — is for you if you **want to generate TOC** for README.md or
-GitHub's wiki page and **don't want to install any additional software**.
+gh-md-toc — is for you if you **want to generate TOC** (Table Of Content) for a README.md or
+a GitHub wiki page **without installing additional software**.
 
 It's my try to fix a problem:
 
