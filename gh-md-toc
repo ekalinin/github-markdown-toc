@@ -106,6 +106,8 @@ gh_toc(){
     local need_replace=$3
     local no_backup=$4
     local no_footer=$5
+    local auto=$6
+    local head=$7
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -153,14 +155,38 @@ gh_toc(){
         local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
+            local ts="<\!--ts-->"
+            local te="<\!--te-->"
             if grep -Fxq "<!--ts-->" $gh_src && grep -Fxq "<!--te-->" $gh_src; then
                 echo "Found markers"
             else
-                echo "You don't have <!--ts--> or <!--te--> in your file...exiting"
-                exit 1
+                if [ "$auto" = "yes" ]; then
+                    echo ""
+                    if [ "$head" = "yes" ]; then
+                        echo "!!! TOC will be automatically generated at the $gh_src head."
+                        # insert toc file
+                        if [[ "$(uname)" == "Darwin" ]]; then
+                            sed -i "" "1i\\
+${te}
+              " "$gh_src"
+                            sed -i "" "1i\\
+${ts}
+              " "$gh_src"
+                        else
+                            sed -i "1i\\${te}" "$gh_src"
+                            sed -i "1i\\${ts}" "$gh_src"
+                        fi
+                    else
+                        echo "!!! TOC will be automatically generated at the $gh_src end."
+                        echo "<!--ts-->" >>$gh_src
+                        echo "<!--te-->" >>$gh_src
+                    fi
+
+                else
+                    echo "You don't have <!--ts--> or <!--te--> in your file...exiting"
+                    exit 1
+                fi
             fi
-            local ts="<\!--ts-->"
-            local te="<\!--te-->"
             local dt=`date +'%F_%H%M%S'`
             local ext=".orig.${dt}"
             local toc_path="${gh_src}.toc.${dt}"
@@ -275,11 +301,20 @@ gh_toc_get_filename() {
 }
 
 #
+# Find all Markdown files for non-hidden folders
+#
+gh_all_md_filename() {
+    all_md_filename=""
+    while IFS= read -r -d $'\0'; do
+        all_md_filename=" $all_md_filename $REPLY"
+    done < <(find . -path "*\/\.*" -prune -o -type f -name "*.md" -print0)
+    echo "$all_md_filename"
+}
+
+#
 # Options handlers
 #
 gh_toc_app() {
-    local need_replace="no"
-
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         local app_name=$(basename "$0")
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
@@ -287,6 +322,9 @@ gh_toc_app() {
         echo "Usage:"
         echo "  $app_name [--insert] [--hide-footer] src [src]  Create TOC for a README file (url or local path)"
         echo "  $app_name [--no-backup] [--hide-footer] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name --all                 Find all Markdown files for non-hidden folders"
+        echo "  $app_name --auto                Ignore ts/te tags, Automatically at the end/head of the file"
+        echo "  $app_name --head                The TOC is generated in the header of the file, requires --auto"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
@@ -338,16 +376,42 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--auto' ]; then
+        auto="yes"
+        shift
+    fi
+
+    if [ "$1" = '--head' ]; then
+        head="yes"
+        shift
+    fi
+
     if [ "$1" = '--hide-footer' ]; then
         need_replace="yes"
         no_footer="yes"
         shift
     fi
 
-    for md in "$@"
-    do
+    if [ "$1" = '--all' ]; then
+        gh_toc_app `gh_all_md_filename`
+        return
+    fi
+
+    if [ "$need_replace" != "yes" ]; then
+        need_replace="no"
+    fi
+
+    base_path=$(pwd)
+    for md in "$@"; do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer"
+        dir_path=${md%/*}
+        md=${md##*/}
+        if [ ! "$dir_path" == "$md" ]; then
+            cd "$dir_path" || exit
+        fi
+
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$auto" "$head"
+        cd "$base_path" || exit
     done
 
     echo ""

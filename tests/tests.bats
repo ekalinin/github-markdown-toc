@@ -95,22 +95,28 @@ load test_helper
     run $BATS_TEST_DIRNAME/../gh-md-toc --help
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
-    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[4]}" "  gh-md-toc --all                 Find all Markdown files for non-hidden folders"
+    assert_equal "${lines[5]}" "  gh-md-toc --auto                Ignore ts/te tags, Automatically at the end/head of the file"
+    assert_equal "${lines[6]}" "  gh-md-toc --head                The TOC is generated in the header of the file, requires --auto"
+    assert_equal "${lines[7]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[8]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[9]}" "  gh-md-toc --version             Show version"
 }
 
 @test "no arguments" {
     run $BATS_TEST_DIRNAME/../gh-md-toc
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
-    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[4]}" "  gh-md-toc --all                 Find all Markdown files for non-hidden folders"
+    assert_equal "${lines[5]}" "  gh-md-toc --auto                Ignore ts/te tags, Automatically at the end/head of the file"
+    assert_equal "${lines[6]}" "  gh-md-toc --head                The TOC is generated in the header of the file, requires --auto"
+    assert_equal "${lines[7]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[8]}" "  gh-md-toc --help                Show help"
+    assert_equal "${lines[9]}" "  gh-md-toc --version             Show version"
 }
 
 @test "--version" {
@@ -166,4 +172,35 @@ load test_helper
     assert_success
 
     assert_equal "${lines[2]}"   "   * [C vs C++](#c-vs-c)"
+}
+
+@test "TOC for local all" {
+	run $BATS_TEST_DIRNAME/../gh-md-toc --all
+	assert_success
+
+	assert_equal "${lines[0]}" "   * [The command foo1](test_backquote.md#the-command-foo1)"
+	assert_equal "${lines[1]}" "      * [The command foo2 is better](test_backquote.md#the-command-foo2-is-better)"
+	assert_equal "${lines[2]}" "   * [The command bar1](test_backquote.md#the-command-bar1)"
+	assert_equal "${lines[3]}" "      * [The command bar2 is better](test_backquote.md#the-command-bar2-is-better)"
+	assert_equal "${lines[4]}" "         * [The command bar3 is the best](test_backquote.md#the-command-bar3-is-the-best)"
+
+	assert_equal "${lines[5]}" "   * [C vs C++](test_plussign.md#c-vs-c)"
+
+	assert_equal "${lines[6]}" "   * [gh-md-toc](README.md#gh-md-toc)"
+	assert_equal "${lines[7]}" "   * [Table of contents](README.md#table-of-contents)"
+	assert_equal "${lines[8]}" "   * [Installation](README.md#installation)"
+	assert_equal "${lines[9]}" "   * [Usage](README.md#usage)"
+	assert_equal "${lines[10]}" "      * [STDIN](README.md#stdin)"
+	assert_equal "${lines[11]}" "      * [Local files](README.md#local-files)"
+	assert_equal "${lines[12]}" "      * [Remote files](README.md#remote-files)"
+	assert_equal "${lines[13]}" "      * [Multiple files](README.md#multiple-files)"
+	assert_equal "${lines[14]}" "      * [Combo](README.md#combo)"
+	assert_equal "${lines[15]}" "      * [Auto insert and update TOC](README.md#auto-insert-and-update-toc)"
+	assert_equal "${lines[16]}" "      * [GitHub token](README.md#github-token)"
+	assert_equal "${lines[17]}" "      * [TOC generation with Github Actions](README.md#toc-generation-with-github-actions)"
+	assert_equal "${lines[18]}" "   * [Tests](README.md#tests)"
+	assert_equal "${lines[19]}" "   * [Dependency](README.md#dependency)"
+	assert_equal "${lines[20]}" "   * [Docker](README.md#docker)"
+	assert_equal "${lines[21]}" "      * [Local](README.md#local)"
+	assert_equal "${lines[22]}" "      * [Public](README.md#public)"
 }
