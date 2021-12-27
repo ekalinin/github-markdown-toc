@@ -65,13 +65,22 @@ gh_toc_md2html() {
         AUTHORIZATION="Authorization: token ${TOKEN}"
     fi
 
+    local gh_tmp_file_md=$gh_file_md
+    if grep -Fxq "<!--te-->" $gh_src; then
+      # cut everything before the toc
+      gh_tmp_file_md=$gh_file_md~~
+      sed '1,/<!--te-->/d' $gh_file_md > $gh_tmp_file_md
+
+    fi
+
     # echo $URL 1>&2
     OUTPUT=$(curl -s \
         --user-agent "$gh_user_agent" \
-        --data-binary @"$gh_file_md" \
+        --data-binary @"$gh_tmp_file_md" \
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
         "$URL")
+    rm -f $gh_file_md~~
 
     if [ "$?" != "0" ]; then
         echo "XXNetworkErrorXX"
