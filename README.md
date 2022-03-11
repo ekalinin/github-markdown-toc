@@ -229,7 +229,7 @@ You can easily combine both ways:
     * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)
     * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
 Auto insert and update TOC
@@ -266,7 +266,7 @@ Table of Contents
 !! TOC added into a separate file: 'README.test.md.toc.2018-02-04_192655'
 
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
 Now check the same file:
