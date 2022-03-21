@@ -361,7 +361,8 @@ jobs:
       - run: |
           curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
           chmod a+x gh-md-toc
-          ./gh-md-toc --insert --no-backup foo.md
+          ./gh-md-toc --insert --no-backup --hide-footer foo.md
+          rm gh-md-toc
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Auto update markdown TOC
