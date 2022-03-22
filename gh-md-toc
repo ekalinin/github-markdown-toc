@@ -175,7 +175,7 @@ gh_toc(){
             fi
 
             # insert toc file
-            if [[ "`uname`" == "Darwin" ]]; then
+            if ! sed --version > /dev/null 2>&1; then
                 sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
             else
                 sed -i "/${ts}/r ${toc_path}" "$gh_src"
