@@ -1,6 +1,9 @@
 gh-md-toc
 =========
 
+[![CI](https://github.com/ekalinin/github-markdown-toc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ekalinin/github-markdown-toc/actions/workflows/ci.yml)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/ekalinin/github-markdown-toc)
+
 gh-md-toc — is for you if you **want to generate TOC** (Table Of Content) for a README.md or
 a GitHub wiki page **without installing additional software**.
 
@@ -21,8 +24,6 @@ better to use a golang based implementation:
 
 It's more solid, reliable and with ability of a parallel processing. And
 absolutely without dependencies.
-
-[![Build Status](https://travis-ci.org/ekalinin/github-markdown-toc.svg?branch=master)](https://travis-ci.org/ekalinin/github-markdown-toc)
 
 Table of contents
 =================
@@ -229,7 +230,7 @@ You can easily combine both ways:
     * [Usage](https://github.com/ekalinin/sitemap.js/blob/master/README.md#usage)
     * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
 Auto insert and update TOC
@@ -266,7 +267,7 @@ Table of Contents
 !! TOC added into a separate file: 'README.test.md.toc.2018-02-04_192655'
 
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
 Now check the same file:
@@ -359,9 +360,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
+          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/0.8.0/gh-md-toc -o gh-md-toc
           chmod a+x gh-md-toc
-          ./gh-md-toc --insert --no-backup foo.md
+          ./gh-md-toc --insert --no-backup --hide-footer foo.md
+          rm gh-md-toc
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Auto update markdown TOC
@@ -370,7 +372,7 @@ jobs:
 Tests
 =====
 
-Done with [bats](https://github.com/sstephenson/bats).
+Done with [bats](https://github.com/bats-core/bats-core).
 Useful articles:
 
   * https://blog.engineyard.com/2014/bats-test-command-line-tools

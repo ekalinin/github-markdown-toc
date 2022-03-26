@@ -14,7 +14,7 @@
 #       substr($0, length($0), 1)
 #
 #  3.2 Get level from 3.1 and insert corresponding number of spaces before '*':
-#       sprintf("%*s", substr($0, length($0), 1)*3, " ")
+#       sprintf("%*s", (level-1)*'"$nb_spaces"', "")
 #
 #  4. Find head's text and insert it inside "* [ ... ]":
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
@@ -119,7 +119,8 @@ gh_toc(){
     local need_replace=$3
     local no_backup=$4
     local no_footer=$5
-    local skip_header=$6
+    local indent=$6
+    local skip_header=$7
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -138,7 +139,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -164,7 +165,7 @@ gh_toc(){
              echo "or place GitHub auth token here: ${TOKEN_FILE}"
              exit 1
         fi
-        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy"`
+        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" $gh_src && grep -Fxq "<!--te-->" $gh_src; then
@@ -178,6 +179,7 @@ gh_toc(){
             local dt=`date +'%F_%H%M%S'`
             local ext=".orig.${dt}"
             local toc_path="${gh_src}.toc.${dt}"
+            local toc_createdby="<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
             local toc_footer="<!-- Added by: `whoami`, at: `date` -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
@@ -185,11 +187,11 @@ gh_toc(){
             # create toc file
             echo "${toc}" > "${toc_path}"
             if [ "${no_footer}" != "yes" ]; then
-                echo -e "\n${toc_footer}\n" >> "$toc_path"
+                echo -e "\n${toc_createdby}\n${toc_footer}\n" >> "$toc_path"
             fi
 
             # insert toc file
-            if [[ "`uname`" == "Darwin" ]]; then
+            if ! sed --version > /dev/null 2>&1; then
                 sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
             else
                 sed -i "/${ts}/r ${toc_path}" "$gh_src"
@@ -212,7 +214,8 @@ gh_toc(){
 # Grabber of the TOC from rendered html
 #
 # $1 - a source url of document.
-# It's need if TOC is generated for multiple documents.
+#      It's need if TOC is generated for multiple documents.
+# $2 - number of spaces used to indent.
 #
 gh_toc_grab() {
     common_awk_script='
@@ -232,7 +235,7 @@ gh_toc_grab() {
                          }
                          modified_href = modified_href res
                     }
-                    print sprintf("%*s", (level-1)*3, "") "* [" text "](" gh_url  modified_href ")"
+                    print sprintf("%*s", (level-1)*'"$2"', "") "* [" text "](" gh_url  modified_href ")"
                     '
     if [ `uname -s` == "OS/390" ]; then
         grepcmd="pcregrep -o"
@@ -293,14 +296,15 @@ gh_toc_get_filename() {
 #
 gh_toc_app() {
     local need_replace="no"
+    local indent=3
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         local app_name=$(basename "$0")
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name [--insert] [--hide-footer] [--skip-header] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
+        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header]  [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
@@ -321,6 +325,11 @@ gh_toc_app() {
         return
     fi
 
+    if [ "$1" = '--indent' ]; then
+        indent="$2"
+        shift
+    fi
+
     if [ "$1" = "-" ]; then
         if [ -z "$TMPDIR" ]; then
             TMPDIR="/tmp"
@@ -337,7 +346,7 @@ gh_toc_app() {
         while read input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab ""
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
         return
     fi
 
@@ -367,11 +376,11 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$skip_header"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header"
     done
 
     echo ""
-    echo "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    echo "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 }
 
 #

@@ -26,7 +26,7 @@ load test_helper
     assert_equal "${lines[16]}" "* [Docker](#docker)"
     assert_equal "${lines[17]}" "   * [Local](#local)"
     assert_equal "${lines[18]}" "   * [Public](#public)"
-    assert_equal "${lines[19]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[19]}" "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 
 }
 
@@ -64,7 +64,7 @@ load test_helper
     assert_equal "${lines[3]}"  "   * [Installation](#installation)"
     assert_equal "${lines[4]}"  "   * [Usage](#usage)"
     assert_equal "${lines[5]}"  "   * [License](#license)"
-    assert_equal "${lines[6]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[6]}"  "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 }
 
 @test "TOC for mixed README.md (remote/local)" {
@@ -94,7 +94,7 @@ load test_helper
     assert_equal "${lines[18]}"  "   * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)"
     assert_equal "${lines[19]}"  "   * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)"
     assert_equal "${lines[20]}"  "   * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)"
-    assert_equal "${lines[21]}"  "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[21]}"  "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 }
 
 @test "TOC for markdown from stdin" {
@@ -122,8 +122,8 @@ load test_helper
     run $BATS_TEST_DIRNAME/../gh-md-toc --help
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
     assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
     assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
     assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
@@ -133,8 +133,8 @@ load test_helper
     run $BATS_TEST_DIRNAME/../gh-md-toc
     assert_success
     assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
     assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
     assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
     assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
