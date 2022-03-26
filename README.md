@@ -1,6 +1,9 @@
 gh-md-toc
 =========
 
+[![CI](https://github.com/ekalinin/github-markdown-toc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ekalinin/github-markdown-toc/actions/workflows/ci.yml)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/ekalinin/github-markdown-toc)
+
 gh-md-toc — is for you if you **want to generate TOC** (Table Of Content) for a README.md or
 a GitHub wiki page **without installing additional software**.
 
@@ -21,8 +24,6 @@ better to use a golang based implementation:
 
 It's more solid, reliable and with ability of a parallel processing. And
 absolutely without dependencies.
-
-[![Build Status](https://travis-ci.org/ekalinin/github-markdown-toc.svg?branch=master)](https://travis-ci.org/ekalinin/github-markdown-toc)
 
 Table of contents
 =================
