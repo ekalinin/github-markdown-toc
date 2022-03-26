@@ -370,7 +370,7 @@ jobs:
 Tests
 =====
 
-Done with [bats](https://github.com/sstephenson/bats).
+Done with [bats](https://github.com/bats-core/bats-core).
 Useful articles:
 
   * https://blog.engineyard.com/2014/bats-test-command-line-tools
