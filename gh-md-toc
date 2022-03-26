@@ -125,7 +125,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -311,6 +311,11 @@ gh_toc_app() {
         return
     fi
 
+    if [ "$1" = '--indent' ]; then
+        indent="$2"
+        shift
+    fi
+
     if [ "$1" = "-" ]; then
         if [ -z "$TMPDIR" ]; then
             TMPDIR="/tmp"
@@ -327,7 +332,7 @@ gh_toc_app() {
         while read input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab ""
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
         return
     fi
 
@@ -347,12 +352,6 @@ gh_toc_app() {
         no_footer="yes"
         shift
     fi
-
-    if [ "$1" = '--indent' ]; then
-        indent="$2"
-        shift 2
-    fi
-    echo "indent: $indent"
 
     for md in "$@"
     do
