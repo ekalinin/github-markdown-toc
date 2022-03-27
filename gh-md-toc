@@ -304,7 +304,7 @@ gh_toc_app() {
         echo ""
         echo "Usage:"
         echo "  $app_name [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header]  [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
