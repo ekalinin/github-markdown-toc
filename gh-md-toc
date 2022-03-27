@@ -51,6 +51,8 @@ gh_toc_load() {
 # <p>Hello world github/linguist#1 <strong>cool</strong>, and #1!</p>'"
 gh_toc_md2html() {
     local gh_file_md=$1
+    local skip_header=$2
+
     URL=https://api.github.com/markdown/raw
 
     if [ ! -z "$GH_TOC_TOKEN" ]; then
@@ -65,13 +67,24 @@ gh_toc_md2html() {
         AUTHORIZATION="Authorization: token ${TOKEN}"
     fi
 
+    local gh_tmp_file_md=$gh_file_md
+    if [ "$skip_header" = "yes" ]; then
+        if grep -Fxq "<!--te-->" $gh_src; then
+          # cut everything before the toc
+          gh_tmp_file_md=$gh_file_md~~
+          sed '1,/<!--te-->/d' $gh_file_md > $gh_tmp_file_md
+        fi
+    fi
+
     # echo $URL 1>&2
     OUTPUT=$(curl -s \
         --user-agent "$gh_user_agent" \
-        --data-binary @"$gh_file_md" \
+        --data-binary @"$gh_tmp_file_md" \
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
         "$URL")
+
+    rm -f $gh_file_md~~
 
     if [ "$?" != "0" ]; then
         echo "XXNetworkErrorXX"
@@ -107,6 +120,7 @@ gh_toc(){
     local no_backup=$4
     local no_footer=$5
     local indent=$6
+    local skip_header=$7
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -138,7 +152,7 @@ gh_toc(){
             echo
         fi
     else
-        local rawhtml=$(gh_toc_md2html "$gh_src")
+        local rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
         if [ "$rawhtml" == "XXNetworkErrorXX" ]; then
              echo "Parsing local markdown file requires access to github API"
              echo "Please make sure curl is installed and check your network connectivity"
@@ -250,16 +264,16 @@ gh_toc_grab() {
     #        </h1>
     #   became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
-    
+
     # find strings that corresponds to template
     $grepcmd '<a.*id="user-content-[^"]*".*</h[1-6]' |
-    
+
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
 
     # remove g-emoji
     sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
-    
+
     # now all rows are like:
     #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
     # format result line
@@ -289,8 +303,8 @@ gh_toc_app() {
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name [--insert] [--hide-footer] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] [--hide-footer] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
+        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
@@ -353,10 +367,16 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--skip-header' ]; then
+        skip_header="yes"
+        shift
+    fi
+
+
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header"
     done
 
     echo ""
