@@ -118,26 +118,31 @@ load test_helper
     }
 }
 
+test_help() {
+    assert_equal "${lines[1]}"  "Usage:"
+    assert_equal "${lines[2]}"  "  gh-md-toc [options] src [src]   Create TOC for a README file (url or local path)"
+    assert_equal "${lines[3]}"  "  gh-md-toc -                     Create TOC for markdown from STDIN"
+    assert_equal "${lines[4]}"  "  gh-md-toc --help                Show help"
+    assert_equal "${lines[5]}"  "  gh-md-toc --version             Show version"
+    assert_equal "${lines[6]}"  "Options:"
+    assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
+    assert_equal "${lines[8]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[10]}" "  --no-backup         Remove backup file. Set --insert as well. Defaul: false."
+    assert_equal "${lines[11]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[12]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "14"
+}
+
 @test "--help" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --help
     assert_success
-    assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
-    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
+    test_help
 }
 
 @test "no arguments" {
     run $BATS_TEST_DIRNAME/../gh-md-toc
     assert_success
-    assert_equal "${lines[1]}" "Usage:"
-    assert_equal "${lines[2]}" "  gh-md-toc [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
-    assert_equal "${lines[3]}" "  gh-md-toc [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
-    assert_equal "${lines[4]}" "  gh-md-toc -                     Create TOC for markdown from STDIN"
-    assert_equal "${lines[5]}" "  gh-md-toc --help                Show help"
-    assert_equal "${lines[6]}" "  gh-md-toc --version             Show version"
+    test_help
 }
 
 @test "--version" {

@@ -303,11 +303,20 @@ gh_toc_app() {
         echo "GitHub TOC generator ($app_name): $gh_toc_version"
         echo ""
         echo "Usage:"
-        echo "  $app_name [--insert] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC for a README file (url or local path)"
-        echo "  $app_name [--no-backup] [--hide-footer] [--skip-header] [--indent #spaces] src [src]  Create TOC without backup, requires <!--ts--> / <!--te--> placeholders"
+        echo "  $app_name [options] src [src]   Create TOC for a README file (url or local path)"
         echo "  $app_name -                     Create TOC for markdown from STDIN"
         echo "  $app_name --help                Show help"
         echo "  $app_name --version             Show version"
+        echo ""
+        echo "Options:"
+        echo "  --indent <NUM>      Set indent size. Default: 3."
+        echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
+        echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
+        echo "  --no-backup         Remove backup file. Set --insert as well. Defaul: false."
+        echo "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+        echo "  --skip-header       Hide entry of the topmost headlines. Default: false."
+        echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
+        echo ""
         return
     fi
 
@@ -387,4 +396,3 @@ gh_toc_app() {
 # Entry point
 #
 gh_toc_app "$@"
-
