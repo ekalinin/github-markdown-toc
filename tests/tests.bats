@@ -51,7 +51,7 @@ load test_helper
     assert_equal "${lines[14]}" "* [Docker](#docker)"
     assert_equal "${lines[15]}" "   * [Local](#local)"
     assert_equal "${lines[16]}" "   * [Public](#public)"
-    assert_equal "${lines[17]}" "Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)"
+    assert_equal "${lines[17]}" "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 
 }
 @test "TOC for remote README.md" {
