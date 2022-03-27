@@ -149,6 +149,8 @@ test_help() {
     run $BATS_TEST_DIRNAME/../gh-md-toc --version
     assert_success
     assert_equal "${lines[0]}" "0.8.0"
+    assert_equal "${lines[1]}" "os:     `uname -s`"
+    assert_equal "${lines[2]}" "arch:   `uname -m`"
 }
 
 @test "TOC for non-english chars, #6, #10" {
