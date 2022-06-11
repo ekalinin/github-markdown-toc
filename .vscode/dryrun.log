@@ -1,0 +1,8 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/sungminyou/Workspace/personal/github-markdown-toc'
+bats tests
+shellcheck -e SC2008 gh-md-toc
+git tag `grep -o -E '[0-9]\.[0-9]\.[0-9]{1,2}' gh-md-toc`
+git push --tags origin master
+make: Leaving directory `/Users/sungminyou/Workspace/personal/github-markdown-toc'
+ 
