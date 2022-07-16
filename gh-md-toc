@@ -349,7 +349,7 @@ gh_toc_app() {
 
     if [ "$1" = '--indent' ]; then
         indent="$2"
-        shift
+        shift 2
     fi
 
     if [ "$1" = "-" ]; then
