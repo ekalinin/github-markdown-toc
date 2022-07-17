@@ -203,7 +203,7 @@ test_help() {
 }
 
 @test "Toc for file path with space, #136" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_filepathwithspace.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc --insert tests/test\ directory/test_filepathwithspace.md
     assert_success
 
     assert_equal "${lines[2]}"   "* [Title](#title)"
