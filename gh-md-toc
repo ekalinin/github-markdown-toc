@@ -323,7 +323,7 @@ show_help() {
     echo "  --indent <NUM>      Set indent size. Default: 3."
     echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
-    echo "  --no-backup         Remove backup file. Set --insert as well. Defaul: false."
+    echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     echo "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
     echo "  --skip-header       Hide entry of the topmost headlines. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
@@ -349,7 +349,7 @@ gh_toc_app() {
 
     if [ "$1" = '--indent' ]; then
         indent="$2"
-        shift
+        shift 2
     fi
 
     if [ "$1" = "-" ]; then

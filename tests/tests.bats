@@ -127,7 +127,7 @@ test_help() {
     assert_equal "${lines[6]}"  "Options:"
     assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
     assert_equal "${lines[8]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[10]}" "  --no-backup         Remove backup file. Set --insert as well. Defaul: false."
+    assert_equal "${lines[10]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     assert_equal "${lines[11]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
     assert_equal "${lines[12]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
     assert_equal "${#lines[@]}"  "14"
