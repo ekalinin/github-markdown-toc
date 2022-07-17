@@ -201,3 +201,11 @@ test_help() {
 
     assert_equal "${lines[2]}" "* [C vs C++](#c-vs-c)"
 }
+
+@test "Toc for file path with space, #136" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_filepathwithspace.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [Title](#title)"
+    assert_equal "${lines[3]}"   "   * [This is test for file path with space](#this-is-test-for-file-path-with-space)"
+}
