@@ -69,7 +69,7 @@ gh_toc_md2html() {
 
     local gh_tmp_file_md=$gh_file_md
     if [ "$skip_header" = "yes" ]; then
-        if grep -Fxq "<!--te-->" $gh_src; then
+        if grep -Fxq "<!--te-->" "$gh_src"; then
           # cut everything before the toc
           gh_tmp_file_md=$gh_file_md~~
           sed '1,/<!--te-->/d' $gh_file_md > $gh_tmp_file_md
@@ -168,7 +168,7 @@ gh_toc(){
         local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
-            if grep -Fxq "<!--ts-->" $gh_src && grep -Fxq "<!--te-->" $gh_src; then
+            if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
                 echo "Found markers"
             else
                 echo "You don't have <!--ts--> or <!--te--> in your file...exiting"
@@ -198,7 +198,7 @@ gh_toc(){
             fi
             echo
             if [ "${no_backup}" = "yes" ]; then
-                rm ${toc_path} ${gh_src}${ext}
+                rm "$toc_path" "$gh_src$ext"
             fi
             echo "!! TOC was added into: '$gh_src'"
             if [ -z "${no_backup}" ]; then
