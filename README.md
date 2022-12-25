@@ -375,7 +375,7 @@ Tests
 Done with [bats](https://github.com/bats-core/bats-core).
 Useful articles:
 
-  * https://blog.engineyard.com/2014/bats-test-command-line-tools
+  * https://www.engineyard.com/blog/how-to-use-bats-to-test-your-command-line-tools/
   * http://blog.spike.cx/post/60548255435/testing-bash-scripts-with-bats
 
 
