@@ -218,6 +218,11 @@ gh_toc(){
 # $2 - number of spaces used to indent.
 #
 gh_toc_grab() {
+
+    href_regex="/href=\"[^\"]+?\"/"
+    lefttext_regex="/(<a class=\"heading-link\".*>)(.*)(<span aria-hidden)/"
+    righttext_regex="/>.*/"
+
     common_awk_script='
                      modified_href = ""
                      split(href, chars, "")
@@ -242,8 +247,9 @@ gh_toc_grab() {
         echoargs=""
         awkscript='{
                      level = substr($0, 3, 1)
-                     text = substr($0, match($0, />[^<]*<span aria-hidden/)+1, RLENGTH-18)
-                     href = substr($0, match($0, "href=\"([^\"]+)?\"")+6, RLENGTH-7)
+                     lefttext = substr($0, match($0, '$lefttext_regex')+1, RLENGTH-18)
+                     text = substr(lefttext, match(lefttext, '$righttext_regex')+1)
+                     href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'
     else
@@ -251,12 +257,12 @@ gh_toc_grab() {
         echoargs="-e"
         awkscript='{
                      level = substr($0, 3, 1)
-                     text = substr($0, match($0, />[^<]*<span aria-hidden/)+1, RLENGTH-18)
-                     href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
+                     lefttext = substr($0, match($0, '$lefttext_regex')+1, RLENGTH-18)
+                     text = substr(lefttext, match(lefttext, '$righttext_regex')+1)
+                     href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'
     fi
-    href_regex='href=\"[^\"]+?\"'
 
     # if closed <h[1-6]> is on the new line, then move it on the prev line
     # for example:
