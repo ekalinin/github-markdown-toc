@@ -185,7 +185,7 @@ test_help() {
 }
 
 @test "TOC for text with backquote, #13" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test_backquote.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_backquote.md
     assert_success
 
     assert_equal "${lines[2]}"   "* [The command foo1](#the-command-foo1)"
@@ -196,7 +196,7 @@ test_help() {
 }
 
 @test "TOC for text with plus signs, #100" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test_plussign.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_plussign.md
     assert_success
 
     assert_equal "${lines[2]}" "* [C vs C++](#c-vs-c)"
