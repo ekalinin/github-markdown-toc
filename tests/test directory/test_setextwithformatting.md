@@ -1,14 +1,11 @@
-Title
-=====
+Title one
+=========
 
 <!--ts-->
-   * [Title](#title)
-      * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)
-   * [<em>Title 2</em>](#title-2)
-      * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)
+
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: corey.sciuto, at: Fri Sep 22 19:13:43 EDT 2023 -->
+<!-- Added by: corey.sciuto, at: Fri Sep 22 20:15:18 EDT 2023 -->
 
 <!--te-->
 
@@ -18,11 +15,27 @@ Blabla...
 
 Blabla...
 
-*Title 2*
-=========
+*Title `two`*
+=============
 
 Blabla...
 
 ## This is test for setext-style with formatting
+
+Blabla...
+
+# Title `three`
+
+Blabla...
+
+## This is a regression test for atx-style
+
+Blabla...
+
+# Title four is a particularly long title because of wrapping
+
+Blabla...
+
+## This is a test for long titles
 
 Blabla...
