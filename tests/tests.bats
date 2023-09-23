@@ -154,6 +154,16 @@ test_help() {
 }
 
 @test "TOC for non-english chars, #6, #10" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_nonenglishchars.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [命令行的艺术](#命令行的艺术)"
+    assert_equal "${lines[3]}"   "   * [必读](#必读)"
+    assert_equal "${lines[4]}"   "   * [基础](#基础)"
+    assert_equal "${lines[5]}"   "   * [日常使用](#日常使用)"
+}
+
+@test "TOC for non-english chars (remote load), #6, #10" {
     run $BATS_TEST_DIRNAME/../gh-md-toc \
         https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.ru.md
     assert_success
@@ -203,7 +213,7 @@ test_help() {
 }
 
 @test "Toc for file path with space, #136" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc --insert tests/test\ directory/test_filepathwithspace.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc --no-backup --hide-footer tests/test\ directory/test_filepathwithspace.md
     assert_success
 
     assert_equal "${lines[2]}"   "* [Title](#title)"
@@ -211,15 +221,15 @@ test_help() {
 }
 
 @test "Toc for setext heading with formatting, #145" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc --insert tests/test\ directory/test_setextwithformatting.md
+    run $BATS_TEST_DIRNAME/../gh-md-toc --no-backup --hide-footer tests/test\ directory/test_setextwithformatting.md
     assert_success
 
-    assert_equal "${lines[2]}"   "   * [Title one](#title-one)"
-    assert_equal "${lines[3]}"   "      * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)"
-    assert_equal "${lines[4]}"   "   * [<em>Title two</em>](#title-two)"
-    assert_equal "${lines[5]}"   "      * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)"
-    assert_equal "${lines[6]}"   "   * [Title three](#title-three)"
-    assert_equal "${lines[7]}"   "      * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)"
-    assert_equal "${lines[8]}"   "   * [Title four is a particularly long title because of wrapping](#title-four-is-a-particularly-long-title-because-of-wrapping)"
-    assert_equal "${lines[9]}"   "      * [This is a test for long titles](#this-is-a-test-for-long-titles)"
+    assert_equal "${lines[2]}"   "* [Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)"
+    assert_equal "${lines[4]}"   "* [<em>Title two</em>](#title-two)"
+    assert_equal "${lines[5]}"   "   * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)"
+    assert_equal "${lines[6]}"   "* [Title three](#title-three)"
+    assert_equal "${lines[7]}"   "   * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)"
+    assert_equal "${lines[8]}"   "* [Title four is a particularly long title because of wrapping](#title-four-is-a-particularly-long-title-because-of-wrapping)"
+    assert_equal "${lines[9]}"   "   * [This is a test for long titles](#this-is-a-test-for-long-titles)"
 }
