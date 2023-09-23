@@ -2,10 +2,17 @@ Title one
 =========
 
 <!--ts-->
-
+   * [Title one](#title-one)
+      * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)
+   * [<em>Title two</em>](#title-two)
+      * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)
+   * [Title three](#title-three)
+      * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)
+   * [Title four is a particularly long title because of wrapping](#title-four-is-a-particularly-long-title-because-of-wrapping)
+      * [This is a test for long titles](#this-is-a-test-for-long-titles)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: corey.sciuto, at: Fri Sep 22 20:15:18 EDT 2023 -->
+<!-- Added by: corey.sciuto, at: Fri Sep 22 20:29:03 EDT 2023 -->
 
 <!--te-->
 

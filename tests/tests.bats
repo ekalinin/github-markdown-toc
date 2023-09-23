@@ -219,5 +219,7 @@ test_help() {
     assert_equal "${lines[4]}"   "   * [<em>Title two</em>](#title-two)"
     assert_equal "${lines[5]}"   "      * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)"
     assert_equal "${lines[6]}"   "   * [Title three](#title-three)"
-    assert_equal "${lines[7]}"   "      * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)"    
+    assert_equal "${lines[7]}"   "      * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)"
+    assert_equal "${lines[8]}"   "   * [Title four is a particularly long title because of wrapping](#title-four-is-a-particularly-long-title-because-of-wrapping)"
+    assert_equal "${lines[9]}"   "      * [This is a test for long titles](#this-is-a-test-for-long-titles)""
 }

@@ -271,6 +271,9 @@ gh_toc_grab() {
     #   became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
 
+    # Sometimes a line can start with <span>. Fix that.
+    sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<span/<span/g' |
+
     # find strings that corresponds to template
     $grepcmd '<h.*id="user-content-[^"]*".*</h[1-6]' |
 
