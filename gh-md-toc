@@ -241,8 +241,8 @@ gh_toc_grab() {
         grepcmd="pcregrep -o"
         echoargs=""
         awkscript='{
-                     level = substr($0, length($0), 1)
-                     text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+                     level = substr($0, 3, 1)
+                     text = substr($0, match($0, />[^<]*<span aria-hidden/)+1, RLENGTH-18)
                      href = substr($0, match($0, "href=\"([^\"]+)?\"")+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'
@@ -250,8 +250,8 @@ gh_toc_grab() {
         grepcmd="grep -Eo"
         echoargs="-e"
         awkscript='{
-                     level = substr($0, length($0), 1)
-                     text = substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+                     level = substr($0, 3, 1)
+                     text = substr($0, match($0, />[^<]*<span aria-hidden/)+1, RLENGTH-18)
                      href = substr($0, match($0, "href=\"[^\"]+?\"")+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'
@@ -266,7 +266,7 @@ gh_toc_grab() {
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
 
     # find strings that corresponds to template
-    $grepcmd '<a.*id="user-content-[^"]*".*</h[1-6]' |
+    $grepcmd '<h.*id="user-content-[^"]*".*</h[1-6]' |
 
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
@@ -275,7 +275,7 @@ gh_toc_grab() {
     sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
 
     # now all rows are like:
-    #   <a id="user-content-..." href="..."><span ...></span></a> ... </h1
+    #   <h1 id="user-content-..."><a href="..."> ... <span ...></span></a></h1
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
