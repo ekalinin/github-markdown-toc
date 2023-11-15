@@ -346,63 +346,75 @@ gh_toc_app() {
     local need_replace="no"
     local indent=3
 
-    if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
+    if [ $# -eq 0 ] ; then
         show_help
         return
     fi
 
-    if [ "$1" = '--version' ]; then
-        show_version
-        return
-    fi
+    POSITIONAL_ARGS=()
 
-    if [ "$1" = '--indent' ]; then
-        indent="$2"
-        shift 2
-    fi
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --version)
+                show_version
+                shift
+                return
+                ;;
+            --indent)
+                indent="$2"
+                shift 2
+                ;;
+            --insert)
+                need_replace="yes"
+                shift
+                ;;
+            --no-backup)
+                need_replace="yes"
+                no_backup="yes"
+                shift
+                ;;
+            --hide-footer)
+                need_replace="yes"
+                no_footer="yes"
+                shift
+                ;;
+            --skip-header)
+                skip_header="yes"
+                shift
+                ;;
+            -)
+                if [ -z "$TMPDIR" ]; then
+                    TMPDIR="/tmp"
+                elif [ -n "$TMPDIR" -a ! -d "$TMPDIR" ]; then
+                    mkdir -p "$TMPDIR"
+                fi
+                local gh_tmp_md
+                if [ `uname -s` == "OS/390" ]; then
+                    local timestamp=$(date +%m%d%Y%H%M%S)
+                    gh_tmp_md="$TMPDIR/tmp.$timestamp"
+                else
+                    gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
+                fi
+                while read input; do
+                    echo "$input" >> "$gh_tmp_md"
+                done
+                gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
+                return
+                shift
+                ;;
+            --help|-*|--*)
+                show_help
+                return
+                shift
+                ;;
+            *)
+                POSITIONAL_ARGS+=("$1")
+                shift
+                ;;
+        esac
+    done	
 
-    if [ "$1" = "-" ]; then
-        if [ -z "$TMPDIR" ]; then
-            TMPDIR="/tmp"
-        elif [ -n "$TMPDIR" -a ! -d "$TMPDIR" ]; then
-            mkdir -p "$TMPDIR"
-        fi
-        local gh_tmp_md
-        if [ `uname -s` == "OS/390" ]; then
-            local timestamp=$(date +%m%d%Y%H%M%S)
-            gh_tmp_md="$TMPDIR/tmp.$timestamp"
-        else
-            gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
-        fi
-        while read input; do
-            echo "$input" >> "$gh_tmp_md"
-        done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
-        return
-    fi
-
-    if [ "$1" = '--insert' ]; then
-        need_replace="yes"
-        shift
-    fi
-
-    if [ "$1" = '--no-backup' ]; then
-        need_replace="yes"
-        no_backup="yes"
-        shift
-    fi
-
-    if [ "$1" = '--hide-footer' ]; then
-        need_replace="yes"
-        no_footer="yes"
-        shift
-    fi
-
-    if [ "$1" = '--skip-header' ]; then
-        skip_header="yes"
-        shift
-    fi
-
+    set -- "${POSITIONAL_ARGS[@]}"
 
     for md in "$@"
     do
