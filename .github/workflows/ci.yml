@@ -1,6 +1,9 @@
 name: CI
 
 on:
+  schedule:
+    # twice a week, on sundays, fridays at 8:00am UTC
+    - cron: "0 8 * * 0,5"
   push:
     branches: [ master ]
   pull_request:
