@@ -148,7 +148,7 @@ test_help() {
 @test "--version" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --version
     assert_success
-    assert_equal "${lines[0]}" "0.9.0"
+    assert_equal "${lines[0]}" "0.9.1"
     assert_equal "${lines[1]}" "os:     `uname -s`"
     assert_equal "${lines[2]}" "arch:   `uname -m`"
 }
