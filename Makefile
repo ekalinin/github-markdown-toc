@@ -1,5 +1,5 @@
-release: test lint
-	@git tag `grep -o -E '[0-9]\.[0-9]\.[0-9]{1,2}' gh-md-toc`
+release: test
+	@git tag `grep -o -E '[0-9]\.[0-9]{2}\.[0-9]{1,2}' gh-md-toc`
 	@git push --tags origin master
 
 test:
