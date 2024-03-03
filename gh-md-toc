@@ -23,7 +23,7 @@
 #       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
 #
 
-gh_toc_version="0.9.1"
+gh_toc_version="0.10.0"
 
 gh_user_agent="gh-md-toc v$gh_toc_version"
 
@@ -253,7 +253,7 @@ gh_toc_grab() {
         echoargs="-e"
         awkscript='{
                      level = substr($0, 3, 1)
-                     text = substr($0, match($0, /<\/span><\/a>.*<\/h/)+11, RLENGTH-14)
+                     text = substr($0, match($0, /">.*<\/h/)+2, RLENGTH-5)
                      href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'
@@ -270,7 +270,7 @@ gh_toc_grab() {
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<span/<span/g' |
 
     # find strings that corresponds to template
-    $grepcmd '<h.*id="user-content-[^"]*".*</h[1-6]' |
+    $grepcmd '<h.*class="heading-element".*</a' |
 
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
@@ -279,7 +279,7 @@ gh_toc_grab() {
     sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
 
     # now all rows are like:
-    #   <h1 id="user-content-..."><a href="..."> ... <span ...></span></a></h1
+    #   <h1 class="heading-element">title</h1><a href="..."><span>..</span></a>
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
