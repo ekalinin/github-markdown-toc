@@ -55,15 +55,15 @@ gh_toc_md2html() {
 
     URL=https://api.github.com/markdown/raw
 
-    if [ ! -z "$GH_TOC_TOKEN" ]; then
+    if [ -n "$GH_TOC_TOKEN" ]; then
         TOKEN=$GH_TOC_TOKEN
     else
         TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
         if [ -f "$TOKEN_FILE" ]; then
-            TOKEN="$(cat $TOKEN_FILE)"
+            TOKEN="$(cat "$TOKEN_FILE")"
         fi
     fi
-    if [ ! -z "${TOKEN}" ]; then
+    if [ -n "${TOKEN}" ]; then
         AUTHORIZATION="Authorization: token ${TOKEN}"
     fi
 
@@ -72,7 +72,7 @@ gh_toc_md2html() {
         if grep -Fxq "<!--te-->" "$gh_src"; then
           # cut everything before the toc
           gh_tmp_file_md=$gh_file_md~~
-          sed '1,/<!--te-->/d' $gh_file_md > $gh_tmp_file_md
+          sed '1,/<!--te-->/d' "$gh_file_md" > "$gh_tmp_file_md"
         fi
     fi
 
@@ -84,7 +84,7 @@ gh_toc_md2html() {
         -H "$AUTHORIZATION" \
         "$URL")
 
-    rm -f $gh_file_md~~
+    rm -f "${gh_file_md}~~"
 
     if [ "$?" != "0" ]; then
         echo "XXNetworkErrorXX"
@@ -152,7 +152,8 @@ gh_toc(){
             echo
         fi
     else
-        local rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
+        local rawhtml
+        rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
         if [ "$rawhtml" == "XXNetworkErrorXX" ]; then
              echo "Parsing local markdown file requires access to github API"
              echo "Please make sure curl is installed and check your network connectivity"
@@ -165,7 +166,8 @@ gh_toc(){
              echo "or place GitHub auth token here: ${TOKEN_FILE}"
              exit 1
         fi
-        local toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
+        local toc
+        toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -176,14 +178,16 @@ gh_toc(){
             fi
             local ts="<\!--ts-->"
             local te="<\!--te-->"
-            local dt=`date +'%F_%H%M%S'`
+            local dt
+            dt=$(date +'%F_%H%M%S')
             local ext=".orig.${dt}"
             local toc_path="${gh_src}.toc.${dt}"
             local toc_createdby="<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
-            local toc_footer="<!-- Added by: `whoami`, at: `date` -->"
+            local toc_footer
+            toc_footer="<!-- Added by: `whoami`, at: `date` -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
-            sed -i${ext} "/${ts}/,/${te}/{//!d;}" "$gh_src"
+            sed -i"${ext}" "/${ts}/,/${te}/{//!d;}" "$gh_src"
             # create toc file
             echo "${toc}" > "${toc_path}"
             if [ "${no_footer}" != "yes" ]; then
@@ -239,7 +243,7 @@ gh_toc_grab() {
                     }
                     print sprintf("%*s", (level-1)*'"$2"', "") "* [" text "](" gh_url  modified_href ")"
                     '
-    if [ `uname -s` == "OS/390" ]; then
+    if [ "`uname -s`" == "OS/390" ]; then
         grepcmd="pcregrep -o"
         echoargs=""
         awkscript='{
@@ -305,8 +309,8 @@ show_version() {
     echo
     for tool in curl wget grep awk sed; do
         printf "%-5s: " $tool
-        if `type $tool &>/dev/null`; then
-            echo `$tool --version | head -n 1`
+        if type $tool &>/dev/null; then
+            $tool --version | head -n 1
         else
             echo "not installed"
         fi
@@ -314,7 +318,8 @@ show_version() {
 }
 
 show_help() {
-    local app_name=$(basename "$0")
+    local app_name
+    app_name=$(basename "$0")
     echo "GitHub TOC generator ($app_name): $gh_toc_version"
     echo ""
     echo "Usage:"
@@ -359,17 +364,18 @@ gh_toc_app() {
     if [ "$1" = "-" ]; then
         if [ -z "$TMPDIR" ]; then
             TMPDIR="/tmp"
-        elif [ -n "$TMPDIR" -a ! -d "$TMPDIR" ]; then
+        elif [ -n "$TMPDIR" ] && [ ! -d "$TMPDIR" ]; then
             mkdir -p "$TMPDIR"
         fi
         local gh_tmp_md
-        if [ `uname -s` == "OS/390" ]; then
-            local timestamp=$(date +%m%d%Y%H%M%S)
+        if [ "`uname -s`" == "OS/390" ]; then
+            local timestamp
+            timestamp=$(date +%m%d%Y%H%M%S)
             gh_tmp_md="$TMPDIR/tmp.$timestamp"
         else
-            gh_tmp_md=$(mktemp $TMPDIR/tmp.XXXXXX)
+            gh_tmp_md=$(mktemp "$TMPDIR/tmp.XXXXXX")
         fi
-        while read input; do
+        while read -r input; do
             echo "$input" >> "$gh_tmp_md"
         done
         gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
