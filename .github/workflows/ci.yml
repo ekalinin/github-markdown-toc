@@ -20,9 +20,11 @@ jobs:
         uses: mig4/setup-bats@v1
         with:
           bats-version: 1.6.0
-          
+
       - name: Check out code
         uses: actions/checkout@v2
 
       - name: Run tests
         run: make test
+        env:
+          GH_TOC_TOKEN: ${{ secrets.GITHUB_TOKEN }}
