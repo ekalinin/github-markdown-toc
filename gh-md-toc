@@ -269,6 +269,13 @@ gh_toc_grab() {
     #        </h1>
     #   became: The command <code>foo1</code></h1>
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<\/h/<\/h/g' |
+    
+    # if opening <h[1-6]> is on the end of a line, merge it with the next line
+    # for example:
+    #    was: <h1 class="heading-element">  
+    #         <code>foo1</code></h1>
+    #    became: <h1 class="heading-element"><code><foo1></code></h1>
+    sed -e ':a' -e 'N' -e '$!ba' -e 's/heading-element">\n/heading-element">/g' |
 
     # Sometimes a line can start with <span>. Fix that.
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<span/<span/g' |
