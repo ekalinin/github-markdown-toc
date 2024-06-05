@@ -52,7 +52,7 @@ gh_toc_load() {
 gh_toc_md2html() {
     local gh_file_md=$1
     local skip_header=$2
-    local status=0
+    local status
 
     URL=https://api.github.com/markdown/raw
 
@@ -83,7 +83,8 @@ gh_toc_md2html() {
         --data-binary @"$gh_tmp_file_md" \
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
-        "$URL" || status=$?)
+        "$URL")
+    status=$?
 
     rm -f "${gh_file_md}~~"
 
