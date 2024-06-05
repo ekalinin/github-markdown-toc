@@ -52,6 +52,7 @@ gh_toc_load() {
 gh_toc_md2html() {
     local gh_file_md=$1
     local skip_header=$2
+    local status=0
 
     URL=https://api.github.com/markdown/raw
 
@@ -82,15 +83,16 @@ gh_toc_md2html() {
         --data-binary @"$gh_tmp_file_md" \
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
-        "$URL")
+        "$URL" || status=$?)
 
     rm -f "${gh_file_md}~~"
 
-    if [ "$?" != "0" ]; then
+    if [ "$status" != "0" ]; then
         echo "XXNetworkErrorXX"
-    fi
-    if [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
+    elif [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
         echo "XXRateLimitXX"
+    elif [ "$(echo "${OUTPUT}" | awk '/Bad credentials/')" != "" ]; then
+        echo "XXBadCredentialsXX"
     else
         echo "${OUTPUT}"
     fi
@@ -158,12 +160,25 @@ gh_toc(){
              echo "Parsing local markdown file requires access to github API"
              echo "Please make sure curl is installed and check your network connectivity"
              exit 1
-        fi
-        if [ "$rawhtml" == "XXRateLimitXX" ]; then
+        elif [ "$rawhtml" == "XXRateLimitXX" ]; then
              echo "Parsing local markdown file requires access to github API"
              echo "Error: You exceeded the hourly limit. See: https://developer.github.com/v3/#rate-limiting"
-             TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
-             echo "or place GitHub auth token here: ${TOKEN_FILE}"
+             if [ -n "$GH_TOC_TOKEN" ]; then
+                echo "Verify correct GitHub auth token in GH_TOC_TOKEN environment variable"
+             else
+                TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+                echo "Verify correct GitHub auth token here: ${TOKEN_FILE}"
+             fi
+             exit 1
+        elif [ "$rawhtml" == "XXBadCredentialsXX" ]; then
+             echo "Parsing local markdown file requires access to github API"
+             echo "Error: You provided bad credentials. See: https://developer.github.com/v3/#rate-limiting"
+             if [ -n "$GH_TOC_TOKEN" ]; then
+                echo "Verify correct GitHub auth token in GH_TOC_TOKEN environment variable"
+             else
+                TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+                echo "Verify correct GitHub auth token here: ${TOKEN_FILE}"
+             fi
              exit 1
         fi
         local toc
