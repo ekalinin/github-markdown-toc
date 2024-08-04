@@ -121,6 +121,7 @@ gh_toc(){
     local no_footer=$5
     local indent=$6
     local skip_header=$7
+    local no_code_tag_removal=$8
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -139,7 +140,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$no_code_tag_removal"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -167,7 +168,7 @@ gh_toc(){
              exit 1
         fi
         local toc
-        toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
+        toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$no_code_tag_removal"`
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -220,8 +221,10 @@ gh_toc(){
 # $1 - a source url of document.
 #      It's need if TOC is generated for multiple documents.
 # $2 - number of spaces used to indent.
+# $3 - whether <code> and </code> tags should be removed from the TOC entries.
 #
 gh_toc_grab() {
+    local no_code_tag_removal=$3
 
     href_regex="/href=\"[^\"]+?\"/"
     common_awk_script='
@@ -276,11 +279,15 @@ gh_toc_grab() {
     # find strings that corresponds to template
     $grepcmd '<h.*class="heading-element".*</a' |
 
-    # remove code tags
-    sed 's/<code>//g' | sed 's/<\/code>//g' |
-
     # remove g-emoji
     sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
+
+    # remove code tags or convert them to backticks if no code tag removal is specified
+    if [ "$no_code_tag_removal" = "no" ]; then
+        sed 's/<code>//g' | sed 's/<\/code>//g'
+    else
+        sed 's/<code>/`/g' | sed 's/<\/code>/`/g'
+    fi |
 
     # now all rows are like:
     #   <h1 class="heading-element">title</h1><a href="..."><span>..</span></a>
@@ -329,13 +336,14 @@ show_help() {
     echo "  $app_name --version             Show version"
     echo ""
     echo "Options:"
-    echo "  --indent <NUM>      Set indent size. Default: 3."
-    echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
-    echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    echo "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    echo "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
+    echo "  --indent <NUM>          Set indent size. Default: 3."
+    echo "  --insert                Insert new TOC into original file. For local files only. Default: false."
+    echo "                          See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
+    echo "  --no-backup             Remove backup file. Set --insert as well. Default: false."
+    echo "  --hide-footer           Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    echo "  --skip-header           Hide entry of the topmost headlines. Default: false."
+    echo "                          See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
+    echo "  --no-code-tag-removal   Do not remove <code> and </code> tags from the TOC entries. Default: false."
     echo ""
 }
 
@@ -345,6 +353,7 @@ show_help() {
 gh_toc_app() {
     local need_replace="no"
     local indent=3
+    local no_code_tag_removal="no"
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -378,7 +387,7 @@ gh_toc_app() {
         while read -r input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent" "$no_code_tag_removal"
         return
     fi
 
@@ -404,11 +413,15 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--no-code-tag-removal' ]; then
+        no_code_tag_removal="yes"
+        shift
+    fi
 
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$no_code_tag_removal"
     done
 
     echo ""
