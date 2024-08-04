@@ -54,6 +54,7 @@ load test_helper
     assert_equal "${lines[17]}" "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 
 }
+
 # @test "TOC for remote README.md" {
 #     run $BATS_TEST_DIRNAME/../gh-md-toc https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md
 #     assert_success
@@ -125,12 +126,14 @@ test_help() {
     assert_equal "${lines[4]}"  "  gh-md-toc --help                Show help"
     assert_equal "${lines[5]}"  "  gh-md-toc --version             Show version"
     assert_equal "${lines[6]}"  "Options:"
-    assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
-    assert_equal "${lines[8]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[10]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    assert_equal "${lines[11]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[12]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "14"
+    assert_equal "${lines[7]}"  "  --indent <NUM>          Set indent size. Default: 3."
+    assert_equal "${lines[8]}"  "  --insert                Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[10]}" "  --no-backup             Remove backup file. Set --insert as well. Default: false."
+    assert_equal "${lines[11]}" "  --hide-footer           Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[12]}" "  --skip-header           Hide entry of the topmost headlines. Default: false."
+    assert_equal "${lines[13]}" "                          See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
+    assert_equal "${lines[14]}" "  --no-code-tag-removal   Do not remove backticks (\`) from the TOC entries. Default: false."
+    assert_equal "${#lines[@]}"  "15"
 }
 
 @test "--help" {
@@ -203,6 +206,17 @@ test_help() {
     assert_equal "${lines[4]}"   "* [The command bar1](#the-command-bar1)"
     assert_equal "${lines[5]}"   "   * [The command bar2 is better](#the-command-bar2-is-better)"
     assert_equal "${lines[6]}"   "      * [The command bar3 is the best](#the-command-bar3-is-the-best)"
+}
+
+@test "TOC for text with backquote with --no-code-tag-removal" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --no-code-tag-removal tests/test\ directory/test_backquote.md
+    assert_success
+
+    assert_equal "${lines[2]}"   '* [The command `foo1`](#the-command-foo1)'
+    assert_equal "${lines[3]}"   '   * [The command `foo2` is better](#the-command-foo2-is-better)'
+    assert_equal "${lines[4]}"   '* [The command `bar1`](#the-command-bar1)'
+    assert_equal "${lines[5]}"   '   * [The command `bar2` is better](#the-command-bar2-is-better)'
+    assert_equal "${lines[6]}"   '      * [The command `bar3` is the best](#the-command-bar3-is-the-best)'
 }
 
 @test "TOC for text with plus signs, #100" {
