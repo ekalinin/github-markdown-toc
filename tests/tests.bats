@@ -132,7 +132,7 @@ test_help() {
     assert_equal "${lines[11]}" "  --hide-footer           Do not write date & author of the last TOC update. Set --insert as well. Default: false."
     assert_equal "${lines[12]}" "  --skip-header           Hide entry of the topmost headlines. Default: false."
     assert_equal "${lines[13]}" "                          See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
-    assert_equal "${lines[14]}" "  --no-code-tag-removal   Do not remove <code> and </code> tags from the TOC entries. Default: false."
+    assert_equal "${lines[14]}" "  --no-code-tag-removal   Do not remove backticks (\`) from the TOC entries. Default: false."
     assert_equal "${#lines[@]}"  "15"
 }
 
@@ -208,7 +208,7 @@ test_help() {
     assert_equal "${lines[6]}"   "      * [The command bar3 is the best](#the-command-bar3-is-the-best)"
 }
 
-@test "TOC for text with backquote with `--no-code-tag-removal`" {
+@test "TOC for text with backquote with --no-code-tag-removal" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --no-code-tag-removal tests/test\ directory/test_backquote.md
     assert_success
 

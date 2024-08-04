@@ -221,7 +221,7 @@ gh_toc(){
 # $1 - a source url of document.
 #      It's need if TOC is generated for multiple documents.
 # $2 - number of spaces used to indent.
-# $3 - whether <code> and </code> tags should be removed from the TOC entries.
+# $3 - whether backticks should be removed from the TOC entries.
 #
 gh_toc_grab() {
     local no_code_tag_removal=$3
@@ -343,7 +343,7 @@ show_help() {
     echo "  --hide-footer           Do not write date & author of the last TOC update. Set --insert as well. Default: false."
     echo "  --skip-header           Hide entry of the topmost headlines. Default: false."
     echo "                          See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
-    echo "  --no-code-tag-removal   Do not remove <code> and </code> tags from the TOC entries. Default: false."
+    echo "  --no-code-tag-removal   Do not remove backticks (\`) from the TOC entries. Default: false."
     echo ""
 }
 
