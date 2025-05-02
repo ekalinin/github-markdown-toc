@@ -379,6 +379,7 @@ gh_toc_app() {
             echo "$input" >> "$gh_tmp_md"
         done
         gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
+        rm $gh_tmp_md
         return
     fi
 
