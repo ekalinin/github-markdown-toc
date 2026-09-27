@@ -274,7 +274,7 @@ gh_toc_grab() {
     sed -e ':a' -e 'N' -e '$!ba' -e 's/\n<span/<span/g' |
 
     # find strings that corresponds to template
-    $grepcmd '<h.*class="heading-element".*</a' |
+    $grepcmd '<h[1-6][^>]*class="heading-element".*</a' |
 
     # remove code tags
     sed 's/<code>//g' | sed 's/<\/code>//g' |
