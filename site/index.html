@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gh-md-toc - Easy TOC creation for GitHub README.md</title>
+  <meta name="description" content="gh-md-toc generates a table of contents for a README.md or a GitHub wiki page without installing additional software.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="gh-md-toc - Easy TOC creation for GitHub README.md">
+  <meta property="og:description" content="gh-md-toc generates a table of contents for a README.md or a GitHub wiki page without installing additional software.">
+  <meta property="og:url" content="https://ekalinin.github.io/github-markdown-toc/">
+  <link rel="canonical" href="https://ekalinin.github.io/github-markdown-toc/">
+  <!-- Empty icon: keeps the browser from requesting /favicon.ico -->
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+
+<header class="hero">
+  <h1 id="gh-md-toc">gh-md-toc</h1>
+  <p class="tagline">Easy TOC creation for GitHub README.md</p>
+  <p class="meta"><span class="version">v{{VERSION}}</span> <a href="https://github.com/ekalinin/github-markdown-toc">GitHub</a></p>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+<a href="#gh-md-toc"><span aria-hidden="true">* [</span>gh-md-toc<span aria-hidden="true">](#gh-md-toc)</span></a>
+<a href="#installation"><span aria-hidden="true">   * [</span>Installation<span aria-hidden="true">](#installation)</span></a>
+<a href="#why"><span aria-hidden="true">   * [</span>Why<span aria-hidden="true">](#why)</span></a>
+<a href="#usage"><span aria-hidden="true">   * [</span>Usage<span aria-hidden="true">](#usage)</span></a>
+<a href="#stdin"><span aria-hidden="true">      * [</span>STDIN<span aria-hidden="true">](#stdin)</span></a>
+<a href="#local-files"><span aria-hidden="true">      * [</span>Local files<span aria-hidden="true">](#local-files)</span></a>
+<a href="#remote-files"><span aria-hidden="true">      * [</span>Remote files<span aria-hidden="true">](#remote-files)</span></a>
+<a href="#multiple-files"><span aria-hidden="true">      * [</span>Multiple files<span aria-hidden="true">](#multiple-files)</span></a>
+<a href="#auto-insert-and-update-toc"><span aria-hidden="true">   * [</span>Auto insert and update TOC<span aria-hidden="true">](#auto-insert-and-update-toc)</span></a>
+<a href="#github-actions"><span aria-hidden="true">   * [</span>GitHub Actions<span aria-hidden="true">](#github-actions)</span></a>
+<a href="#github-token"><span aria-hidden="true">   * [</span>GitHub token<span aria-hidden="true">](#github-token)</span></a>
+<a href="#docker"><span aria-hidden="true">   * [</span>Docker<span aria-hidden="true">](#docker)</span></a>
+<a href="#windows"><span aria-hidden="true">   * [</span>Windows<span aria-hidden="true">](#windows)</span></a>
+</nav>
+
+<main>
+
+<h2 id="installation">Installation</h2>
+
+<p>macOS (manual installation):</p>
+<pre data-copy data-lang="sh"><code>curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
+chmod a+x gh-md-toc</code></pre>
+
+<p>Linux (manual installation):</p>
+<pre data-copy data-lang="sh"><code>wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc
+chmod a+x gh-md-toc</code></pre>
+
+<p>Linux or macOS, using <a href="https://github.com/basherpm/basher">Basher</a> (<code>gh-md-toc</code> will be available in the <code>PATH</code>):</p>
+<pre data-copy data-lang="sh"><code>basher install ekalinin/github-markdown-toc</code></pre>
+
+<h2 id="why">Why</h2>
+
+<p>gh-md-toc is for you if you want to generate a TOC (table of contents) for a README.md or a GitHub wiki page without installing additional software. It is an attempt to fix the problem from <a href="https://github.com/isaacs/github/issues/215">github/issues/215</a>.</p>
+
+<p>It needs only standard tools:</p>
+<ul>
+  <li><code>curl</code> or <code>wget</code></li>
+  <li><code>awk</code></li>
+  <li><code>grep</code></li>
+  <li><code>sed</code></li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+
+<p>gh-md-toc works with markdown from stdin, local files, and pages on github.com. Local files and stdin are rendered through the GitHub API, see <a href="#github-token">GitHub token</a> if you hit its rate limit.</p>
+
+<h3 id="stdin">STDIN</h3>
+
+<p>Pass <code>-</code> to read markdown from stdin:</p>
+<pre data-lang="console"><code>$ cat README.md | ./gh-md-toc -
+* [gh-md-toc](#gh-md-toc)
+* [Table of contents](#table-of-contents)
+* [Installation](#installation)
+* [Usage](#usage)
+   * [STDIN](#stdin)
+   * [Local files](#local-files)
+   * [Remote files](#remote-files)
+   * [Multiple files](#multiple-files)
+...</code></pre>
+
+<h3 id="local-files">Local files</h3>
+
+<p>Pass a path to a markdown file:</p>
+<pre data-lang="console"><code>$ ./gh-md-toc README.md
+
+Table of Contents
+=================
+
+* [gh-md-toc](#gh-md-toc)
+* [Table of contents](#table-of-contents)
+* [Installation](#installation)
+* [Usage](#usage)
+   * [STDIN](#stdin)
+   * [Local files](#local-files)
+...
+* [Docker](#docker)
+   * [Local](#local)
+   * [Public](#public)
+
+&lt;!-- Created by https://github.com/ekalinin/github-markdown-toc --&gt;</code></pre>
+
+<h3 id="remote-files">Remote files</h3>
+
+<p>Pass a URL instead of a path, for example a GitHub wiki page:</p>
+<pre data-lang="console"><code>$ ./gh-md-toc https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv
+
+Table of Contents
+=================
+
+* [Who Uses Nodeenv?](#who-uses-nodeenv)
+   * [edx](#edx)
+   * [OpenStack](#openstack)
+   * [HSReplay.net](#hsreplaynet)
+   * [pre-commit.com](#pre-commitcom)
+   * [sailing-channels.com](#sailing-channelscom)
+   * [Galaxy](#galaxy)
+   * [Lambdas in Python with Serverless.com](#lambdas-in-python-with-serverlesscom)
+
+&lt;!-- Created by https://github.com/ekalinin/github-markdown-toc --&gt;</code></pre>
+
+<p>That's all. Copy the result into your README.md, or redirect it to a file with <code>&gt; toc.md</code>.</p>
+
+<h3 id="multiple-files">Multiple files</h3>
+
+<p>Pass several files or URLs, local and remote ones can be combined. Each link is prefixed with its source:</p>
+<pre data-lang="console"><code>$ ./gh-md-toc README.md https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv
+
+* [gh-md-toc](README.md#gh-md-toc)
+* [Table of contents](README.md#table-of-contents)
+* [Installation](README.md#installation)
+...
+   * [Public](README.md#public)
+
+* [Who Uses Nodeenv?](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#who-uses-nodeenv)
+   * [edx](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#edx)
+   * [OpenStack](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#openstack)
+   * [HSReplay.net](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#hsreplaynet)
+   * [pre-commit.com](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#pre-commitcom)
+   * [sailing-channels.com](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#sailing-channelscom)
+   * [Galaxy](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#galaxy)
+   * [Lambdas in Python with Serverless.com](https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv#lambdas-in-python-with-serverlesscom)
+
+&lt;!-- Created by https://github.com/ekalinin/github-markdown-toc --&gt;</code></pre>
+
+<h2 id="auto-insert-and-update-toc">Auto insert and update TOC</h2>
+
+<p>Put these two lines into a local file where the TOC should be:</p>
+<pre data-lang="output"><code>&lt;!--ts--&gt;
+&lt;!--te--&gt;</code></pre>
+
+<p>And run:</p>
+<pre data-lang="console"><code>$ ./gh-md-toc --insert README.md
+
+Table of Contents
+=================
+
+* [My project](#my-project)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [Options](#options)
+   * [License](#license)
+Found markers
+
+!! TOC was added into: 'README.md'
+!! Origin version of the file: 'README.md.orig.2026-09-27_112342'
+!! TOC added into a separate file: 'README.md.toc.2026-09-27_112342'
+
+
+&lt;!-- Created by https://github.com/ekalinin/github-markdown-toc --&gt;</code></pre>
+
+<p>The file now contains:</p>
+<pre data-lang="output"><code>&lt;!--ts--&gt;
+* [My project](#my-project)
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [Options](#options)
+   * [License](#license)
+
+&lt;!-- Created by https://github.com/ekalinin/github-markdown-toc --&gt;
+&lt;!-- Added by: user, at: Sun Sep 27 11:23:42 UTC 2026 --&gt;
+
+&lt;!--te--&gt;</code></pre>
+
+<p>When the file changes, run the same command again to refresh the TOC. Options for <code>--insert</code>:</p>
+<ul>
+  <li><code>--no-backup</code> - do not keep the backup files (<code>.orig.*</code> and <code>.toc.*</code>).</li>
+  <li><code>--hide-footer</code> - do not write the footer comments with the author and date of the last TOC update.</li>
+</ul>
+
+<h2 id="github-actions">GitHub Actions</h2>
+
+<p>Keep the TOC up to date on every push to the file:</p>
+<pre data-copy data-lang="yaml"><code>on:
+  push:
+    branches: [main]
+    paths: ['foo.md']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
+          chmod a+x gh-md-toc
+          ./gh-md-toc --insert --no-backup --hide-footer foo.md
+          rm gh-md-toc
+      - uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: Auto update markdown TOC</code></pre>
+
+<p><code>permissions: contents: write</code> lets the default <code>GITHUB_TOKEN</code> push the updated file.</p>
+
+<h2 id="github-token">GitHub token</h2>
+
+<p>Without a token, the GitHub API limits how many files you can process per hour. When you hit the limit, gh-md-toc prints:</p>
+<pre><code>Parsing local markdown file requires access to github API
+Error: You exceeded the hourly limit. See: https://developer.github.com/v3/#rate-limiting
+or place GitHub auth token here: /home/user/token.txt</code></pre>
+
+<p>Create a token at <a href="https://github.com/settings/tokens">github.com/settings/tokens</a> and pass it as an environment variable:</p>
+<pre data-copy data-lang="sh"><code>GH_TOC_TOKEN=&lt;your token&gt; ./gh-md-toc README.md</code></pre>
+
+<p>Or put it into <code>token.txt</code> next to the <code>gh-md-toc</code> script:</p>
+<pre data-copy data-lang="sh"><code>echo "&lt;your token&gt;" &gt; token.txt
+./gh-md-toc README.md</code></pre>
+
+<h2 id="docker">Docker</h2>
+
+<p>Public image on Docker Hub:</p>
+<pre data-copy data-lang="sh"><code>docker pull evkalinin/gh-md-toc:{{VERSION}}
+docker run -it evkalinin/gh-md-toc:{{VERSION}} https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv</code></pre>
+
+<p>Or build the image from the repository's <code>Dockerfile</code>:</p>
+<pre data-copy data-lang="sh"><code>docker build -t markdown-toc-generator .</code></pre>
+
+<p>Run it on a URL:</p>
+<pre data-copy data-lang="sh"><code>docker run -it markdown-toc-generator https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv</code></pre>
+
+<p>Run it on a local file, sharing its directory as a volume:</p>
+<pre data-copy data-lang="sh"><code>docker run -it -v "$PWD":/data markdown-toc-generator /data/README.md</code></pre>
+
+<h2 id="windows">Windows</h2>
+
+<p>gh-md-toc is a Bash script. On Windows, use <a href="https://github.com/ekalinin/github-markdown-toc.go">github-markdown-toc.go</a>, a Go implementation without dependencies that can also process files in parallel.</p>
+
+</main>
+
+<footer>
+  <p>gh-md-toc is released under the <a href="https://github.com/ekalinin/github-markdown-toc/blob/master/LICENSE">MIT License</a>. Source code: <a href="https://github.com/ekalinin/github-markdown-toc">github.com/ekalinin/github-markdown-toc</a>.</p>
+</footer>
+
+</div>
+<script>
+// Syntax highlighting for pre[data-lang]. Only wraps tokens in spans, the text
+// stays the same, so copy buttons copy exactly what is shown.
+(function () {
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function tok(cls, s) {
+    return '<span class="tok-' + cls + '">' + esc(s) + '</span>';
+  }
+
+  // One shell command line: command names, flags, quoted strings.
+  function sh(line) {
+    var re = /("[^"]*"|'[^']*')|(<[^>]*>)|(\s+)|([|;&]+|>)|([^\s"'|;&<>]+)/g;
+    var out = '', expectCmd = true, m;
+    while ((m = re.exec(line))) {
+      if (m[1]) { out += tok('str', m[1]); expectCmd = false; }
+      else if (m[2] || m[3]) out += esc(m[0]);      // placeholder or spaces
+      else if (m[4]) { out += esc(m[4]); expectCmd = m[4] !== '>'; }
+      else if (expectCmd && /^[A-Za-z_]\w*=/.test(m[5])) out += esc(m[5]);  // VAR=value before the command
+      else if (expectCmd) { out += tok('cmd', m[5]); expectCmd = false; }
+      else if (/^--?[A-Za-z]/.test(m[5])) out += tok('flag', m[5]);
+      else out += esc(m[5]);
+    }
+    return out;
+  }
+
+  // gh-md-toc output: TOC lines look like the sidebar, HTML comments are muted.
+  function output(line) {
+    var m = /^(\s*\* \[)(.*)(\]\(.*\))$/.exec(line);
+    if (m) return tok('syntax', m[1]) + tok('title', m[2]) + tok('syntax', m[3]);
+    if (/^\s*<!--.*-->$/.test(line)) return tok('comment', line);
+    return esc(line);
+  }
+
+  function console_(line, i) {
+    if (i === 0 && line.indexOf('$ ') === 0) return tok('prompt', '$') + ' ' + sh(line.slice(2));
+    return output(line);
+  }
+
+  // YAML: keys, quoted strings, comments.
+  function yaml(line) {
+    if (/^\s*#/.test(line)) return tok('comment', line);
+    var m = /^(\s*)(- )?([A-Za-z_][\w-]*)(:)(.*)$/.exec(line);
+    if (!m) return esc(line);
+    var value = m[5].replace(/("[^"]*"|'[^']*')|([^"']+)/g, function (all, str, rest) {
+      return str ? tok('str', str) : esc(rest);
+    });
+    return m[1] + (m[2] ? tok('syntax', '-') + ' ' : '') + tok('key', m[3]) + esc(m[4]) + value;
+  }
+
+  var byLang = { sh: sh, console: console_, yaml: yaml, output: output };
+  document.querySelectorAll('pre[data-lang] > code').forEach(function (code) {
+    var fn = byLang[code.parentNode.getAttribute('data-lang')];
+    if (fn) code.innerHTML = code.textContent.split('\n').map(fn).join('\n');
+  });
+})();
+
+// Copy buttons for command-only blocks. Created here, so without JS there are none.
+document.querySelectorAll('pre[data-copy]').forEach(function (pre) {
+  var wrap = document.createElement('div');
+  wrap.className = 'copyable';
+  pre.parentNode.insertBefore(wrap, pre);
+  wrap.appendChild(pre);
+
+  var button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'copy';
+  button.textContent = 'Copy';
+  button.addEventListener('click', function () {
+    navigator.clipboard.writeText(pre.textContent).then(function () {
+      button.textContent = 'Copied';
+      setTimeout(function () { button.textContent = 'Copy'; }, 1500);
+    });
+  });
+  wrap.appendChild(button);
+});
+</script>
+</body>
+</html>

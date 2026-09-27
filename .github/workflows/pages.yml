@@ -1,0 +1,59 @@
+# Deploy the landing page (site/) to GitHub Pages.
+# The version on the page comes from gh-md-toc itself, so the page is rebuilt
+# whenever gh-md-toc changes on master.
+name: Pages
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'site/**'
+      - 'gh-md-toc'
+      - '.github/workflows/pages.yml'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; don't cancel a deploy in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Build site
+        run: |
+          VERSION="$(./gh-md-toc --version | head -n 1)"
+          mkdir -p _site
+          cp -R site/. _site/
+          # A pipe, not `sed -i`: the -i syntax differs between GNU and BSD sed.
+          sed "s|{{VERSION}}|$VERSION|g" site/index.html > _site/index.html
+          if grep -n '{{' _site/index.html; then
+            echo "Unsubstituted placeholder in _site/index.html"
+            exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

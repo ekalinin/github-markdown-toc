@@ -1,0 +1,230 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbfbf8;
+  --fg: #1b1b1b;
+  --muted: #595959;
+  --accent: #0b5cad;
+  --code-bg: #f0efe9;
+  --line: #d6d4cc;
+  --hl-str: #2d6a1f;
+  --hl-flag: #8a3a9e;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16171a;
+    --fg: #e8e6e3;
+    --muted: #a3a19c;
+    --accent: #7fb2f0;
+    --code-bg: #1f2125;
+    --line: #36383d;
+    --hl-str: #93c98a;
+    --hl-flag: #d6a2e8;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 1rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 1rem/1.6 var(--sans);
+}
+
+a {
+  color: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Narrow screens: one column in source order (hero, TOC, content, footer). */
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.page > * {
+  min-width: 0;
+}
+
+.hero h1 {
+  margin: 0;
+  font: 700 2.5rem/1.2 var(--mono);
+}
+
+.tagline {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--mono);
+  color: var(--muted);
+}
+
+/* The TOC keeps gh-md-toc's literal output: one line per link, spaces preserved. */
+.toc {
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--code-bg);
+  font: 0.8125rem/1.8 var(--mono);
+}
+
+.toc a {
+  display: block;
+  white-space: pre;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
+.toc a span {
+  color: var(--muted);
+}
+
+main h2 {
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.5rem;
+}
+
+main h2:first-child {
+  margin-top: 0;
+}
+
+main h3 {
+  margin: 1.75rem 0 0.75rem;
+  font-size: 1.2rem;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+}
+
+pre {
+  overflow-x: auto;
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--code-bg);
+  line-height: 1.5;
+}
+
+pre code {
+  font-size: 0.875rem;
+}
+
+/* Syntax highlighting (added by the inline script). */
+.tok-prompt,
+.tok-syntax,
+.tok-comment {
+  color: var(--muted);
+}
+
+.tok-cmd {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tok-key,
+.tok-title {
+  color: var(--accent);
+}
+
+.tok-flag {
+  color: var(--hl-flag);
+}
+
+.tok-str {
+  color: var(--hl-str);
+}
+
+.copyable {
+  position: relative;
+}
+
+/* Room above the first line, so the button never covers a long command. */
+.copyable pre {
+  padding-top: 2.5rem;
+}
+
+.copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 0.75rem var(--sans);
+  cursor: pointer;
+}
+
+footer {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* Wide screens: the TOC becomes a sticky sidebar left of the content. */
+@media (min-width: 80rem) {
+  .page {
+    grid-template-columns: max-content minmax(0, 46rem);
+    justify-content: center;
+    column-gap: 3rem;
+  }
+
+  .toc {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    align-self: start;
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 3rem);
+    overflow: auto;
+  }
+
+  .hero {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  main {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  footer {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
