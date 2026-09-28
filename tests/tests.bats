@@ -233,3 +233,12 @@ test_help() {
     assert_equal "${lines[8]}"   "* [Title four is a particularly long title because of wrapping](#title-four-is-a-particularly-long-title-because-of-wrapping)"
     assert_equal "${lines[9]}"   "   * [This is a test for long titles](#this-is-a-test-for-long-titles)"
 }
+
+@test "Error for local file without network access" {
+    # route curl through a closed port to simulate a network failure
+    HTTPS_PROXY=http://127.0.0.1:9 run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_plussign.md
+    assert_fail
+
+    assert_equal "${lines[2]}"   "Parsing local markdown file requires access to github API"
+    assert_equal "${lines[3]}"   "Please make sure curl is installed and check your network connectivity"
+}
