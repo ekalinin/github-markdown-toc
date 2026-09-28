@@ -107,6 +107,22 @@ Table of Contents
   * [License](#license)
 ```
 
+To include only headings up to a given level, use `--depth <NUM>`:
+
+```bash
+➥ ./gh-md-toc --depth 1 ~/projects/Dockerfile.vim/README.md
+
+Table of Contents
+=================
+
+* [Dockerfile.vim](#dockerfilevim)
+* [Screenshot](#screenshot)
+* [Installation](#installation)
+* [License](#license)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+```
+
 Remote files
 ------------
 

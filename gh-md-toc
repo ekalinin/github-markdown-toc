@@ -122,6 +122,7 @@ gh_toc(){
     local no_footer=$5
     local indent=$6
     local skip_header=$7
+    local depth=$8
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -140,7 +141,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -168,7 +169,7 @@ gh_toc(){
              exit 1
         fi
         local toc
-        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent")
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -221,11 +222,13 @@ gh_toc(){
 # $1 - a source url of document.
 #      It's need if TOC is generated for multiple documents.
 # $2 - number of spaces used to indent.
+# $3 - max heading level to include. 0 means all levels.
 #
 gh_toc_grab() {
 
     href_regex="/href=\"[^\"]+?\"/"
     common_awk_script='
+                     if (depth+0 > 0 && level+0 > depth+0) next
                      modified_href = ""
                      split(href, chars, "")
                      for (i=1;i <= length(href); i++) {
@@ -290,7 +293,7 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" "$awkscript")"
+    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" "$awkscript")"
 }
 
         # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
@@ -333,6 +336,7 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  --indent <NUM>      Set indent size. Default: 3."
+    echo "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
     echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
@@ -348,6 +352,7 @@ show_help() {
 gh_toc_app() {
     local need_replace="no"
     local indent=3
+    local depth=0
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -361,6 +366,11 @@ gh_toc_app() {
 
     if [ "$1" = '--indent' ]; then
         indent="$2"
+        shift 2
+    fi
+
+    if [ "$1" = '--depth' ]; then
+        depth="$2"
         shift 2
     fi
 
@@ -381,7 +391,7 @@ gh_toc_app() {
         while read -r input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent"
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent" "$depth"
         return
     fi
 
@@ -411,7 +421,7 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth"
     done
 
     echo ""
