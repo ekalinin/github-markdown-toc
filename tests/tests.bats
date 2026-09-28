@@ -126,11 +126,12 @@ test_help() {
     assert_equal "${lines[5]}"  "  gh-md-toc --version             Show version"
     assert_equal "${lines[6]}"  "Options:"
     assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
-    assert_equal "${lines[8]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[10]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    assert_equal "${lines[11]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[12]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "14"
+    assert_equal "${lines[8]}"  "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
+    assert_equal "${lines[9]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[11]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
+    assert_equal "${lines[12]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[13]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "15"
 }
 
 @test "--help" {
@@ -241,4 +242,25 @@ test_help() {
 
     assert_equal "${lines[2]}"   "Parsing local markdown file requires access to github API"
     assert_equal "${lines[3]}"   "Please make sure curl is installed and check your network connectivity"
+}
+
+@test "TOC with depth for local file, #25" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --depth 2 tests/test\ directory/test_depth.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   * [Section](#section)"
+    assert_equal "${lines[4]}"   "* [Title two](#title-two)"
+    assert_equal "${lines[5]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "TOC with depth for markdown from stdin, #25" {
+    cat tests/test\ directory/test_depth.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --depth 1 -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [Title one](#title-one)"
+        assert_equal "${lines[1]}"   "* [Title two](#title-two)"
+        assert_equal "${#lines[@]}"  "2"
+    }
 }
