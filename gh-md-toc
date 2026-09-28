@@ -83,10 +83,11 @@ gh_toc_md2html() {
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
         "$URL")
+    local curl_status=$?
 
     rm -f "${gh_file_md}~~"
 
-    if [ "$?" != "0" ]; then
+    if [ "$curl_status" != "0" ]; then
         echo "XXNetworkErrorXX"
     fi
     if [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
