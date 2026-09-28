@@ -168,7 +168,7 @@ gh_toc(){
              exit 1
         fi
         local toc
-        toc=`echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent"`
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -185,7 +185,7 @@ gh_toc(){
             local toc_path="${gh_src}.toc.${dt}"
             local toc_createdby="<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
             local toc_footer
-            toc_footer="<!-- Added by: `whoami`, at: `date` -->"
+            toc_footer="<!-- Added by: $(whoami), at: $(date) -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
             sed -i"${ext}" "/${ts}/,/${te}/{//!d;}" "$gh_src"
@@ -244,9 +244,10 @@ gh_toc_grab() {
                     }
                     print sprintf("%*s", (level-1)*'"$2"', "") "* [" text "](" gh_url  modified_href ")"
                     '
-    if [ "`uname -s`" == "OS/390" ]; then
+    if [ "$(uname -s)" == "OS/390" ]; then
         grepcmd="pcregrep -o"
         echoargs=""
+        # shellcheck disable=SC2016
         awkscript='{
                      level = substr($0, 3, 1)
                      text = substr($0, match($0, /<\/span><\/a>[^<]*<\/h/)+11, RLENGTH-14)
@@ -256,6 +257,7 @@ gh_toc_grab() {
     else
         grepcmd="grep -Eo"
         echoargs="-e"
+        # shellcheck disable=SC2016
         awkscript='{
                      level = substr($0, 3, 1)
                      text = substr($0, match($0, /">.*<\/h/)+2, RLENGTH-5)
@@ -303,10 +305,10 @@ gh_toc_get_filename() {
 show_version() {
     echo "$gh_toc_version"
     echo
-    echo "os:     `uname -s`"
-    echo "arch:   `uname -m`"
-    echo "kernel: `uname -r`"
-    echo "shell:  `$SHELL --version`"
+    echo "os:     $(uname -s)"
+    echo "arch:   $(uname -m)"
+    echo "kernel: $(uname -r)"
+    echo "shell:  $($SHELL --version)"
     echo
     for tool in curl wget grep awk sed; do
         printf "%-5s: " $tool
@@ -369,7 +371,7 @@ gh_toc_app() {
             mkdir -p "$TMPDIR"
         fi
         local gh_tmp_md
-        if [ "`uname -s`" == "OS/390" ]; then
+        if [ "$(uname -s)" == "OS/390" ]; then
             local timestamp
             timestamp=$(date +%m%d%Y%H%M%S)
             gh_tmp_md="$TMPDIR/tmp.$timestamp"
