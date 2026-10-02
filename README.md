@@ -123,6 +123,46 @@ Table of Contents
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
+To number the entries, use `--numbered list` for an ordered list:
+
+```bash
+➥ ./gh-md-toc --numbered list ~/projects/Dockerfile.vim/README.md
+
+Table of Contents
+=================
+
+1. [Dockerfile.vim](#dockerfilevim)
+1. [Screenshot](#screenshot)
+1. [Installation](#installation)
+         1. [Or using Pathogen:](#or-using-pathogen)
+         1. [Or using Vundle:](#or-using-vundle)
+         1. [Or using NeoBundle:](#or-using-neobundle)
+         1. [Or using Vim-Plug](#or-using-vim-plug)
+1. [License](#license)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+```
+
+or `--numbered outline` for numbers like `3.1.` in the entry text:
+
+```bash
+➥ ./gh-md-toc --numbered outline ~/projects/Dockerfile.vim/README.md
+
+Table of Contents
+=================
+
+* [1. Dockerfile.vim](#dockerfilevim)
+* [2. Screenshot](#screenshot)
+* [3. Installation](#installation)
+         * [3.1. Or using Pathogen:](#or-using-pathogen)
+         * [3.2. Or using Vundle:](#or-using-vundle)
+         * [3.3. Or using NeoBundle:](#or-using-neobundle)
+         * [3.4. Or using Vim-Plug](#or-using-vim-plug)
+* [4. License](#license)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+```
+
 Remote files
 ------------
 
