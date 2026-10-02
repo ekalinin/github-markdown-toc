@@ -127,11 +127,12 @@ test_help() {
     assert_equal "${lines[6]}"  "Options:"
     assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
     assert_equal "${lines[8]}"  "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
-    assert_equal "${lines[9]}"  "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[11]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    assert_equal "${lines[12]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[13]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "15"
+    assert_equal "${lines[9]}"  "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
+    assert_equal "${lines[10]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[12]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
+    assert_equal "${lines[13]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[14]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "16"
 }
 
 @test "--help" {
@@ -263,4 +264,60 @@ test_help() {
         assert_equal "${lines[1]}"   "* [Title two](#title-two)"
         assert_equal "${#lines[@]}"  "2"
     }
+}
+
+@test "TOC as ordered list for local file, #26" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered list tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "1. [Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   1. [Section](#section)"
+    assert_equal "${lines[4]}"   "      1. [Subsection](#subsection)"
+    assert_equal "${lines[5]}"   "   1. [Other section](#other-section)"
+    assert_equal "${lines[6]}"   "1. [Title two](#title-two)"
+    assert_equal "${lines[7]}"   "      1. [Skipped](#skipped)"
+    assert_equal "${lines[8]}"   "   1. [After skip](#after-skip)"
+    assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "TOC with outline numbers for local file, #26" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered outline tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [1. Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   * [1.1. Section](#section)"
+    assert_equal "${lines[4]}"   "      * [1.1.1. Subsection](#subsection)"
+    assert_equal "${lines[5]}"   "   * [1.2. Other section](#other-section)"
+    assert_equal "${lines[6]}"   "* [2. Title two](#title-two)"
+    assert_equal "${lines[7]}"   "      * [2.1. Skipped](#skipped)"
+    assert_equal "${lines[8]}"   "   * [2.2. After skip](#after-skip)"
+    assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "TOC with outline numbers and depth for markdown from stdin, #26" {
+    cat tests/test\ directory/test_numbered.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --depth 2 --numbered outline -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [1. Title one](#title-one)"
+        assert_equal "${lines[1]}"   "   * [1.1. Section](#section)"
+        assert_equal "${lines[2]}"   "   * [1.2. Other section](#other-section)"
+        assert_equal "${lines[3]}"   "* [2. Title two](#title-two)"
+        assert_equal "${lines[4]}"   "   * [2.1. After skip](#after-skip)"
+        assert_equal "${#lines[@]}"  "5"
+    }
+}
+
+@test "Error for unknown --numbered type, #26" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered roman README.md
+    assert_fail
+
+    assert_equal "${lines[0]}"   "Unknown type for --numbered: 'roman'. Use 'list' or 'outline'."
+}
+
+@test "Error for --numbered list with indent less than 3, #26" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --indent 2 --numbered list README.md
+    assert_fail
+
+    assert_equal "${lines[0]}"   "--numbered list requires --indent 3 or more, got '2'."
 }

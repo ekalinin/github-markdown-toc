@@ -123,6 +123,7 @@ gh_toc(){
     local indent=$6
     local skip_header=$7
     local depth=$8
+    local numbered=$9
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -141,7 +142,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -169,7 +170,7 @@ gh_toc(){
              exit 1
         fi
         local toc
-        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth")
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -223,12 +224,20 @@ gh_toc(){
 #      It's need if TOC is generated for multiple documents.
 # $2 - number of spaces used to indent.
 # $3 - max heading level to include. 0 means all levels.
+# $4 - numbering type: "list", "outline" or empty for bullets.
 #
 gh_toc_grab() {
 
     href_regex="/href=\"[^\"]+?\"/"
     common_awk_script='
                      if (depth+0 > 0 && level+0 > depth+0) next
+                     # outline number: pop the entries down to the parent,
+                     # the last popped one is the previous sibling
+                     prev = 0
+                     while (top > 0 && lvls[top] >= level+0) { prev = nums[top]; top-- }
+                     top++; lvls[top] = level+0; nums[top] = prev + 1
+                     num = ""
+                     for (k = 1; k <= top; k++) num = num nums[k] "."
                      modified_href = ""
                      split(href, chars, "")
                      for (i=1;i <= length(href); i++) {
@@ -245,7 +254,11 @@ gh_toc_grab() {
                          }
                          modified_href = modified_href res
                     }
-                    print sprintf("%*s", (level-1)*'"$2"', "") "* [" text "](" gh_url  modified_href ")"
+                    marker = "* "
+                    prefix = ""
+                    if (numbered == "list") marker = "1. "
+                    if (numbered == "outline") prefix = num " "
+                    print sprintf("%*s", (level-1)*'"$2"', "") marker "[" prefix text "](" gh_url  modified_href ")"
                     '
     if [ "$(uname -s)" == "OS/390" ]; then
         grepcmd="pcregrep -o"
@@ -293,7 +306,7 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" "$awkscript")"
+    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" "$awkscript")"
 }
 
         # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
@@ -337,6 +350,7 @@ show_help() {
     echo "Options:"
     echo "  --indent <NUM>      Set indent size. Default: 3."
     echo "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
+    echo "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
     echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
@@ -353,6 +367,7 @@ gh_toc_app() {
     local need_replace="no"
     local indent=3
     local depth=0
+    local numbered=""
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -374,6 +389,23 @@ gh_toc_app() {
         shift 2
     fi
 
+    if [ "$1" = '--numbered' ]; then
+        numbered="$2"
+        shift 2
+    fi
+
+    case $numbered in
+        "" | list | outline) ;;
+        *)
+            echo "Unknown type for --numbered: '$numbered'. Use 'list' or 'outline'."
+            exit 1;;
+    esac
+
+    if [ "$numbered" = "list" ] && [ "$indent" -lt 3 ] 2>/dev/null; then
+        echo "--numbered list requires --indent 3 or more, got '$indent'."
+        exit 1
+    fi
+
     if [ "$1" = "-" ]; then
         if [ -z "$TMPDIR" ]; then
             TMPDIR="/tmp"
@@ -391,7 +423,7 @@ gh_toc_app() {
         while read -r input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent" "$depth"
+        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent" "$depth" "$numbered"
         return
     fi
 
@@ -421,7 +453,7 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered"
     done
 
     echo ""
