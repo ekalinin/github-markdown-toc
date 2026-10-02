@@ -339,7 +339,7 @@ Now check the same file:
 * [License](#license)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: <your-user>, at: 2026-10-02_120000 -->
+<!-- Added by: <your-user>, at: Fri Oct  2 12:00:00 UTC 2026 -->
 
 <!--te-->
 ```
