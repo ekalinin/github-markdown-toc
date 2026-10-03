@@ -23,6 +23,8 @@
 #       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
 #
 
+set -e
+
 gh_toc_version="0.10.0"
 
 gh_user_agent="gh-md-toc v$gh_toc_version"
