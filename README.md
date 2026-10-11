@@ -140,13 +140,12 @@ And you want to generate TOC for it.
 There is nothing easier:
 
 ```bash
-➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/master/README.md
+➥ ./gh-md-toc https://github.com/ekalinin/envirius/blob/f939d3b6882bfb6ecb28ef7b6e62862f934ba945/README.md
 
 Table of Contents
 =================
 
 * [envirius](#envirius)
-   * [Table of Contents](#table-of-contents)
    * [Idea](#idea)
    * [Features](#features)
 * [Installation](#installation)
@@ -162,8 +161,6 @@ Table of Contents
    * [Get list of environments](#get-list-of-environments)
    * [Get current activated environment](#get-current-activated-environment)
    * [Do something in environment without enabling it](#do-something-in-environment-without-enabling-it)
-   * [Export environment into tar archive](#export-environment-into-tar-archive)
-   * [Import environment from tar archive](#import-environment-from-tar-archive)
    * [Get help](#get-help)
    * [Get help for a command](#get-help-for-a-command)
 * [How to add a plugin?](#how-to-add-a-plugin)
@@ -258,7 +255,7 @@ You can easily combine both ways:
 ```bash
 ➥ ./gh-md-toc \
     /home/you/projects/Dockerfile.vim/README.md \
-    https://github.com/ekalinin/sitemap.js/blob/master/README.md
+    https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md
 
 * [Dockerfile.vim](/home/you/projects/Dockerfile.vim/README.md#dockerfilevim)
 * [Screenshot](/home/you/projects/Dockerfile.vim/README.md#screenshot)
@@ -269,18 +266,10 @@ You can easily combine both ways:
          * [Or using Vim-Plug](/home/you/projects/Dockerfile.vim/README.md#or-using-vim-plug)
 * [License](/home/you/projects/Dockerfile.vim/README.md#license)
 
-* [sitemap <a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/58b74923f31b284091105e7ef6a0a576b1d28fd205d401521cd4eab677a93f39/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f736974656d6170"><img src="https://camo.githubusercontent.com/58b74923f31b284091105e7ef6a0a576b1d28fd205d401521cd4eab677a93f39/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f736974656d6170" alt="MIT License" data-canonical-src="https://img.shields.io/npm/l/sitemap" style="max-width: 100%;"></a><a href="https://github.com/ekalinin/sitemap.js/actions"><img src="https://github.com/ekalinin/sitemap.js/workflows/Node%20CI/badge.svg" alt="Build Status" style="max-width: 100%;"></a><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/deabf360f557bbfe69c534282e9498cd62f2bb958708174f4efd6526741e5b44/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f646d2f736974656d6170"><img src="https://camo.githubusercontent.com/deabf360f557bbfe69c534282e9498cd62f2bb958708174f4efd6526741e5b44/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f646d2f736974656d6170" alt="Monthly Downloads" data-canonical-src="https://img.shields.io/npm/dm/sitemap" style="max-width: 100%;"></a>](https://github.com/ekalinin/sitemap.js/blob/master/README.mdhttps://camo.githubusercontent.com/58b74923f31b284091105e7ef6a0a576b1d28fd205d401521cd4eab677a93f39/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f6c2f736974656d6170)
-   * [Table of Contents](https://github.com/ekalinin/sitemap.js/blob/master/README.md#table-of-contents)
-   * [Installation](https://github.com/ekalinin/sitemap.js/blob/master/README.md#installation)
-   * [Generate a one time sitemap from a list of urls](https://github.com/ekalinin/sitemap.js/blob/master/README.md#generate-a-one-time-sitemap-from-a-list-of-urls)
-   * [Serve a sitemap from a server and periodically update it](https://github.com/ekalinin/sitemap.js/blob/master/README.md#serve-a-sitemap-from-a-server-and-periodically-update-it)
-   * [Create sitemap and index files from one large list](https://github.com/ekalinin/sitemap.js/blob/master/README.md#create-sitemap-and-index-files-from-one-large-list)
-      * [Options you can pass](https://github.com/ekalinin/sitemap.js/blob/master/README.md#options-you-can-pass)
-   * [Filtering sitemap entries during parsing](https://github.com/ekalinin/sitemap.js/blob/master/README.md#filtering-sitemap-entries-during-parsing)
-   * [Examples](https://github.com/ekalinin/sitemap.js/blob/master/README.md#examples)
-   * [API](https://github.com/ekalinin/sitemap.js/blob/master/README.md#api)
-   * [Maintainers](https://github.com/ekalinin/sitemap.js/blob/master/README.md#maintainers)
-   * [License](https://github.com/ekalinin/sitemap.js/blob/master/README.md#license)
+* [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)
+   * [Installation](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#installation)
+   * [Usage](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#usage)
+   * [License](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#license)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
@@ -439,7 +428,7 @@ How to run tests:
 ➥ make test
 ```
 
-That runs the bats suite (currently 17 tests on `master`). Prefer `make test` over copying a hand-maintained checklist — new cases land often.
+That runs the bats suite. Prefer `make test` over copying a hand-maintained checklist — new cases land often.
 
 Dependency
 ==========
@@ -486,7 +475,7 @@ $ docker images | grep toc
 evkalinin/gh-md-toc   0.10.0   <image-id>   2024-03-03   ~72MB
 
 $ docker run -it evkalinin/gh-md-toc:0.10.0 \
-    https://github.com/ekalinin/envirius/blob/master/README.md
+    https://github.com/ekalinin/nodeenv/wiki/Who-Uses-Nodeenv
 ```
 
 The published `0.10.0` image was built in March 2024 from that tag. It does not include later `master` fixes (for example remote first-heading handling from #170) and does not support `--depth`. For current behaviour, build from this repository (`docker build -t markdown-toc-generator .`) or run `./gh-md-toc` locally.
