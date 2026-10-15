@@ -77,23 +77,63 @@ gh_toc_md2html() {
     fi
 
     # echo $URL 1>&2
+    # append the HTTP status code as the last line of the output, so API
+    # errors are detected by status rather than by the rendered markdown
     OUTPUT=$(curl -s \
         --user-agent "$gh_user_agent" \
         --data-binary @"$gh_tmp_file_md" \
         -H "Content-Type:text/plain" \
         -H "$AUTHORIZATION" \
+        -w '\n%{http_code}' \
         "$URL")
     local curl_status=$?
+    local http_code=${OUTPUT##*$'\n'}
+    OUTPUT=${OUTPUT%$'\n'*}
 
     rm -f "${gh_file_md}~~"
 
     if [ "$curl_status" != "0" ]; then
         echo "XXNetworkErrorXX"
-    fi
-    if [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
+    elif [ "$http_code" = "401" ]; then
+        echo "XXBadCredentialsXX"
+    elif [ "$http_code" != "200" ] && [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
         echo "XXRateLimitXX"
+    elif [ "$http_code" != "200" ]; then
+        echo "XXApiErrorXX ${http_code}"
     else
         echo "${OUTPUT}"
+    fi
+}
+
+
+#
+# Prints an error and exits if gh_toc_md2html returned an error marker
+#
+gh_toc_check_api_error() {
+    if [ "$1" == "XXNetworkErrorXX" ]; then
+        echo "Parsing local markdown file requires access to github API"
+        echo "Please make sure curl is installed and check your network connectivity"
+        exit 1
+    elif [ "$1" == "XXRateLimitXX" ]; then
+        echo "Parsing local markdown file requires access to github API"
+        echo "Error: You exceeded the hourly limit. See: https://developer.github.com/v3/#rate-limiting"
+        TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+        echo "or place GitHub auth token here: ${TOKEN_FILE}"
+        exit 1
+    elif [ "$1" == "XXBadCredentialsXX" ]; then
+        echo "Parsing local markdown file requires access to github API"
+        echo "Error: GitHub API rejected the auth token (HTTP 401 Bad credentials)"
+        if [ -n "$GH_TOC_TOKEN" ]; then
+            echo "Check the GitHub auth token in the GH_TOC_TOKEN environment variable"
+        else
+            TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
+            echo "Check the GitHub auth token here: ${TOKEN_FILE}"
+        fi
+        exit 1
+    elif [[ "$1" == "XXApiErrorXX "* ]]; then
+        echo "Parsing local markdown file requires access to github API"
+        echo "Error: GitHub API request failed (HTTP ${1#XXApiErrorXX })"
+        exit 1
     fi
 }
 
@@ -157,18 +197,7 @@ gh_toc(){
     else
         local rawhtml
         rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
-        if [ "$rawhtml" == "XXNetworkErrorXX" ]; then
-             echo "Parsing local markdown file requires access to github API"
-             echo "Please make sure curl is installed and check your network connectivity"
-             exit 1
-        fi
-        if [ "$rawhtml" == "XXRateLimitXX" ]; then
-             echo "Parsing local markdown file requires access to github API"
-             echo "Error: You exceeded the hourly limit. See: https://developer.github.com/v3/#rate-limiting"
-             TOKEN_FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/token.txt"
-             echo "or place GitHub auth token here: ${TOKEN_FILE}"
-             exit 1
-        fi
+        gh_toc_check_api_error "$rawhtml"
         local toc
         toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered")
         echo "$toc"
@@ -423,7 +452,10 @@ gh_toc_app() {
         while read -r input; do
             echo "$input" >> "$gh_tmp_md"
         done
-        gh_toc_md2html "$gh_tmp_md" | gh_toc_grab "" "$indent" "$depth" "$numbered"
+        local rawhtml
+        rawhtml=$(gh_toc_md2html "$gh_tmp_md")
+        gh_toc_check_api_error "$rawhtml"
+        echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered"
         return
     fi
 

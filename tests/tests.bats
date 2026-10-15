@@ -245,6 +245,45 @@ test_help() {
     assert_equal "${lines[3]}"   "Please make sure curl is installed and check your network connectivity"
 }
 
+@test "Error for local file with invalid GitHub token" {
+    GH_TOC_TOKEN=invalid run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_plussign.md
+    assert_fail
+
+    assert_equal "${lines[2]}"   "Parsing local markdown file requires access to github API"
+    assert_equal "${lines[3]}"   "Error: GitHub API rejected the auth token (HTTP 401 Bad credentials)"
+    assert_equal "${lines[4]}"   "Check the GitHub auth token in the GH_TOC_TOKEN environment variable"
+}
+
+@test "Error for markdown from stdin with invalid GitHub token" {
+    printf '# A\n' | {
+        GH_TOC_TOKEN=invalid run $BATS_TEST_DIRNAME/../gh-md-toc -
+        assert_fail
+
+        assert_equal "${lines[0]}"   "Parsing local markdown file requires access to github API"
+        assert_equal "${lines[1]}"   "Error: GitHub API rejected the auth token (HTTP 401 Bad credentials)"
+        assert_equal "${lines[2]}"   "Check the GitHub auth token in the GH_TOC_TOKEN environment variable"
+    }
+}
+
+@test "Error for markdown from stdin without network access" {
+    printf '# A\n' | {
+        # route curl through a closed port to simulate a network failure
+        HTTPS_PROXY=http://127.0.0.1:9 run $BATS_TEST_DIRNAME/../gh-md-toc -
+        assert_fail
+
+        assert_equal "${lines[0]}"   "Parsing local markdown file requires access to github API"
+        assert_equal "${lines[1]}"   "Please make sure curl is installed and check your network connectivity"
+    }
+}
+
+@test "TOC for local file mentioning API error messages" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_api_error_text.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [Bad credentials](#bad-credentials)"
+    assert_equal "${lines[3]}"   "   * [API rate limit exceeded](#api-rate-limit-exceeded)"
+}
+
 @test "TOC with depth for local file, #25" {
     run $BATS_TEST_DIRNAME/../gh-md-toc --depth 2 tests/test\ directory/test_depth.md
     assert_success
