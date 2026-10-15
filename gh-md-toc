@@ -219,7 +219,8 @@ gh_toc(){
             toc_footer="<!-- Added by: $(whoami), at: $(date) -->"
             # http://fahdshariff.blogspot.ru/2012/12/sed-mutli-line-replacement-between-two.html
             # clear old TOC
-            sed -i"${ext}" "/${ts}/,/${te}/{//!d;}" "$gh_src"
+            # only the first full-line marker pair, so markers quoted in code blocks are left alone
+            sed -i"${ext}" "1,/^${te}\$/{/^${ts}\$/,/^${te}\$/{//!d;};}" "$gh_src"
             # create toc file
             echo "${toc}" > "${toc_path}"
             if [ "${no_footer}" != "yes" ]; then
@@ -228,9 +229,11 @@ gh_toc(){
 
             # insert toc file
             if ! sed --version > /dev/null 2>&1; then
-                sed -i "" "/${ts}/r ${toc_path}" "$gh_src"
+                sed -i "" "1,/^${te}\$/{/^${ts}\$/r ${toc_path}
+}" "$gh_src"
             else
-                sed -i "/${ts}/r ${toc_path}" "$gh_src"
+                sed -i "1,/^${te}\$/{/^${ts}\$/r ${toc_path}
+}" "$gh_src"
             fi
             echo
             if [ "${no_backup}" = "yes" ]; then
