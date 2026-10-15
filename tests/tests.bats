@@ -321,3 +321,36 @@ test_help() {
 
     assert_equal "${lines[0]}"   "--numbered list requires --indent 3 or more, got '2'."
 }
+
+@test "TOC without level 1 heading for local file, #30" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_noh1.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [Section one](#section-one)"
+    assert_equal "${lines[3]}"   "   * [Subsection](#subsection)"
+    assert_equal "${lines[4]}"   "* [Section two](#section-two)"
+    assert_equal "${lines[5]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "TOC without level 1 heading and indent 4 for markdown from stdin, #30" {
+    cat tests/test\ directory/test_noh1.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --indent 4 -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [Section one](#section-one)"
+        assert_equal "${lines[1]}"   "    * [Subsection](#subsection)"
+        assert_equal "${lines[2]}"   "* [Section two](#section-two)"
+        assert_equal "${#lines[@]}"  "3"
+    }
+}
+
+@test "TOC without level 1 heading and depth for markdown from stdin, #30" {
+    cat tests/test\ directory/test_noh1.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --depth 2 -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [Section one](#section-one)"
+        assert_equal "${lines[1]}"   "* [Section two](#section-two)"
+        assert_equal "${#lines[@]}"  "2"
+    }
+}
