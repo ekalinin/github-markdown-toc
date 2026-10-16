@@ -13,8 +13,9 @@
 #      It's a level of the current header:
 #       substr($0, length($0), 1)
 #
-#  3.2 Get level from 3.1 and insert corresponding number of spaces before '*':
-#       sprintf("%*s", (level-1)*'"$nb_spaces"', "")
+#  3.2 Get level from 3.1 and insert corresponding number of spaces before '*'
+#      (min_level is the smallest level in the document):
+#       sprintf("%*s", (level-min_level)*'"$nb_spaces"', "")
 #
 #  4. Find head's text and insert it inside "* [ ... ]":
 #       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
@@ -287,8 +288,18 @@ gh_toc_grab() {
                     prefix = ""
                     if (numbered == "list") marker = "1. "
                     if (numbered == "outline") prefix = num " "
-                    print sprintf("%*s", (level-1)*'"$2"', "") marker "[" prefix text "](" gh_url  modified_href ")"
+                    # keep the entry, the indent is known only after the last one
+                    count++
+                    entry_level[count] = level+0
+                    entry[count] = marker "[" prefix text "](" gh_url  modified_href ")"
+                    if (count == 1 || level+0 < min_level) min_level = level+0
                     '
+    # indent relative to the top level of the document, see #30
+    common_awk_end='
+                END {
+                     for (i = 1; i <= count; i++)
+                         print sprintf("%*s", (entry_level[i]-min_level)*'"$2"', "") entry[i]
+                }'
     if [ "$(uname -s)" == "OS/390" ]; then
         grepcmd="pcregrep -o"
         echoargs=""
@@ -298,7 +309,7 @@ gh_toc_grab() {
                      text = substr($0, match($0, /<\/span><\/a>[^<]*<\/h/)+11, RLENGTH-14)
                      href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
                      '"$common_awk_script"'
-                }'
+                }'"$common_awk_end"
     else
         grepcmd="grep -Eo"
         echoargs="-e"
@@ -308,7 +319,7 @@ gh_toc_grab() {
                      text = substr($0, match($0, /">.*<\/h/)+2, RLENGTH-5)
                      href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
                      '"$common_awk_script"'
-                }'
+                }'"$common_awk_end"
     fi
 
     # if closed <h[1-6]> is on the new line, then move it on the prev line
