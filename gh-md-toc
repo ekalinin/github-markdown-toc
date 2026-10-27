@@ -165,6 +165,7 @@ gh_toc(){
     local skip_header=$7
     local depth=$8
     local numbered=$9
+    local bullet=${10}
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -183,7 +184,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -200,7 +201,7 @@ gh_toc(){
         rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
         gh_toc_check_api_error "$rawhtml"
         local toc
-        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered")
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -255,6 +256,7 @@ gh_toc(){
 # $2 - number of spaces used to indent.
 # $3 - max heading level to include. 0 means all levels.
 # $4 - numbering type: "list", "outline" or empty for bullets.
+# $5 - bullet character: "*", "-", "+" or empty for "*".
 #
 gh_toc_grab() {
 
@@ -285,6 +287,7 @@ gh_toc_grab() {
                          modified_href = modified_href res
                     }
                     marker = "* "
+                    if (bullet != "") marker = bullet " "
                     prefix = ""
                     if (numbered == "list") marker = "1. "
                     if (numbered == "outline") prefix = num " "
@@ -346,7 +349,7 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" "$awkscript")"
+    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" -v "bullet=$5" "$awkscript")"
 }
 
         # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
@@ -391,6 +394,7 @@ show_help() {
     echo "  --indent <NUM>      Set indent size. Default: 3."
     echo "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
     echo "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
+    echo "  --bullet <CHAR>     Bullet of TOC entries: *, - or +. Default: *."
     echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
@@ -408,6 +412,7 @@ gh_toc_app() {
     local indent=3
     local depth=0
     local numbered=""
+    local bullet=""
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -434,6 +439,11 @@ gh_toc_app() {
         shift 2
     fi
 
+    if [ "$1" = '--bullet' ]; then
+        bullet="$2"
+        shift 2
+    fi
+
     case $numbered in
         "" | list | outline) ;;
         *)
@@ -441,8 +451,21 @@ gh_toc_app() {
             exit 1;;
     esac
 
+    # "*" is quoted to match only the asterisk itself
+    case $bullet in
+        "" | "*" | - | +) ;;
+        *)
+            echo "Unknown bullet for --bullet: '$bullet'. Use '*', '-' or '+'."
+            exit 1;;
+    esac
+
     if [ "$numbered" = "list" ] && [ "$indent" -lt 3 ] 2>/dev/null; then
         echo "--numbered list requires --indent 3 or more, got '$indent'."
+        exit 1
+    fi
+
+    if [ "$numbered" = "list" ] && [ -n "$bullet" ]; then
+        echo "--bullet cannot be used with --numbered list."
         exit 1
     fi
 
@@ -466,7 +489,7 @@ gh_toc_app() {
         local rawhtml
         rawhtml=$(gh_toc_md2html "$gh_tmp_md")
         gh_toc_check_api_error "$rawhtml"
-        echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered"
+        echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet"
         return
     fi
 
@@ -496,7 +519,7 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet"
     done
 
     echo ""

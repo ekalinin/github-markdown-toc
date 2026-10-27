@@ -128,11 +128,12 @@ test_help() {
     assert_equal "${lines[7]}"  "  --indent <NUM>      Set indent size. Default: 3."
     assert_equal "${lines[8]}"  "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
     assert_equal "${lines[9]}"  "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
-    assert_equal "${lines[10]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[12]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    assert_equal "${lines[13]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[14]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "16"
+    assert_equal "${lines[10]}" "  --bullet <CHAR>     Bullet of TOC entries: *, - or +. Default: *."
+    assert_equal "${lines[11]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[13]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
+    assert_equal "${lines[14]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[15]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "17"
 }
 
 @test "--help" {
@@ -392,4 +393,58 @@ test_help() {
         assert_equal "${lines[1]}"   "* [Section two](#section-two)"
         assert_equal "${#lines[@]}"  "2"
     }
+}
+
+@test "TOC with dash bullets for local file, #71" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --bullet - tests/test\ directory/test_depth.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "- [Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   - [Section](#section)"
+    assert_equal "${lines[4]}"   "      - [Subsection](#subsection)"
+    assert_equal "${lines[5]}"   "         - [Deep](#deep)"
+    assert_equal "${lines[6]}"   "- [Title two](#title-two)"
+    assert_equal "${lines[7]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "TOC with dash bullets for markdown from stdin, #71" {
+    cat tests/test\ directory/test_depth.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --bullet - -
+        assert_success
+
+        assert_equal "${lines[0]}"   "- [Title one](#title-one)"
+        assert_equal "${lines[1]}"   "   - [Section](#section)"
+        assert_equal "${lines[2]}"   "      - [Subsection](#subsection)"
+        assert_equal "${lines[3]}"   "         - [Deep](#deep)"
+        assert_equal "${lines[4]}"   "- [Title two](#title-two)"
+        assert_equal "${#lines[@]}"  "5"
+    }
+}
+
+@test "TOC with plus bullets and outline numbers for local file, #71" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered outline --bullet + tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "+ [1. Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   + [1.1. Section](#section)"
+    assert_equal "${lines[4]}"   "      + [1.1.1. Subsection](#subsection)"
+    assert_equal "${lines[5]}"   "   + [1.2. Other section](#other-section)"
+    assert_equal "${lines[6]}"   "+ [2. Title two](#title-two)"
+    assert_equal "${lines[7]}"   "      + [2.1. Skipped](#skipped)"
+    assert_equal "${lines[8]}"   "   + [2.2. After skip](#after-skip)"
+    assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "Error for unknown --bullet char, #71" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --bullet x README.md
+    assert_fail
+
+    assert_equal "${lines[0]}"   "Unknown bullet for --bullet: 'x'. Use '*', '-' or '+'."
+}
+
+@test "Error for --bullet with --numbered list, #71" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered list --bullet - README.md
+    assert_fail
+
+    assert_equal "${lines[0]}"   "--bullet cannot be used with --numbered list."
 }
