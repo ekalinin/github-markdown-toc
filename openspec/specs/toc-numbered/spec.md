@@ -10,8 +10,9 @@ or entries with hierarchical numbers like `2.1.`, for any input.
 ### Requirement: Ordered list
 
 With `--numbered list`, every TOC entry SHALL have the form `1. [<heading text>](<link>)`,
-with the marker `1.` for every entry, indented by `(level - 1) * indent` spaces. The
-heading text and the link SHALL be the same as without `--numbered`.
+with the marker `1.` for every entry, indented by `(level - top) * indent` spaces, where
+`top` is the smallest heading level among the entries of the document. The heading text
+and the link SHALL be the same as without `--numbered`.
 
 #### Scenario: Local file
 
@@ -27,8 +28,9 @@ heading text and the link SHALL be the same as without `--numbered`.
 ### Requirement: Hierarchical numbers
 
 With `--numbered outline`, every TOC entry SHALL have the form
-`* [<number> <heading text>](<link>)`, indented by `(level - 1) * indent` spaces. The
-heading text and the link SHALL be the same as without `--numbered`.
+`* [<number> <heading text>](<link>)`, indented by `(level - top) * indent` spaces, where
+`top` is the smallest heading level among the entries of the document. The heading text
+and the link SHALL be the same as without `--numbered`.
 
 The number SHALL follow the heading tree of the entries in the TOC. The parent of an
 entry is the nearest previous entry with a lower heading level; entries without a parent
