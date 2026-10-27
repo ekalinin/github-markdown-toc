@@ -28,7 +28,8 @@ and the link SHALL be the same as without `--numbered`.
 ### Requirement: Hierarchical numbers
 
 With `--numbered outline`, every TOC entry SHALL have the form
-`* [<number> <heading text>](<link>)`, indented by `(level - top) * indent` spaces, where
+`<bullet> [<number> <heading text>](<link>)`, where `<bullet>` is the value of
+`--bullet <CHAR>` (`*` by default), indented by `(level - top) * indent` spaces, where
 `top` is the smallest heading level among the entries of the document. The heading text
 and the link SHALL be the same as without `--numbered`.
 

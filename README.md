@@ -163,6 +163,26 @@ Table of Contents
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
+To change the bullet of the entries, use `--bullet <CHAR>` with `*` (default), `-` or `+`:
+
+```bash
+➥ ./gh-md-toc --bullet - ~/projects/Dockerfile.vim/README.md
+
+Table of Contents
+=================
+
+- [Dockerfile.vim](#dockerfilevim)
+- [Screenshot](#screenshot)
+- [Installation](#installation)
+         - [Or using Pathogen:](#or-using-pathogen)
+         - [Or using Vundle:](#or-using-vundle)
+         - [Or using NeoBundle:](#or-using-neobundle)
+         - [Or using Vim-Plug](#or-using-vim-plug)
+- [License](#license)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+```
+
 Remote files
 ------------
 
