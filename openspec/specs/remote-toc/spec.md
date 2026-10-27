@@ -12,8 +12,9 @@ its URL, with anchors identical to the ones GitHub renders for that page.
 For a GitHub file (`/blob/`) URL or a GitHub wiki page URL, the TOC SHALL contain one
 entry per heading of the rendered document, in document order, including the first
 heading when the document starts with a heading. Each entry SHALL have the form
-`* [<heading text>](#<anchor>)`, indented by `(level - 1) * indent` spaces (indent is
-3 by default). No entry SHALL contain markup of the GitHub page around the document or
+`* [<heading text>](#<anchor>)`, indented by `(level - top) * indent` spaces, where `top`
+is the smallest heading level among the entries of the document (indent is 3 by
+default). No entry SHALL contain markup of the GitHub page around the document or
 link to anything other than a heading anchor of the document.
 
 #### Scenario: File that starts with a heading
