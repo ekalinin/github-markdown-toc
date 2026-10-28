@@ -132,8 +132,9 @@ test_help() {
     assert_equal "${lines[11]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
     assert_equal "${lines[13]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     assert_equal "${lines[14]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[15]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "17"
+    assert_equal "${lines[15]}" "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
+    assert_equal "${lines[16]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "18"
 }
 
 @test "--help" {
@@ -447,4 +448,155 @@ test_help() {
     assert_fail
 
     assert_equal "${lines[0]}"   "--bullet cannot be used with --numbered list."
+}
+
+# Expected stdout of "--hide-footer --stdout" for test_stdout.md. The fixture
+# has no newline at the end on purpose: the last line must be kept as is.
+stdout_expected() {
+    printf '# Title\n\n<!--ts-->\n* [Title](#title)\n   * [Section](#section)\n<!--te-->\n\n    # indented code, not a heading\n\n## Section\n\nText without a newline at the end'
+}
+
+# Runs gh-md-toc with stdout and stderr in separate files, keeping the exact
+# bytes: "run" merges them and drops the trailing newline.
+run_to_files() {
+    status=0
+    $BATS_TEST_DIRNAME/../gh-md-toc "$@" > "$BATS_TEST_TMPDIR/out.md" 2> "$BATS_TEST_TMPDIR/err.txt" || status=$?
+}
+
+@test "Whole file with TOC to stdout for local file, #62" {
+    run_to_files --hide-footer --stdout tests/test\ directory/test_stdout.md
+    assert_success
+
+    stdout_expected | cmp - "$BATS_TEST_TMPDIR/out.md"
+}
+
+@test "Whole file with TOC and footer to stdout, #62" {
+    run_to_files --stdout tests/test\ directory/test_stdout.md
+    assert_success
+
+    assert_equal "$(sed -n 6p "$BATS_TEST_TMPDIR/out.md")"  ""
+    assert_equal "$(sed -n 7p "$BATS_TEST_TMPDIR/out.md")"  "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+    assert_equal "$(sed -n 8p "$BATS_TEST_TMPDIR/out.md" | cut -c 1-15)"  "<!-- Added by: "
+    assert_equal "$(sed -n 9p "$BATS_TEST_TMPDIR/out.md")"  ""
+    assert_equal "$(sed -n 10p "$BATS_TEST_TMPDIR/out.md")" "<!--te-->"
+}
+
+@test "Whole file with TOC to stdout is the same as --insert, #62" {
+    cp tests/test\ directory/test_stdout.md "$BATS_TEST_TMPDIR/copy.md"
+    run $BATS_TEST_DIRNAME/../gh-md-toc --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/copy.md"
+    assert_success
+
+    run_to_files --hide-footer --stdout tests/test\ directory/test_stdout.md
+    assert_success
+    cmp "$BATS_TEST_TMPDIR/copy.md" "$BATS_TEST_TMPDIR/out.md"
+}
+
+@test "Whole file with TOC to stdout does not change the file, #62" {
+    local sum_before ls_before
+    sum_before=$(cksum < tests/test\ directory/test_stdout.md)
+    ls_before=$(ls -A tests/test\ directory)
+
+    run_to_files --insert --no-backup --hide-footer --stdout tests/test\ directory/test_stdout.md
+    assert_success
+
+    assert_equal "$(cksum < tests/test\ directory/test_stdout.md)" "$sum_before"
+    assert_equal "$(ls -A tests/test\ directory)" "$ls_before"
+    stdout_expected | cmp - "$BATS_TEST_TMPDIR/out.md"
+}
+
+@test "Whole file with TOC to stdout for markdown from stdin, #62" {
+    run_to_files --hide-footer --stdout - < tests/test\ directory/test_stdout.md
+    assert_success
+
+    stdout_expected | cmp - "$BATS_TEST_TMPDIR/out.md"
+}
+
+@test "Whole file with dash bullets to stdout, #62" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --bullet - --hide-footer --stdout tests/test\ directory/test_stdout.md
+    assert_success
+
+    assert_equal "${lines[1]}"   "<!--ts-->"
+    assert_equal "${lines[2]}"   "- [Title](#title)"
+    assert_equal "${lines[3]}"   "   - [Section](#section)"
+    assert_equal "${lines[4]}"   "<!--te-->"
+}
+
+@test "Whole file with skip headers to stdout, #62" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --hide-footer --stdout --skip-header tests/test\ directory/test_stdout.md
+    assert_success
+
+    assert_equal "${lines[1]}"   "<!--ts-->"
+    assert_equal "${lines[2]}"   "* [Section](#section)"
+    assert_equal "${lines[3]}"   "<!--te-->"
+}
+
+@test "Error for --stdout with two inputs, #62" {
+    run_to_files --stdout README.md tests/test\ directory/test_stdout.md
+    assert_fail
+
+    [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "--stdout works with one local file or '-' (STDIN) only."
+}
+
+@test "Error for --stdout with remote file, #62" {
+    run_to_files --stdout https://github.com/ekalinin/github-markdown-toc/blob/master/README.md
+    assert_fail
+
+    [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "--stdout works with one local file or '-' (STDIN) only."
+}
+
+@test "Error for --stdout with file without markers, #62" {
+    run_to_files --stdout tests/test\ directory/test_plussign.md
+    assert_fail
+
+    [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "You don't have <!--ts--> or <!--te--> in your file...exiting"
+}
+
+@test "Error for --stdout with invalid GitHub token, #62" {
+    GH_TOC_TOKEN=invalid run_to_files --stdout tests/test\ directory/test_stdout.md
+    assert_fail
+
+    [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
+    grep -Fx "Error: GitHub API rejected the auth token (HTTP 401 Bad credentials)" "$BATS_TEST_TMPDIR/err.txt"
+}
+
+@test "No temporary files left by --stdout for markdown from stdin, #62" {
+    mkdir "$BATS_TEST_TMPDIR/tmp"
+    TMPDIR="$BATS_TEST_TMPDIR/tmp" run_to_files --hide-footer --stdout - < tests/test\ directory/test_stdout.md
+    assert_success
+
+    assert_equal "$(ls -A "$BATS_TEST_TMPDIR/tmp")" ""
+}
+
+@test "No temporary files left by --stdout on error, #62" {
+    mkdir "$BATS_TEST_TMPDIR/tmp"
+    TMPDIR="$BATS_TEST_TMPDIR/tmp" GH_TOC_TOKEN=invalid run_to_files --hide-footer --stdout - < tests/test\ directory/test_stdout.md
+    assert_fail
+
+    grep -Fx "Error: GitHub API rejected the auth token (HTTP 401 Bad credentials)" "$BATS_TEST_TMPDIR/err.txt"
+    assert_equal "$(ls -A "$BATS_TEST_TMPDIR/tmp")" ""
+}
+
+@test "TOC for markdown from stdin with indented code, #62" {
+    cat tests/test\ directory/test_stdout.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [Title](#title)"
+        assert_equal "${lines[1]}"   "   * [Section](#section)"
+        assert_equal "${#lines[@]}"  "2"
+    }
+}
+
+@test "TOC for markdown from stdin without newline at the end, #62" {
+    printf '# A\n\n## B' | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc -
+        assert_success
+
+        assert_equal "${lines[0]}"   "* [A](#a)"
+        assert_equal "${lines[1]}"   "   * [B](#b)"
+        assert_equal "${#lines[@]}"  "2"
+    }
 }

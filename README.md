@@ -372,6 +372,18 @@ Now check the same file:
 Next time when your file will be changed just repeat the command (`./gh-md-toc
 --insert ...`) and TOC will be refreshed again.
 
+To get the whole file with the new TOC on stdout instead, use `--stdout`. The
+file is not changed and no backup files are created. It takes one local file
+or `-` for STDIN, and works with `--hide-footer` and `--skip-header`:
+
+```bash
+$ ./gh-md-toc --stdout README.test.md > README.new.md
+$ curl -s https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/README.md | ./gh-md-toc --stdout - > README.md
+```
+
+Do not redirect the output into the same file (`> README.test.md`): the shell
+empties it before it is read. Use `--insert` to update the file in place.
+
 GitHub token
 ------------
 
