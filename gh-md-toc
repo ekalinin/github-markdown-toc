@@ -152,6 +152,27 @@ gh_is_url() {
 }
 
 #
+# Prints the path of a new temporary file
+#
+gh_toc_mktemp() {
+    if [ -z "$TMPDIR" ]; then
+        TMPDIR="/tmp"
+    elif [ -n "$TMPDIR" ] && [ ! -d "$TMPDIR" ]; then
+        mkdir -p "$TMPDIR"
+    fi
+    local gh_tmp_md
+    if [ "$(uname -s)" == "OS/390" ]; then
+        local timestamp
+        timestamp=$(date +%m%d%Y%H%M%S)
+        # pid and random part: --stdout - makes two files in the same second
+        gh_tmp_md="$TMPDIR/tmp.$timestamp.$$.$RANDOM"
+    else
+        gh_tmp_md=$(mktemp "$TMPDIR/tmp.XXXXXX")
+    fi
+    echo "$gh_tmp_md"
+}
+
+#
 # TOC generator
 #
 gh_toc(){
@@ -246,6 +267,58 @@ gh_toc(){
             echo
         fi
     fi
+}
+
+#
+# Prints the whole document with the new TOC between <!--ts--> and <!--te-->.
+# The document is not changed, the errors go to stderr.
+#
+# $1 - a local path, or "-" for STDIN.
+#
+gh_toc_stdout(){
+    # gh_toc_md2html reads gh_src for --skip-header
+    local gh_src=$1
+    local no_footer=$2
+    local indent=$3
+    local skip_header=$4
+    local depth=$5
+    local numbered=$6
+    local bullet=$7
+
+    # global: the trap runs on exit, after this function has returned
+    gh_tmp_stdin=""
+    gh_tmp_toc=""
+    trap 'rm -f ${gh_tmp_stdin:+"$gh_tmp_stdin"} ${gh_tmp_toc:+"$gh_tmp_toc"}' EXIT
+
+    if [ "$gh_src" = "-" ]; then
+        gh_tmp_stdin=$(gh_toc_mktemp)
+        cat > "$gh_tmp_stdin"
+        gh_src=$gh_tmp_stdin
+    fi
+
+    if ! grep -Fxq "<!--ts-->" "$gh_src" || ! grep -Fxq "<!--te-->" "$gh_src"; then
+        echo "You don't have <!--ts--> or <!--te--> in your file...exiting" >&2
+        exit 1
+    fi
+
+    local rawhtml
+    rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
+    gh_toc_check_api_error "$rawhtml" >&2
+    local toc
+    toc=$(echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet")
+
+    # the same TOC block and sed expressions as --insert, without -i
+    local ts="<\!--ts-->"
+    local te="<\!--te-->"
+    local toc_createdby="<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+    local toc_footer
+    toc_footer="<!-- Added by: $(whoami), at: $(date) -->"
+    gh_tmp_toc=$(gh_toc_mktemp)
+    echo "${toc}" > "${gh_tmp_toc}"
+    if [ "${no_footer}" != "yes" ]; then
+        echo -e "\n${toc_createdby}\n${toc_footer}\n" >> "$gh_tmp_toc"
+    fi
+    sed "/${ts}/,/${te}/{//!d;}" "$gh_src" | sed "/${ts}/r ${gh_tmp_toc}"
 }
 
 #
@@ -399,6 +472,7 @@ show_help() {
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     echo "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    echo "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
     echo "  --skip-header       Hide entry of the topmost headlines. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
     echo ""
@@ -413,6 +487,7 @@ gh_toc_app() {
     local depth=0
     local numbered=""
     local bullet=""
+    local to_stdout=""
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -470,22 +545,9 @@ gh_toc_app() {
     fi
 
     if [ "$1" = "-" ]; then
-        if [ -z "$TMPDIR" ]; then
-            TMPDIR="/tmp"
-        elif [ -n "$TMPDIR" ] && [ ! -d "$TMPDIR" ]; then
-            mkdir -p "$TMPDIR"
-        fi
         local gh_tmp_md
-        if [ "$(uname -s)" == "OS/390" ]; then
-            local timestamp
-            timestamp=$(date +%m%d%Y%H%M%S)
-            gh_tmp_md="$TMPDIR/tmp.$timestamp"
-        else
-            gh_tmp_md=$(mktemp "$TMPDIR/tmp.XXXXXX")
-        fi
-        while read -r input; do
-            echo "$input" >> "$gh_tmp_md"
-        done
+        gh_tmp_md=$(gh_toc_mktemp)
+        cat > "$gh_tmp_md"
         local rawhtml
         rawhtml=$(gh_toc_md2html "$gh_tmp_md")
         gh_toc_check_api_error "$rawhtml"
@@ -510,9 +572,23 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--stdout' ]; then
+        to_stdout="yes"
+        shift
+    fi
+
     if [ "$1" = '--skip-header' ]; then
         skip_header="yes"
         shift
+    fi
+
+    if [ "$to_stdout" = "yes" ]; then
+        if [ $# -ne 1 ] || [ "$(gh_is_url "$1")" == "yes" ]; then
+            echo "--stdout works with one local file or '-' (STDIN) only." >&2
+            exit 1
+        fi
+        gh_toc_stdout "$1" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet"
+        return
     fi
 
 
