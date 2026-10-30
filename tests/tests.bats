@@ -230,7 +230,7 @@ test_help() {
 
     assert_equal "${lines[2]}"   "* [Title one](#title-one)"
     assert_equal "${lines[3]}"   "   * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)"
-    assert_equal "${lines[4]}"   "* [<em>Title two</em>](#title-two)"
+    assert_equal "${lines[4]}"   "* [Title two](#title-two)"
     assert_equal "${lines[5]}"   "   * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)"
     assert_equal "${lines[6]}"   "* [Title three](#title-three)"
     assert_equal "${lines[7]}"   "   * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)"
@@ -599,4 +599,18 @@ run_to_files() {
         assert_equal "${lines[1]}"   "   * [B](#b)"
         assert_equal "${#lines[@]}"  "2"
     }
+}
+
+@test "TOC for headings with links and formatting, #40, #67" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_headingmarkup.md
+    assert_success
+
+    assert_equal "${lines[2]}"   "* [Top](#top)"
+    assert_equal "${lines[3]}"   "   * [On Go to Top](#on-go-to-top)"
+    assert_equal "${lines[4]}"   "   * [My issue](#my-issue)"
+    assert_equal "${lines[5]}"   "   * [See docs here](#see-docs-here)"
+    assert_equal "${lines[6]}"   "   * [Linux vs. Samba permissions](#linux-vs-samba-permissions)"
+    assert_equal "${lines[7]}"   "   * [A  B](#a--b)"
+    assert_equal "${lines[8]}"   "   * [Tom &amp; Jerry &lt;3](#tom--jerry-3)"
+    assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 }

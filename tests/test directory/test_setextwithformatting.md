@@ -4,7 +4,7 @@ Title one
 <!--ts-->
 * [Title one](#title-one)
    * [This is test for setext-style without formatting](#this-is-test-for-setext-style-without-formatting)
-* [<em>Title two</em>](#title-two)
+* [Title two](#title-two)
    * [This is test for setext-style with formatting](#this-is-test-for-setext-style-with-formatting)
 * [Title three](#title-three)
    * [This is a regression test for atx-style](#this-is-a-regression-test-for-atx-style)

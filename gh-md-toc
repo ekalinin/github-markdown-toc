@@ -17,11 +17,13 @@
 #      (min_level is the smallest level in the document):
 #       sprintf("%*s", (level-min_level)*'"$nb_spaces"', "")
 #
-#  4. Find head's text and insert it inside "* [ ... ]":
-#       substr($0, match($0, /a>.*<\/h/)+2, RLENGTH-5)
+#  4. Find head's text without tags and insert it inside "* [ ... ]":
+#       substr($0, match($0, /">.*<\/h/)+2, RLENGTH-5)
+#       gsub(/<[^>]*>/, "", text)
 #
-#  5. Find anchor and insert it inside "(...)":
-#       substr($0, match($0, "href=\"[^\"]+?\" ")+6, RLENGTH-8)
+#  5. Find anchor of the head (class="anchor") and insert it inside "(...)":
+#       anchor = substr($0, match($0, /class="anchor"[^>]*href="[^"]+"/), RLENGTH)
+#       substr(anchor, match(anchor, /href="[^"]+"/)+6, RLENGTH-7)
 #
 
 gh_toc_version="0.10.0"
@@ -333,9 +335,12 @@ gh_toc_stdout(){
 #
 gh_toc_grab() {
 
-    href_regex="/href=\"[^\"]+?\"/"
+    # the heading's own anchor, not a link in the heading text, see #40
+    href_regex="/class=\"anchor\"[^>]*href=\"[^\"]+\"/"
     common_awk_script='
                      if (depth+0 > 0 && level+0 > depth+0) next
+                     # remove tags of links, formatting and inline html, see #40
+                     gsub(/<[^>]*>/, "", text)
                      # outline number: pop the entries down to the parent,
                      # the last popped one is the previous sibling
                      prev = 0
@@ -383,7 +388,8 @@ gh_toc_grab() {
         awkscript='{
                      level = substr($0, 3, 1)
                      text = substr($0, match($0, /<\/span><\/a>[^<]*<\/h/)+11, RLENGTH-14)
-                     href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
+                     anchor = substr($0, match($0, '$href_regex'), RLENGTH)
+                     href = substr(anchor, match(anchor, /href="[^"]+"/)+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'"$common_awk_end"
     else
@@ -393,7 +399,8 @@ gh_toc_grab() {
         awkscript='{
                      level = substr($0, 3, 1)
                      text = substr($0, match($0, /">.*<\/h/)+2, RLENGTH-5)
-                     href = substr($0, match($0, '$href_regex')+6, RLENGTH-7)
+                     anchor = substr($0, match($0, '$href_regex'), RLENGTH)
+                     href = substr(anchor, match(anchor, /href="[^"]+"/)+6, RLENGTH-7)
                      '"$common_awk_script"'
                 }'"$common_awk_end"
     fi
