@@ -308,7 +308,7 @@ test_help() {
 }
 
 @test "TOC as ordered list for local file, #26" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered list tests/test\ directory/test_numbered.md
+    run gh_md_toc_no_stderr --numbered list tests/test\ directory/test_numbered.md
     assert_success
 
     assert_equal "${lines[2]}"   "1. [Title one](#title-one)"
@@ -322,7 +322,7 @@ test_help() {
 }
 
 @test "TOC with outline numbers for local file, #26" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered outline tests/test\ directory/test_numbered.md
+    run gh_md_toc_no_stderr --numbered outline tests/test\ directory/test_numbered.md
     assert_success
 
     assert_equal "${lines[2]}"   "* [1. Title one](#title-one)"
@@ -423,7 +423,7 @@ test_help() {
 }
 
 @test "TOC with plus bullets and outline numbers for local file, #71" {
-    run $BATS_TEST_DIRNAME/../gh-md-toc --numbered outline --bullet + tests/test\ directory/test_numbered.md
+    run gh_md_toc_no_stderr --numbered outline --bullet + tests/test\ directory/test_numbered.md
     assert_success
 
     assert_equal "${lines[2]}"   "+ [1. Title one](#title-one)"
@@ -461,6 +461,12 @@ stdout_expected() {
 run_to_files() {
     status=0
     $BATS_TEST_DIRNAME/../gh-md-toc "$@" > "$BATS_TEST_TMPDIR/out.md" 2> "$BATS_TEST_TMPDIR/err.txt" || status=$?
+}
+
+# Runs gh-md-toc without stderr: "run" merges stderr into "lines", so a warning
+# would shift the line indexes.
+gh_md_toc_no_stderr() {
+    $BATS_TEST_DIRNAME/../gh-md-toc "$@" 2>/dev/null
 }
 
 @test "Whole file with TOC to stdout for local file, #62" {
@@ -613,4 +619,77 @@ run_to_files() {
     assert_equal "${lines[7]}"   "   * [A  B](#a--b)"
     assert_equal "${lines[8]}"   "   * [Tom &amp; Jerry &lt;3](#tom--jerry-3)"
     assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "Warning for skipped heading level for local file, #75" {
+    run_to_files tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "Warning: heading 'Skipped' (level 3) skips a level after 'Title two' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+
+    run cat "$BATS_TEST_TMPDIR/out.md"
+    assert_equal "${lines[2]}"   "* [Title one](#title-one)"
+    assert_equal "${lines[3]}"   "   * [Section](#section)"
+    assert_equal "${lines[4]}"   "      * [Subsection](#subsection)"
+    assert_equal "${lines[5]}"   "   * [Other section](#other-section)"
+    assert_equal "${lines[6]}"   "* [Title two](#title-two)"
+    assert_equal "${lines[7]}"   "      * [Skipped](#skipped)"
+    assert_equal "${lines[8]}"   "   * [After skip](#after-skip)"
+    assert_equal "${lines[9]}"   "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "Warning for headings without a parent and two skipped levels for markdown from stdin, #75" {
+    printf '### First\n\n## Second\n\n#### Third\n\n### Fourth\n\n###### Fifth\n' | {
+        run_to_files -
+        assert_success
+
+        assert_equal "$(sed -n 1p "$BATS_TEST_TMPDIR/err.txt")" "Warning: heading 'Third' (level 4) skips a level after 'Second' (level 2), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+        assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/err.txt")" "Warning: heading 'Fifth' (level 6) skips a level after 'Fourth' (level 3), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+        assert_equal "$(wc -l < "$BATS_TEST_TMPDIR/err.txt" | tr -d ' ')" "2"
+    }
+}
+
+@test "Warning for skipped heading level is not inserted into the file, #75" {
+    printf '<!--ts-->\n<!--te-->\n\n# Title\n\n### Skipped\n' > "$BATS_TEST_TMPDIR/skipped.md"
+    run_to_files --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/skipped.md"
+    assert_success
+
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/skipped.md")" "* [Title](#title)"
+    assert_equal "$(sed -n 3p "$BATS_TEST_TMPDIR/skipped.md")" "      * [Skipped](#skipped)"
+    assert_equal "$(sed -n 4p "$BATS_TEST_TMPDIR/skipped.md")" "<!--te-->"
+    assert_equal "$(grep -c Warning "$BATS_TEST_TMPDIR/skipped.md")" "0"
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "Warning: heading 'Skipped' (level 3) skips a level after 'Title' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+}
+
+@test "Warning for skipped heading level is not in the whole file on stdout, #75" {
+    printf '<!--ts-->\n<!--te-->\n\n# Title\n\n### Skipped\n' | {
+        run_to_files --hide-footer --stdout -
+        assert_success
+
+        printf '<!--ts-->\n* [Title](#title)\n      * [Skipped](#skipped)\n<!--te-->\n\n# Title\n\n### Skipped\n' | cmp - "$BATS_TEST_TMPDIR/out.md"
+        assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "Warning: heading 'Skipped' (level 3) skips a level after 'Title' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+    }
+}
+
+@test "Warning for skipped heading level for several files, #75" {
+    run_to_files tests/test\ directory/test_depth.md tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "tests/test directory/test_numbered.md: Warning: heading 'Skipped' (level 3) skips a level after 'Title two' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+}
+
+@test "No warning for skipped heading level dropped by depth for markdown from stdin, #75" {
+    cat tests/test\ directory/test_numbered.md | {
+        run_to_files --depth 2 -
+        assert_success
+
+        [ ! -s "$BATS_TEST_TMPDIR/err.txt" ]
+    }
+}
+
+@test "No warning for consecutive heading levels for local file, #75" {
+    run_to_files tests/test\ directory/test_depth.md
+    assert_success
+
+    [ ! -s "$BATS_TEST_TMPDIR/err.txt" ]
 }
