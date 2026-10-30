@@ -345,7 +345,14 @@ gh_toc_grab() {
                      # the last popped one is the previous sibling
                      prev = 0
                      while (top > 0 && lvls[top] >= level+0) { prev = nums[top]; top-- }
-                     top++; lvls[top] = level+0; nums[top] = prev + 1
+                     # a skipped level: GitHub can render the entry as text of
+                     # the parent entry, so warn on stderr, see #75
+                     if (top > 0 && level+0 > lvls[top] + 1)
+                         print (gh_url != "" ? gh_url ": " : "") \
+                             "Warning: heading \047" text "\047 (level " level ") skips a level" \
+                             " after \047" txts[top] "\047 (level " lvls[top] ")," \
+                             " see https://github.com/ekalinin/github-markdown-toc/issues/75" | "cat 1>&2"
+                     top++; lvls[top] = level+0; nums[top] = prev + 1; txts[top] = text
                      num = ""
                      for (k = 1; k <= top; k++) num = num nums[k] "."
                      modified_href = ""
