@@ -26,7 +26,7 @@
 #       substr(anchor, match(anchor, /href="[^"]+"/)+6, RLENGTH-7)
 #
 
-gh_toc_version="0.10.0"
+gh_toc_version="0.11.0"
 
 gh_user_agent="gh-md-toc v$gh_toc_version"
 
