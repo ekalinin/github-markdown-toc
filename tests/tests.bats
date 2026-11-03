@@ -693,3 +693,16 @@ gh_md_toc_no_stderr() {
 
     [ ! -s "$BATS_TEST_TMPDIR/err.txt" ]
 }
+
+@test "TOC for several files with a space in the path, #76" {
+    run gh_md_toc_no_stderr tests/test\ directory/test_depth.md tests/test\ directory/test_numbered.md
+    assert_success
+
+    assert_equal "${lines[0]}"   "* [Title one](tests/test%20directory/test_depth.md#title-one)"
+    assert_equal "${lines[1]}"   "   * [Section](tests/test%20directory/test_depth.md#section)"
+    assert_equal "${lines[2]}"   "      * [Subsection](tests/test%20directory/test_depth.md#subsection)"
+    assert_equal "${lines[3]}"   "         * [Deep](tests/test%20directory/test_depth.md#deep)"
+    assert_equal "${lines[4]}"   "* [Title two](tests/test%20directory/test_depth.md#title-two)"
+    assert_equal "${lines[5]}"   "* [Title one](tests/test%20directory/test_numbered.md#title-one)"
+    assert_equal "${lines[12]}"  "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
