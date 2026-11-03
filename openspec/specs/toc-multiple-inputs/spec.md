@@ -13,8 +13,10 @@ When more than one input is given, every TOC entry SHALL have the form
 `* [<heading text>](<input>#<anchor>)`, where `<input>` is the input as given on the
 command line with every space replaced by `%20`. No other character of the input SHALL be
 changed, and entries of an input without a space SHALL NOT change. This SHALL apply to the
-output and to the TOC that `--insert` writes. Everything else that shows an input, such as
-the skipped level warning on stderr, SHALL show it as given, with spaces.
+output without `--insert` and to the entries of a remote URL with `--insert`. A local file
+with `--insert` SHALL follow the requirement Insert into several files. Everything else
+that shows an input, such as the skipped level warning on stderr, SHALL show it as given,
+with spaces.
 
 #### Scenario: Two local files in a directory with a space
 
@@ -52,3 +54,26 @@ when the path of the input has a space.
 - **WHEN** the user runs `gh-md-toc "tests/test directory/test_filepathwithspace.md"`
 - **THEN** the TOC entries are `* [Title](#title)` and
   `   * [This is test for file path with space](#this-is-test-for-file-path-with-space)`
+
+### Requirement: Insert into several files
+
+With `--insert` and more than one input, every TOC entry of a local file SHALL link to
+`#<anchor>` only, without the input, as with one input. This SHALL apply to the TOC
+written into the file and to the TOC printed on stdout for that file. The skipped level
+warning SHALL still start with the input as given on the command line, followed by `: `.
+The entries of a remote URL SHALL keep the prefix: nothing is inserted for them.
+
+#### Scenario: Two local files and a remote URL
+
+- **WHEN** the user runs
+  `gh-md-toc --insert --no-backup --hide-footer <dir>/a.md <dir>/b.md https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md`,
+  where `a.md` has the lines `<!--ts-->`, `<!--te-->` and the headings `# Page a`,
+  `## Usage`, and `b.md` has the lines `<!--ts-->`, `<!--te-->` and the headings
+  `# Title`, `### Skipped`
+- **THEN** the lines between `<!--ts-->` and `<!--te-->` in `a.md` are
+  `* [Page a](#page-a)` and `   * [Usage](#usage)`, in `b.md` they are
+  `* [Title](#title)` and `      * [Skipped](#skipped)`, stdout has the same entries and
+  `* [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)`,
+  stderr is
+  `<dir>/b.md: Warning: heading 'Skipped' (level 3) skips a level after 'Title' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75`,
+  and the exit code is 0
