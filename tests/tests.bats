@@ -726,3 +726,50 @@ gh_md_toc_no_stderr() {
     assert_equal "$(grep -Fxc '* [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)' "$BATS_TEST_TMPDIR/out.md")" "1"
     assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "$BATS_TEST_TMPDIR/b.md: Warning: heading 'Skipped' (level 3) skips a level after 'Title' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
 }
+
+@test "Insert into a file with CRLF line endings, #119" {
+    printf '<!--ts-->\r\n<!--te-->\r\n\r\n# Title\r\n\r\n## Section\r\n' > "$BATS_TEST_TMPDIR/crlf.md"
+    run $BATS_TEST_DIRNAME/../gh-md-toc --insert --no-backup "$BATS_TEST_TMPDIR/crlf.md"
+    assert_success
+
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/crlf.md")" "* [Title](#title)"$'\r'
+    assert_equal "$(sed -n 3p "$BATS_TEST_TMPDIR/crlf.md")" "   * [Section](#section)"$'\r'
+    assert_equal "$(sed -n 5p "$BATS_TEST_TMPDIR/crlf.md")" "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"$'\r'
+    assert_equal "$(sed -n 8p "$BATS_TEST_TMPDIR/crlf.md")" "<!--te-->"$'\r'
+    assert_equal "$(grep -vc $'\r$' "$BATS_TEST_TMPDIR/crlf.md")" "0"
+}
+
+@test "Whole file with TOC to stdout for CRLF line endings, #119" {
+    printf '<!--ts-->\r\n<!--te-->\r\n\r\n# Title\r\n\r\n## Section\r\n' > "$BATS_TEST_TMPDIR/crlf.md"
+    run_to_files --hide-footer --stdout "$BATS_TEST_TMPDIR/crlf.md"
+    assert_success
+
+    printf '<!--ts-->\r\n* [Title](#title)\r\n   * [Section](#section)\r\n<!--te-->\r\n\r\n# Title\r\n\r\n## Section\r\n' | cmp - "$BATS_TEST_TMPDIR/out.md"
+}
+
+@test "TOC with skip headers for CRLF line endings, #119" {
+    printf '# Header\r\n\r\n<!--ts-->\r\n<!--te-->\r\n\r\n# Title\r\n\r\n## Section\r\n' > "$BATS_TEST_TMPDIR/crlf.md"
+    run $BATS_TEST_DIRNAME/../gh-md-toc --skip-header "$BATS_TEST_TMPDIR/crlf.md"
+    assert_success
+
+    assert_equal "${lines[2]}" "* [Title](#title)"
+    assert_equal "${lines[3]}" "   * [Section](#section)"
+    assert_equal "${lines[4]}" "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
+}
+
+@test "Insert with trailing whitespace after the markers, #119" {
+    printf '<!--ts--> \t\n<!--te-->  \n\n# Title\n' > "$BATS_TEST_TMPDIR/spaces.md"
+    run $BATS_TEST_DIRNAME/../gh-md-toc --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/spaces.md"
+    assert_success
+
+    printf '<!--ts--> \t\n* [Title](#title)\n<!--te-->  \n\n# Title\n' | cmp - "$BATS_TEST_TMPDIR/spaces.md"
+}
+
+@test "Error for indented markers, #119" {
+    printf '    <!--ts-->\n    <!--te-->\n\n# Title\n' > "$BATS_TEST_TMPDIR/indented.md"
+    run_to_files --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/indented.md"
+    assert_fail
+
+    assert_equal "$(grep -Fxc "You don't have <!--ts--> or <!--te--> in your file...exiting" "$BATS_TEST_TMPDIR/out.md")" "1"
+    printf '    <!--ts-->\n    <!--te-->\n\n# Title\n' | cmp - "$BATS_TEST_TMPDIR/indented.md"
+}

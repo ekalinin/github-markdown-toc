@@ -72,7 +72,7 @@ gh_toc_md2html() {
 
     local gh_tmp_file_md=$gh_file_md
     if [ "$skip_header" = "yes" ]; then
-        if grep -Fxq "<!--te-->" "$gh_src"; then
+        if grep -Eq '^<!--te-->[[:space:]]*$' "$gh_src"; then
           # cut everything before the toc
           gh_tmp_file_md=$gh_file_md~~
           sed '1,/<!--te-->/d' "$gh_file_md" > "$gh_tmp_file_md"
@@ -227,7 +227,7 @@ gh_toc(){
         toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet" "$need_replace")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
-            if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
+            if grep -Eq '^<!--ts-->[[:space:]]*$' "$gh_src" && grep -Eq '^<!--te-->[[:space:]]*$' "$gh_src"; then
                 echo "Found markers"
             else
                 echo "You don't have <!--ts--> or <!--te--> in your file...exiting"
@@ -249,6 +249,10 @@ gh_toc(){
             echo "${toc}" > "${toc_path}"
             if [ "${no_footer}" != "yes" ]; then
                 echo -e "\n${toc_createdby}\n${toc_footer}\n" >> "$toc_path"
+            fi
+            # keep CRLF line endings of the file, see #119
+            if grep -Eq '^<!--ts-->[[:space:]]*'$'\r''$' "$gh_src"; then
+                awk '{print $0 "\r"}' "${toc_path}" > "${toc_path}.crlf" && mv "${toc_path}.crlf" "${toc_path}"
             fi
 
             # insert toc file
@@ -290,7 +294,7 @@ gh_toc_stdout(){
     # global: the trap runs on exit, after this function has returned
     gh_tmp_stdin=""
     gh_tmp_toc=""
-    trap 'rm -f ${gh_tmp_stdin:+"$gh_tmp_stdin"} ${gh_tmp_toc:+"$gh_tmp_toc"}' EXIT
+    trap 'rm -f ${gh_tmp_stdin:+"$gh_tmp_stdin"} ${gh_tmp_toc:+"$gh_tmp_toc"} ${gh_tmp_toc:+"$gh_tmp_toc.crlf"}' EXIT
 
     if [ "$gh_src" = "-" ]; then
         gh_tmp_stdin=$(gh_toc_mktemp)
@@ -298,7 +302,7 @@ gh_toc_stdout(){
         gh_src=$gh_tmp_stdin
     fi
 
-    if ! grep -Fxq "<!--ts-->" "$gh_src" || ! grep -Fxq "<!--te-->" "$gh_src"; then
+    if ! grep -Eq '^<!--ts-->[[:space:]]*$' "$gh_src" || ! grep -Eq '^<!--te-->[[:space:]]*$' "$gh_src"; then
         echo "You don't have <!--ts--> or <!--te--> in your file...exiting" >&2
         exit 1
     fi
@@ -319,6 +323,10 @@ gh_toc_stdout(){
     echo "${toc}" > "${gh_tmp_toc}"
     if [ "${no_footer}" != "yes" ]; then
         echo -e "\n${toc_createdby}\n${toc_footer}\n" >> "$gh_tmp_toc"
+    fi
+    # keep CRLF line endings of the file, see #119
+    if grep -Eq '^<!--ts-->[[:space:]]*'$'\r''$' "$gh_src"; then
+        awk '{print $0 "\r"}' "${gh_tmp_toc}" > "${gh_tmp_toc}.crlf" && mv "${gh_tmp_toc}.crlf" "${gh_tmp_toc}"
     fi
     sed "/${ts}/,/${te}/{//!d;}" "$gh_src" | sed "/${ts}/r ${gh_tmp_toc}"
 }
