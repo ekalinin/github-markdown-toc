@@ -379,7 +379,10 @@ gh_toc_grab() {
                     # keep the entry, the indent is known only after the last one
                     count++
                     entry_level[count] = level+0
-                    entry[count] = marker "[" prefix text "](" gh_url  modified_href ")"
+                    # a space breaks the link, see #76
+                    link_url = gh_url
+                    gsub(/ /, "%20", link_url)
+                    entry[count] = marker "[" prefix text "](" link_url  modified_href ")"
                     if (count == 1 || level+0 < min_level) min_level = level+0
                     '
     # indent relative to the top level of the document, see #30
