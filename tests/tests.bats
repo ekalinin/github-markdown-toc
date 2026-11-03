@@ -706,3 +706,23 @@ gh_md_toc_no_stderr() {
     assert_equal "${lines[5]}"   "* [Title one](tests/test%20directory/test_numbered.md#title-one)"
     assert_equal "${lines[12]}"  "<!-- Created by https://github.com/ekalinin/github-markdown-toc -->"
 }
+
+@test "Insert into several files links to the anchor only, #113" {
+    printf '<!--ts-->\n<!--te-->\n\n# Page a\n\n## Usage\n' > "$BATS_TEST_TMPDIR/a.md"
+    printf '<!--ts-->\n<!--te-->\n\n# Title\n\n### Skipped\n' > "$BATS_TEST_TMPDIR/b.md"
+    run_to_files --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/a.md" "$BATS_TEST_TMPDIR/b.md" https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md
+    assert_success
+
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/a.md")" "* [Page a](#page-a)"
+    assert_equal "$(sed -n 3p "$BATS_TEST_TMPDIR/a.md")" "   * [Usage](#usage)"
+    assert_equal "$(sed -n 4p "$BATS_TEST_TMPDIR/a.md")" "<!--te-->"
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/b.md")" "* [Title](#title)"
+    assert_equal "$(sed -n 3p "$BATS_TEST_TMPDIR/b.md")" "      * [Skipped](#skipped)"
+    assert_equal "$(sed -n 4p "$BATS_TEST_TMPDIR/b.md")" "<!--te-->"
+    assert_equal "$(grep -Fxc '* [Page a](#page-a)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '   * [Usage](#usage)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '* [Title](#title)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '      * [Skipped](#skipped)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '* [sitemap.js](https://github.com/ekalinin/sitemap.js/blob/6bc3eb12c898c1037a35a11b2eb24ababdeb3580/README.md#sitemapjs)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "$BATS_TEST_TMPDIR/b.md: Warning: heading 'Skipped' (level 3) skips a level after 'Title' (level 1), see https://github.com/ekalinin/github-markdown-toc/issues/75"
+}

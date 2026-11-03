@@ -224,7 +224,7 @@ gh_toc(){
         rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
         gh_toc_check_api_error "$rawhtml"
         local toc
-        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet")
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet" "$need_replace")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Fxq "<!--ts-->" "$gh_src" && grep -Fxq "<!--te-->" "$gh_src"; then
@@ -332,6 +332,7 @@ gh_toc_stdout(){
 # $3 - max heading level to include. 0 means all levels.
 # $4 - numbering type: "list", "outline" or empty for bullets.
 # $5 - bullet character: "*", "-", "+" or empty for "*".
+# $6 - "yes" if the TOC goes into the document itself (--insert).
 #
 gh_toc_grab() {
 
@@ -379,8 +380,9 @@ gh_toc_grab() {
                     # keep the entry, the indent is known only after the last one
                     count++
                     entry_level[count] = level+0
+                    # a link inside the document needs no prefix, see #113
+                    link_url = (need_replace == "yes" ? "" : gh_url)
                     # a space breaks the link, see #76
-                    link_url = gh_url
                     gsub(/ /, "%20", link_url)
                     entry[count] = marker "[" prefix text "](" link_url  modified_href ")"
                     if (count == 1 || level+0 < min_level) min_level = level+0
@@ -439,7 +441,7 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" -v "bullet=$5" "$awkscript")"
+    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" -v "bullet=$5" -v "need_replace=$6" "$awkscript")"
 }
 
         # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
