@@ -102,7 +102,10 @@ gh_toc_md2html() {
     elif [ "$http_code" != "200" ] && [ "$(echo "${OUTPUT}" | awk '/API rate limit exceeded/')" != "" ]; then
         echo "XXRateLimitXX"
     elif [ "$http_code" != "200" ]; then
-        echo "XXApiErrorXX ${http_code}"
+        # the reason from the JSON answer, e.g. the size limit, see #141
+        local message
+        message=$(echo "${OUTPUT}" | awk 'match($0, /"message": *"[^"]*"/) { s = substr($0, RSTART, RLENGTH); sub(/^"message": *"/, "", s); sub(/"$/, "", s); print s; exit }')
+        echo "XXApiErrorXX ${http_code} ${message}"
     else
         echo "${OUTPUT}"
     fi
@@ -134,8 +137,14 @@ gh_toc_check_api_error() {
         fi
         exit 1
     elif [[ "$1" == "XXApiErrorXX "* ]]; then
+        # "<code> <message>", the message can be empty
+        local api_error=${1#XXApiErrorXX }
+        local message=${api_error#* }
         echo "Parsing local markdown file requires access to github API"
-        echo "Error: GitHub API request failed (HTTP ${1#XXApiErrorXX })"
+        echo "Error: GitHub API request failed (HTTP ${api_error%% *})"
+        if [ -n "$message" ]; then
+            echo "$message"
+        fi
         exit 1
     fi
 }
