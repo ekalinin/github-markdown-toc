@@ -773,3 +773,13 @@ gh_md_toc_no_stderr() {
     assert_equal "$(grep -Fxc "You don't have <!--ts--> or <!--te--> in your file...exiting" "$BATS_TEST_TMPDIR/out.md")" "1"
     printf '    <!--ts-->\n    <!--te-->\n\n# Title\n' | cmp - "$BATS_TEST_TMPDIR/indented.md"
 }
+
+@test "Error for local file larger than the GitHub API limit, #141" {
+    head -c 1048576 /dev/zero | tr '\0' 'a' > "$BATS_TEST_TMPDIR/big.md"
+    run $BATS_TEST_DIRNAME/../gh-md-toc "$BATS_TEST_TMPDIR/big.md"
+    assert_fail
+
+    assert_equal "${lines[2]}"   "Parsing local markdown file requires access to github API"
+    assert_equal "${lines[3]}"   "Error: GitHub API request failed (HTTP 403)"
+    [[ "${lines[4]}" == *"too large"* ]]
+}
