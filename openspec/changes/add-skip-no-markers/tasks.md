@@ -31,20 +31,20 @@
 
 ## 2. Implementation
 
-- [ ] 2.1 `gh_toc_app`: add `local skip_no_markers=""` next to `local to_stdout=""`, the
+- [x] 2.1 `gh_toc_app`: add `local skip_no_markers=""` next to `local to_stdout=""`, the
   `--skip-no-markers` check right after `--hide-footer` (sets `need_replace="yes"` and
   `skip_no_markers="yes"`), and pass `"$skip_no_markers"` to `gh_toc` as the 11th
   parameter. `gh_toc`: take `local skip_no_markers=${11}`, and right after the check for
   an empty input add the check from design.md (local input, `[ -f "$gh_src" ]`, the two
   `grep -Eq` of `gh_toc_stdout`, the warning to stderr, `return`); verify `make lint`
   passes, the tests from 1.1, 1.2 and 1.4 pass, and the tests from 1.3 and 1.5 still pass
-- [ ] 2.2 `gh_toc_app`, the `--stdout` branch: before the check of the inputs, print
+- [x] 2.2 `gh_toc_app`, the `--stdout` branch: before the check of the inputs, print
   `--skip-no-markers cannot be used with --stdout.` to stderr and `exit 1` when
   `skip_no_markers` is `yes`; verify the test from 1.6 passes
-- [ ] 2.3 `show_help`: add
+- [x] 2.3 `show_help`: add
   `  --skip-no-markers   Skip files without <!--ts--> or <!--te-->. Set --insert as well. Default: false.`
   right after the `--hide-footer` line; verify the tests from 1.7 pass
-- [ ] 2.4 Check the cases not covered by the tests: in a temporary directory with
+- [x] 2.4 Check the cases not covered by the tests: in a temporary directory with
   `a.md` and `sub/c.md` (with markers) and `b.md` (without), run the README example
   `find . -name '*.md' -exec <repo>/gh-md-toc --insert --no-backup --hide-footer --skip-no-markers {} +`;
   verify `a.md` and `sub/c.md` get their TOC with `#<anchor>` links, `b.md` does not

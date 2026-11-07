@@ -198,10 +198,19 @@ gh_toc(){
     local depth=$8
     local numbered=$9
     local bullet=${10}
+    local skip_no_markers=${11}
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
         exit 1
+    fi
+
+    # skip a local file without the markers before the API request, see #110
+    if [ "$skip_no_markers" = "yes" ] && [ "$(gh_is_url "$gh_src")" != "yes" ] && [ -f "$gh_src" ]; then
+        if ! grep -Eq '^<!--ts-->[[:space:]]*$' "$gh_src" || ! grep -Eq '^<!--te-->[[:space:]]*$' "$gh_src"; then
+            echo "$gh_src: Warning: no <!--ts--> or <!--te--> in the file, skipped" >&2
+            return
+        fi
     fi
 
 
@@ -508,6 +517,7 @@ show_help() {
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     echo "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    echo "  --skip-no-markers   Skip files without <!--ts--> or <!--te-->. Set --insert as well. Default: false."
     echo "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
     echo "  --skip-header       Hide entry of the topmost headlines. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/125 for details."
@@ -524,6 +534,7 @@ gh_toc_app() {
     local numbered=""
     local bullet=""
     local to_stdout=""
+    local skip_no_markers=""
 
     if [ "$1" = '--help' ] || [ $# -eq 0 ] ; then
         show_help
@@ -608,6 +619,12 @@ gh_toc_app() {
         shift
     fi
 
+    if [ "$1" = '--skip-no-markers' ]; then
+        need_replace="yes"
+        skip_no_markers="yes"
+        shift
+    fi
+
     if [ "$1" = '--stdout' ]; then
         to_stdout="yes"
         shift
@@ -619,6 +636,10 @@ gh_toc_app() {
     fi
 
     if [ "$to_stdout" = "yes" ]; then
+        if [ "$skip_no_markers" = "yes" ]; then
+            echo "--skip-no-markers cannot be used with --stdout." >&2
+            exit 1
+        fi
         if [ $# -ne 1 ] || [ "$(gh_is_url "$1")" == "yes" ]; then
             echo "--stdout works with one local file or '-' (STDIN) only." >&2
             exit 1
@@ -631,7 +652,7 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet" "$skip_no_markers"
     done
 
     echo ""
