@@ -54,7 +54,7 @@
 
 ## 3. Documentation
 
-- [ ] 3.1 README, section "Auto insert and update TOC": after the paragraph "Next time
+- [x] 3.1 README, section "Auto insert and update TOC": after the paragraph "Next time
   when your file will be changed just repeat the command ...", add a sentence about
   `--skip-no-markers` and the `find` example from design.md; add no new heading; verify
   the README TOC tests (`TOC for local README.md`, `TOC for local README.md with skip
