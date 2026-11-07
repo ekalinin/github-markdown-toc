@@ -372,6 +372,14 @@ Now check the same file:
 Next time when your file will be changed just repeat the command (`./gh-md-toc
 --insert ...`) and TOC will be refreshed again.
 
+To refresh the TOC in all markdown files of a directory, add `--skip-no-markers`:
+the files without `<!--ts-->` or `<!--te-->` are skipped with a warning on stderr,
+instead of an error:
+
+```bash
+$ find . -name '*.md' -exec ./gh-md-toc --insert --no-backup --hide-footer --skip-no-markers {} +
+```
+
 To get the whole file with the new TOC on stdout instead, use `--stdout`. The
 file is not changed and no backup files are created. It takes one local file
 or `-` for STDIN, and works with `--hide-footer` and `--skip-header`:

@@ -132,9 +132,10 @@ test_help() {
     assert_equal "${lines[11]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
     assert_equal "${lines[13]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
     assert_equal "${lines[14]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[15]}" "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
-    assert_equal "${lines[16]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "18"
+    assert_equal "${lines[15]}" "  --skip-no-markers   Skip files without <!--ts--> or <!--te-->. Set --insert as well. Default: false."
+    assert_equal "${lines[16]}" "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
+    assert_equal "${lines[17]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "19"
 }
 
 @test "--help" {
@@ -782,4 +783,69 @@ gh_md_toc_no_stderr() {
     assert_equal "${lines[2]}"   "Parsing local markdown file requires access to github API"
     assert_equal "${lines[3]}"   "Error: GitHub API request failed (HTTP 403)"
     [[ "${lines[4]}" == *"too large"* ]]
+}
+
+@test "Insert into several files skips a file without markers, #110" {
+    printf '<!--ts-->\n<!--te-->\n\n# Page a\n' > "$BATS_TEST_TMPDIR/a.md"
+    printf '# Page b\n' > "$BATS_TEST_TMPDIR/b.md"
+    printf '<!--ts-->\n<!--te-->\n\n# Page c\n' > "$BATS_TEST_TMPDIR/c.md"
+    run_to_files --insert --no-backup --hide-footer --skip-no-markers "$BATS_TEST_TMPDIR/a.md" "$BATS_TEST_TMPDIR/b.md" "$BATS_TEST_TMPDIR/c.md"
+    assert_success
+
+    printf '<!--ts-->\n* [Page a](#page-a)\n<!--te-->\n\n# Page a\n' | cmp - "$BATS_TEST_TMPDIR/a.md"
+    printf '<!--ts-->\n* [Page c](#page-c)\n<!--te-->\n\n# Page c\n' | cmp - "$BATS_TEST_TMPDIR/c.md"
+    printf '# Page b\n' | cmp - "$BATS_TEST_TMPDIR/b.md"
+    assert_equal "$(grep -Fxc '* [Page a](#page-a)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '* [Page c](#page-c)' "$BATS_TEST_TMPDIR/out.md")" "1"
+    assert_equal "$(grep -Fxc '* [Page b](#page-b)' "$BATS_TEST_TMPDIR/out.md")" "0"
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "$BATS_TEST_TMPDIR/b.md: Warning: no <!--ts--> or <!--te--> in the file, skipped"
+}
+
+@test "Skip a file with one marker without a GitHub API request, #110" {
+    mkdir "$BATS_TEST_TMPDIR/dir"
+    printf '<!--ts-->\n\n# Page b\n' > "$BATS_TEST_TMPDIR/dir/b.md"
+    GH_TOC_TOKEN=invalid run_to_files --insert --skip-no-markers "$BATS_TEST_TMPDIR/dir/b.md"
+    assert_success
+
+    printf '<!--ts-->\n\n# Page b\n' | cmp - "$BATS_TEST_TMPDIR/dir/b.md"
+    assert_equal "$(ls "$BATS_TEST_TMPDIR/dir")" "b.md"
+    assert_equal "$(grep -Fxc 'Parsing local markdown file requires access to github API' "$BATS_TEST_TMPDIR/out.md")" "0"
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "$BATS_TEST_TMPDIR/dir/b.md: Warning: no <!--ts--> or <!--te--> in the file, skipped"
+}
+
+@test "No skip for a missing file, #110" {
+    run_to_files --skip-no-markers "$BATS_TEST_TMPDIR/missing.md"
+    assert_fail
+
+    assert_equal "$(grep -c 'in the file, skipped$' "$BATS_TEST_TMPDIR/err.txt")" "0"
+}
+
+@test "--skip-no-markers turns on --insert, #110" {
+    printf '<!--ts-->\n<!--te-->\n\n# Page a\n' > "$BATS_TEST_TMPDIR/a.md"
+    run_to_files --skip-no-markers "$BATS_TEST_TMPDIR/a.md"
+    assert_success
+
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/a.md")" "* [Page a](#page-a)"
+    assert_equal "$(grep -Fxc "!! TOC was added into: '$BATS_TEST_TMPDIR/a.md'" "$BATS_TEST_TMPDIR/out.md")" "1"
+}
+
+@test "Insert into several files stops at a file without markers, #110" {
+    printf '<!--ts-->\n<!--te-->\n\n# Page a\n' > "$BATS_TEST_TMPDIR/a.md"
+    printf '# Page b\n' > "$BATS_TEST_TMPDIR/b.md"
+    printf '<!--ts-->\n<!--te-->\n\n# Page c\n' > "$BATS_TEST_TMPDIR/c.md"
+    run_to_files --insert --no-backup --hide-footer "$BATS_TEST_TMPDIR/a.md" "$BATS_TEST_TMPDIR/b.md" "$BATS_TEST_TMPDIR/c.md"
+    assert_fail
+
+    assert_equal "$(sed -n 2p "$BATS_TEST_TMPDIR/a.md")" "* [Page a](#page-a)"
+    assert_equal "$(grep -Fxc "You don't have <!--ts--> or <!--te--> in your file...exiting" "$BATS_TEST_TMPDIR/out.md")" "1"
+    printf '# Page b\n' | cmp - "$BATS_TEST_TMPDIR/b.md"
+    printf '<!--ts-->\n<!--te-->\n\n# Page c\n' | cmp - "$BATS_TEST_TMPDIR/c.md"
+}
+
+@test "Error for --skip-no-markers with --stdout, #110" {
+    run_to_files --skip-no-markers --stdout tests/test\ directory/test_stdout.md
+    assert_fail
+
+    [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
+    assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "--skip-no-markers cannot be used with --stdout."
 }
