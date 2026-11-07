@@ -2,30 +2,30 @@
 
 ## 1. Tests
 
-- [ ] 1.1 Add the test "Insert into several files skips a file without markers, #110" in
+- [x] 1.1 Add the test "Insert into several files skips a file without markers, #110" in
   `tests/tests.bats`, as in the spec scenario "Skip a file without markers - Several
   files": `a.md`, `b.md`, `c.md` in `$BATS_TEST_TMPDIR`, `run_to_files`, the files
   compared with `cmp`, stdout with `grep -Fxc`, `err.txt` with `assert_equal`; verify it
   fails before the implementation (`bats --filter "<test name>" tests`)
-- [ ] 1.2 Add the test "Skip a file with one marker without a GitHub API request, #110",
+- [x] 1.2 Add the test "Skip a file with one marker without a GitHub API request, #110",
   as in the spec scenario "One file with one marker": `b.md` in its own directory under
   `$BATS_TEST_TMPDIR`, `GH_TOC_TOKEN=invalid`, `ls` of the directory is `b.md`, no
   `Parsing local markdown file requires access to github API` in `out.md`; verify it
   fails before the implementation
-- [ ] 1.3 Add the test "No skip for a missing file, #110", as in the spec scenario
+- [x] 1.3 Add the test "No skip for a missing file, #110", as in the spec scenario
   "Missing file": `assert_fail` and no `in the file, skipped` in `err.txt`; verify it
   passes before the implementation
-- [ ] 1.4 Add the test "--skip-no-markers turns on --insert, #110", as in the spec
+- [x] 1.4 Add the test "--skip-no-markers turns on --insert, #110", as in the spec
   scenario "Without --insert": line 2 of `a.md` and the `!! TOC was added into` line in
   `out.md`; verify it fails before the implementation
-- [ ] 1.5 Add the test "Insert into several files stops at a file without markers, #110",
+- [x] 1.5 Add the test "Insert into several files stops at a file without markers, #110",
   as in the spec scenario "Several files without the option": line 2 of `a.md`, the
   `You don't have ...` line in `out.md`, `b.md` and `c.md` compared with `cmp`,
   `assert_fail`; verify it passes before the implementation
-- [ ] 1.6 Add the test "Error for --skip-no-markers with --stdout, #110", as in the spec
+- [x] 1.6 Add the test "Error for --skip-no-markers with --stdout, #110", as in the spec
   scenario "With --stdout": `assert_fail`, `err.txt` is the message, `out.md` is empty;
   verify it fails before the implementation
-- [ ] 1.7 Update `test_help`: the `--skip-no-markers` line at index 15, the `--stdout`
+- [x] 1.7 Update `test_help`: the `--skip-no-markers` line at index 15, the `--stdout`
   and `--skip-header` lines at 16 and 17, and 19 lines in total; verify `--help` and
   `no arguments` fail before the implementation
 
