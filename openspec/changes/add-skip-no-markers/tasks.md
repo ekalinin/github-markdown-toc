@@ -62,4 +62,4 @@
 
 ## 4. Verification
 
-- [ ] 4.1 Run `make lint` and `make test` with `GH_TOC_TOKEN` set; verify both pass
+- [x] 4.1 Run `make lint` and `make test` with `GH_TOC_TOKEN` set; verify both pass
