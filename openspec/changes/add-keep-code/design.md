@@ -23,9 +23,10 @@ awk: text = from the first "> to </h                  per branch (default, OS/39
        skipped level warning, numbers, bullet, link
 ```
 
-Since #185, the `<code>` `sed` step is redundant on the default branch: the awk `gsub`
-removes every tag of the text. The OS/390 branch takes the text with
-`/<\/span><\/a>[^<]*<\/h/`, so there the `sed` step still matters.
+Since #185, the `<code>` `sed` step is redundant: the awk `gsub` removes every tag of
+the text. The OS/390 branch takes the text with `/<\/span><\/a>[^<]*<\/h/`, an
+expression for the old GitHub HTML layout, so its entries have no text on the current
+markup (#204).
 
 The inline code in the HTML, both from the markdown API and on a remote GitHub page
 (checked on `tests/test directory/test_backquote.md` on github.com):
@@ -109,12 +110,12 @@ longer show what `gh_toc_grab` depends on.
 if [ "$7" = "yes" ]; then cat; else sed 's/<code>//g' | sed 's/<\/code>//g'; fi |
 ```
 
-Without the option, the step runs as before, so the OS/390 branch does not change.
+Without the option, the step runs as before.
 
 Alternatives considered:
 
-- Remove the step: it would change the text of the OS/390 branch for headings with code,
-  and that branch can not be checked here.
+- Remove the step: it is redundant since #185, but `--keep-code` does not need it
+  removed. It stays to keep the diff small, as `fix-heading-markup` (#185) decided.
 - Replace `<code>` and `</code>` with a backtick in `sed`, as #153 suggests: no entity
   decoding and always one backtick, so `` `a<b>&c` `` would give `` `a&lt;b&gt;&amp;c` ``
   (rendered as is inside a code span), and ``` `` a`b `` ``` would give `` `a`b` ``.
@@ -237,7 +238,5 @@ On a temporary copy of the script with the parsing replaced by an environment va
   removed as without the option, so the entry has the code without backticks.
 - [GitHub escapes `"` or `'` inside code in the future] → They would be written as
   `&quot;` or `&#39;` in the code span. Today they are written as they are.
-- [The OS/390 branch is not checked] → It shares `common_awk_script` with the default
-  branch; its text expression and, without the option, its pipeline do not change.
 - [Five new tests call the GitHub API or load a page from github.com] → Same as the
   existing tests: `GH_TOC_TOKEN` locally, `secrets.GITHUB_TOKEN` in CI.
