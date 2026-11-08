@@ -31,18 +31,18 @@
 
 ## 2. Implementation
 
-- [ ] 2.1 `gh_toc_grab`: take `$7` (document it in the comment above the function), pass
+- [x] 2.1 `gh_toc_grab`: take `$7` (document it in the comment above the function), pass
   it to awk as `-v "keep_code=$7"`, skip the `<code>` `sed` step when it is `yes`, and
   add the code span loop and `text = out text` to `common_awk_script` as in design.md;
   verify `make lint` passes and the test from 1.2 still passes
-- [ ] 2.2 `gh_toc_app`: add `local keep_code=""` next to `local bullet=""` and the
+- [x] 2.2 `gh_toc_app`: add `local keep_code=""` next to `local bullet=""` and the
   `--keep-code` check right after `--bullet`; pass `"" "$keep_code"` to `gh_toc_grab` in
   the stdin branch, `"$keep_code"` to `gh_toc_stdout` as the 8th parameter and to
   `gh_toc` as the 12th. `gh_toc`: take `local keep_code=${12}`, pass `"" "$keep_code"`
   in the remote call and `"$keep_code"` after `"$need_replace"` in the local call.
   `gh_toc_stdout`: take `local keep_code=$8`, pass `"" "$keep_code"`; verify `make lint`
   passes and the tests from 1.3 to 1.6 pass
-- [ ] 2.3 `show_help`: add
+- [x] 2.3 `show_help`: add
   `  --keep-code         Keep inline code of headings in backticks. Default: false.`
   right after the `--bullet` line; verify the tests from 1.7 pass
 - [ ] 2.4 Check the cases not covered by the tests: render the TOC entries of

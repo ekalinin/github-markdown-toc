@@ -199,6 +199,7 @@ gh_toc(){
     local numbered=$9
     local bullet=${10}
     local skip_no_markers=${11}
+    local keep_code=${12}
 
     if [ "$gh_src" = "" ]; then
         echo "Please, enter URL or local path for a README.md"
@@ -225,7 +226,7 @@ gh_toc(){
     fi
 
     if [ "$(gh_is_url "$gh_src")" == "yes" ]; then
-        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet"
+        gh_toc_load "$gh_src" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet" "" "$keep_code"
         if [ "${PIPESTATUS[0]}" != "0" ]; then
             echo "Could not load remote document."
             echo "Please check your url or network connectivity"
@@ -242,7 +243,7 @@ gh_toc(){
         rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
         gh_toc_check_api_error "$rawhtml"
         local toc
-        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet" "$need_replace")
+        toc=$(echo "$rawhtml" | gh_toc_grab "$gh_src_copy" "$indent" "$depth" "$numbered" "$bullet" "$need_replace" "$keep_code")
         echo "$toc"
         if [ "$need_replace" = "yes" ]; then
             if grep -Eq '^<!--ts-->[[:space:]]*$' "$gh_src" && grep -Eq '^<!--te-->[[:space:]]*$' "$gh_src"; then
@@ -308,6 +309,7 @@ gh_toc_stdout(){
     local depth=$5
     local numbered=$6
     local bullet=$7
+    local keep_code=$8
 
     # global: the trap runs on exit, after this function has returned
     gh_tmp_stdin=""
@@ -329,7 +331,7 @@ gh_toc_stdout(){
     rawhtml=$(gh_toc_md2html "$gh_src" "$skip_header")
     gh_toc_check_api_error "$rawhtml" >&2
     local toc
-    toc=$(echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet")
+    toc=$(echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet" "" "$keep_code")
 
     # the same TOC block and sed expressions as --insert, without -i
     local ts="<\!--ts-->"
@@ -359,15 +361,44 @@ gh_toc_stdout(){
 # $4 - numbering type: "list", "outline" or empty for bullets.
 # $5 - bullet character: "*", "-", "+" or empty for "*".
 # $6 - "yes" if the TOC goes into the document itself (--insert).
+# $7 - "yes" to keep inline code in backticks (--keep-code).
 #
 gh_toc_grab() {
 
     # the heading's own anchor, not a link in the heading text, see #40
     href_regex="/class=\"anchor\"[^>]*href=\"[^\"]+\"/"
+    # shellcheck disable=SC2016
     common_awk_script='
                      if (depth+0 > 0 && level+0 > depth+0) next
+                     out = ""
+                     # keep inline code in backticks, see #153
+                     while (keep_code == "yes" && match(text, /<code[^>]*>[^<]*<\/code>/)) {
+                         pre = substr(text, 1, RSTART - 1)
+                         code = substr(text, RSTART, RLENGTH)
+                         text = substr(text, RSTART + RLENGTH)
+                         gsub(/<[^>]*>/, "", pre)
+                         sub(/^<code[^>]*>/, "", code)
+                         sub(/<\/code>$/, "", code)
+                         gsub(/&lt;/, "<", code)
+                         gsub(/&gt;/, ">", code)
+                         gsub(/&amp;/, "\\&", code)
+                         # one backtick more than the longest run inside
+                         fence = "`"
+                         s = code
+                         while (match(s, /`+/)) {
+                             if (RLENGTH >= length(fence)) {
+                                 fence = "`"
+                                 for (n = 0; n < RLENGTH; n++) fence = fence "`"
+                             }
+                             s = substr(s, RSTART + RLENGTH)
+                         }
+                         # a space on each side keeps the spaces and backticks at the edges
+                         pad = (code ~ /[^ ]/ && (code ~ /^[ `]/ || code ~ /[ `]$/)) ? " " : ""
+                         out = out pre fence pad code pad fence
+                     }
                      # remove tags of links, formatting and inline html, see #40
                      gsub(/<[^>]*>/, "", text)
+                     text = out text
                      # outline number: pop the entries down to the parent,
                      # the last popped one is the previous sibling
                      prev = 0
@@ -456,8 +487,8 @@ gh_toc_grab() {
     # find strings that corresponds to template
     $grepcmd '<h[1-6][^>]*class="heading-element".*</a' |
 
-    # remove code tags
-    sed 's/<code>//g' | sed 's/<\/code>//g' |
+    # remove code tags, unless --keep-code, see #153
+    if [ "$7" = "yes" ]; then cat; else sed 's/<code>//g' | sed 's/<\/code>//g'; fi |
 
     # remove g-emoji
     sed 's/<g-emoji[^>]*[^<]*<\/g-emoji> //g' |
@@ -467,7 +498,7 @@ gh_toc_grab() {
     # format result line
     #   * $0 - whole string
     #   * last element of each row: "</hN" where N in (1,2,3,...)
-    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" -v "bullet=$5" -v "need_replace=$6" "$awkscript")"
+    echo $echoargs "$(awk -v "gh_url=$1" -v "depth=$3" -v "numbered=$4" -v "bullet=$5" -v "need_replace=$6" -v "keep_code=$7" "$awkscript")"
 }
 
         # perl -lpE 's/(\[[^\]]*\]\()(.*?)(\))/my ($pre, $in, $post)=($1, $2, $3) ; $in =~ s{\+}{ }g; $in =~ s{%}{\\x}g; $pre.$in.$post/ems')"
@@ -513,6 +544,7 @@ show_help() {
     echo "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
     echo "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
     echo "  --bullet <CHAR>     Bullet of TOC entries: *, - or +. Default: *."
+    echo "  --keep-code         Keep inline code of headings in backticks. Default: false."
     echo "  --insert            Insert new TOC into original file. For local files only. Default: false."
     echo "                      See https://github.com/ekalinin/github-markdown-toc/issues/41 for details."
     echo "  --no-backup         Remove backup file. Set --insert as well. Default: false."
@@ -533,6 +565,7 @@ gh_toc_app() {
     local depth=0
     local numbered=""
     local bullet=""
+    local keep_code=""
     local to_stdout=""
     local skip_no_markers=""
 
@@ -564,6 +597,11 @@ gh_toc_app() {
     if [ "$1" = '--bullet' ]; then
         bullet="$2"
         shift 2
+    fi
+
+    if [ "$1" = '--keep-code' ]; then
+        keep_code="yes"
+        shift
     fi
 
     case $numbered in
@@ -598,7 +636,7 @@ gh_toc_app() {
         local rawhtml
         rawhtml=$(gh_toc_md2html "$gh_tmp_md")
         gh_toc_check_api_error "$rawhtml"
-        echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet"
+        echo "$rawhtml" | gh_toc_grab "" "$indent" "$depth" "$numbered" "$bullet" "" "$keep_code"
         return
     fi
 
@@ -644,7 +682,7 @@ gh_toc_app() {
             echo "--stdout works with one local file or '-' (STDIN) only." >&2
             exit 1
         fi
-        gh_toc_stdout "$1" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet"
+        gh_toc_stdout "$1" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet" "$keep_code"
         return
     fi
 
@@ -652,7 +690,7 @@ gh_toc_app() {
     for md in "$@"
     do
         echo ""
-        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet" "$skip_no_markers"
+        gh_toc "$md" "$#" "$need_replace" "$no_backup" "$no_footer" "$indent" "$skip_header" "$depth" "$numbered" "$bullet" "$skip_no_markers" "$keep_code"
     done
 
     echo ""
