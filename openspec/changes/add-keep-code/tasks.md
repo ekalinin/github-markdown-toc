@@ -61,7 +61,7 @@
 
 ## 4. Verification
 
-- [ ] 4.1 Run `make lint` and `make test` with `GH_TOC_TOKEN` set; verify both pass
-- [ ] 4.2 Run `./gh-md-toc --keep-code` and `./gh-md-toc` on the fixture in a Debian
+- [x] 4.1 Run `make lint` and `make test` with `GH_TOC_TOKEN` set; verify both pass
+- [x] 4.2 Run `./gh-md-toc --keep-code` and `./gh-md-toc` on the fixture in a Debian
   container with mawk and with GNU awk (the files passed in with `tar` on stdin); verify
   both outputs are the same as on macOS
