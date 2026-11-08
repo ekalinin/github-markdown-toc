@@ -129,13 +129,14 @@ test_help() {
     assert_equal "${lines[8]}"  "  --depth <NUM>       Max heading level to include into TOC. Default: 0 (all levels)."
     assert_equal "${lines[9]}"  "  --numbered <TYPE>   Number TOC entries: list (ordered list) or outline (1.1. in text). Default: none."
     assert_equal "${lines[10]}" "  --bullet <CHAR>     Bullet of TOC entries: *, - or +. Default: *."
-    assert_equal "${lines[11]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
-    assert_equal "${lines[13]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
-    assert_equal "${lines[14]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
-    assert_equal "${lines[15]}" "  --skip-no-markers   Skip files without <!--ts--> or <!--te-->. Set --insert as well. Default: false."
-    assert_equal "${lines[16]}" "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
-    assert_equal "${lines[17]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
-    assert_equal "${#lines[@]}"  "19"
+    assert_equal "${lines[11]}" "  --keep-code         Keep inline code of headings in backticks. Default: false."
+    assert_equal "${lines[12]}" "  --insert            Insert new TOC into original file. For local files only. Default: false."
+    assert_equal "${lines[14]}" "  --no-backup         Remove backup file. Set --insert as well. Default: false."
+    assert_equal "${lines[15]}" "  --hide-footer       Do not write date & author of the last TOC update. Set --insert as well. Default: false."
+    assert_equal "${lines[16]}" "  --skip-no-markers   Skip files without <!--ts--> or <!--te-->. Set --insert as well. Default: false."
+    assert_equal "${lines[17]}" "  --stdout            Print the whole file with the new TOC to stdout. The file is not changed. Default: false."
+    assert_equal "${lines[18]}" "  --skip-header       Hide entry of the topmost headlines. Default: false."
+    assert_equal "${#lines[@]}"  "20"
 }
 
 @test "--help" {
@@ -848,4 +849,79 @@ gh_md_toc_no_stderr() {
 
     [ ! -s "$BATS_TEST_TMPDIR/out.md" ]
     assert_equal "$(cat "$BATS_TEST_TMPDIR/err.txt")" "--skip-no-markers cannot be used with --stdout."
+}
+
+@test "TOC with inline code without --keep-code for local file, #153" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc tests/test\ directory/test_keepcode.md
+    assert_success
+
+    assert_equal "${lines[2]}"   '* [Headline](#headline)'
+    assert_equal "${lines[3]}"   '   * [The command foo1 is better](#the-command-foo1-is-better)'
+    assert_equal "${lines[4]}"   '   * [a&lt;b&gt;&amp;c](#abc)'
+    assert_equal "${lines[5]}"   '   * [a`b](#ab)'
+    assert_equal "${lines[6]}"   '   * [`a`](#a)'
+    assert_equal "${lines[7]}"   '   * [a``b](#ab-1)'
+    assert_equal "${lines[8]}"   '   * [&amp;lt; &amp;copy;](#lt-copy)'
+    assert_equal "${lines[9]}"   '   * [  spaced  ](#--spaced--)'
+    assert_equal "${lines[10]}"  '   * [x   y](#x---y)'
+    assert_equal "${lines[11]}"  '   * [**kwargs**](#kwargs)'
+    assert_equal "${lines[12]}"  '   * [Tom &amp; Jerry &lt;3](#tom--jerry-3)'
+    assert_equal "${lines[13]}"  '   * [A em code and link](#a-em-code-and-link)'
+    assert_equal "${lines[14]}"  '<!-- Created by https://github.com/ekalinin/github-markdown-toc -->'
+}
+
+@test "TOC with inline code in backticks for local file, #153" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --keep-code tests/test\ directory/test_keepcode.md
+    assert_success
+
+    assert_equal "${lines[2]}"   '* [`Headline`](#headline)'
+    assert_equal "${lines[3]}"   '   * [The command `foo1` is better](#the-command-foo1-is-better)'
+    assert_equal "${lines[4]}"   '   * [`a<b>&c`](#abc)'
+    assert_equal "${lines[5]}"   '   * [``a`b``](#ab)'
+    assert_equal "${lines[6]}"   '   * [`` `a` ``](#a)'
+    assert_equal "${lines[7]}"   '   * [```a``b```](#ab-1)'
+    assert_equal "${lines[8]}"   '   * [`&lt; &copy;`](#lt-copy)'
+    assert_equal "${lines[9]}"   '   * [`   spaced   `](#--spaced--)'
+    assert_equal "${lines[10]}"  '   * [x ` ` y](#x---y)'
+    assert_equal "${lines[11]}"  '   * [`**kwargs**`](#kwargs)'
+    assert_equal "${lines[12]}"  '   * [Tom &amp; `Jerry` &lt;3](#tom--jerry-3)'
+    assert_equal "${lines[13]}"  '   * [A em `code` and `link`](#a-em-code-and-link)'
+    assert_equal "${lines[14]}"  '<!-- Created by https://github.com/ekalinin/github-markdown-toc -->'
+}
+
+@test "TOC with inline code in backticks for markdown from stdin, #153" {
+    cat tests/test\ directory/test_backquote.md | {
+        run $BATS_TEST_DIRNAME/../gh-md-toc --bullet - --keep-code -
+        assert_success
+
+        assert_equal "${lines[0]}"   '- [The command `foo1`](#the-command-foo1)'
+        assert_equal "${lines[1]}"   '   - [The command `foo2` is better](#the-command-foo2-is-better)'
+        assert_equal "${lines[2]}"   '- [The command `bar1`](#the-command-bar1)'
+        assert_equal "${lines[3]}"   '   - [The command `bar2` is better](#the-command-bar2-is-better)'
+        assert_equal "${lines[4]}"   '      - [The command `bar3` is the best](#the-command-bar3-is-the-best)'
+        assert_equal "${#lines[@]}"  "5"
+    }
+}
+
+@test "TOC with inline code in backticks for remote file, #153" {
+    run $BATS_TEST_DIRNAME/../gh-md-toc --keep-code https://github.com/ekalinin/github-markdown-toc/blob/a28f86dcb616ce17103d1dfc28f6c3ac423c388c/tests/test%20directory/test_backquote.md
+    assert_success
+
+    assert_equal "${lines[2]}"   '* [The command `foo1`](#the-command-foo1)'
+    assert_equal "${lines[3]}"   '   * [The command `foo2` is better](#the-command-foo2-is-better)'
+    assert_equal "${lines[4]}"   '* [The command `bar1`](#the-command-bar1)'
+    assert_equal "${lines[5]}"   '   * [The command `bar2` is better](#the-command-bar2-is-better)'
+    assert_equal "${lines[6]}"   '      * [The command `bar3` is the best](#the-command-bar3-is-the-best)'
+}
+
+@test "Whole file with inline code in backticks to stdout, #153" {
+    printf '<!--ts-->\n<!--te-->\n\n# The command `foo1`\n' > "$BATS_TEST_TMPDIR/a.md"
+    local sum_before
+    sum_before=$(cksum < "$BATS_TEST_TMPDIR/a.md")
+
+    run_to_files --keep-code --hide-footer --stdout "$BATS_TEST_TMPDIR/a.md"
+    assert_success
+
+    printf '<!--ts-->\n* [The command `foo1`](#the-command-foo1)\n<!--te-->\n\n# The command `foo1`\n' | cmp - "$BATS_TEST_TMPDIR/out.md"
+    assert_equal "$(cksum < "$BATS_TEST_TMPDIR/a.md")" "$sum_before"
 }

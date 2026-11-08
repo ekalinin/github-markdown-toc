@@ -2,29 +2,29 @@
 
 ## 1. Tests
 
-- [ ] 1.1 Add the fixture `tests/test directory/test_keepcode.md` with the headings of the
+- [x] 1.1 Add the fixture `tests/test directory/test_keepcode.md` with the headings of the
   spec scenario "Inline code in backticks - Headings with inline code", separated by
   empty lines; verify with the markdown API that no heading has a line break right after
   the heading tag (#201)
-- [ ] 1.2 Add the test "TOC with inline code without --keep-code for local file, #153"
+- [x] 1.2 Add the test "TOC with inline code without --keep-code for local file, #153"
   in `tests/tests.bats`, as in the spec scenario "Headings with inline code without the
   option": every entry and the footer; verify it passes before the implementation
   (`bats --filter "<test name>" tests`)
-- [ ] 1.3 Add the test "TOC with inline code in backticks for local file, #153", as in
+- [x] 1.3 Add the test "TOC with inline code in backticks for local file, #153", as in
   the spec scenario "Headings with inline code": every entry and the footer; verify it
   fails before the implementation
-- [ ] 1.4 Add the test "TOC with inline code in backticks for markdown from stdin, #153",
+- [x] 1.4 Add the test "TOC with inline code in backticks for markdown from stdin, #153",
   as in the spec scenario "Stdin with a bullet": `cat` of `test_backquote.md` into
   `--bullet - --keep-code -`, the 5 lines and `${#lines[@]}`; verify it fails before the
   implementation
-- [ ] 1.5 Add the test "TOC with inline code in backticks for remote file, #153", as in
+- [x] 1.5 Add the test "TOC with inline code in backticks for remote file, #153", as in
   the spec scenario "Remote URL": the 5 entries with `*`; verify it fails before the
   implementation
-- [ ] 1.6 Add the test "Whole file with inline code in backticks to stdout, #153", as in
+- [x] 1.6 Add the test "Whole file with inline code in backticks to stdout, #153", as in
   the spec scenario "Whole file to stdout": `a.md` in `$BATS_TEST_TMPDIR` written with
   `printf`, `run_to_files`, stdout and `a.md` compared with `cmp`; verify it fails before
   the implementation
-- [ ] 1.7 Update `test_help`: the `--keep-code` line at index 11, the `--insert`,
+- [x] 1.7 Update `test_help`: the `--keep-code` line at index 11, the `--insert`,
   `--no-backup`, `--hide-footer`, `--skip-no-markers`, `--stdout` and `--skip-header`
   lines at 12, 14, 15, 16, 17 and 18, and 20 lines in total; verify `--help` and
   `no arguments` fail before the implementation
