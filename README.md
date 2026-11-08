@@ -183,6 +183,14 @@ Table of Contents
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 ```
 
+To keep the inline code of the headings in backticks, use `--keep-code`:
+
+```bash
+➥ printf '# The command `foo1`\n\n## The command `foo2` is better\n' | ./gh-md-toc --keep-code -
+* [The command `foo1`](#the-command-foo1)
+   * [The command `foo2` is better](#the-command-foo2-is-better)
+```
+
 Remote files
 ------------
 

@@ -45,7 +45,7 @@
 - [x] 2.3 `show_help`: add
   `  --keep-code         Keep inline code of headings in backticks. Default: false.`
   right after the `--bullet` line; verify the tests from 1.7 pass
-- [ ] 2.4 Check the cases not covered by the tests: render the TOC entries of
+- [x] 2.4 Check the cases not covered by the tests: render the TOC entries of
   `--keep-code` on the fixture with the markdown API and verify every `<code>` content
   is the same as in the headings; run `--keep-code --insert --no-backup --hide-footer` on
   a copy of the file from 1.6 and verify the TOC in it is the same as in the output of
@@ -54,7 +54,7 @@
 
 ## 3. Documentation
 
-- [ ] 3.1 README, section "Local files": after the `--bullet` example, add the sentence
+- [x] 3.1 README, section "Local files": after the `--bullet` example, add the sentence
   and the example from design.md; add no new heading; verify the example output with
   `./gh-md-toc`, and verify the README TOC tests (`TOC for local README.md`, `TOC for
   local README.md with skip headers`, `TOC for markdown from stdin`) still pass
