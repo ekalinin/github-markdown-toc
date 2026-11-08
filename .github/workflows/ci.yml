@@ -17,12 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup bats
-        uses: mig4/setup-bats@v1
+        uses: bats-core/bats-action@4.1.0
         with:
-          bats-version: 1.6.0
+          bats-version: 1.14.0
+          support-install: false
+          assert-install: false
+          detik-install: false
+          file-install: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Run tests
         run: make test
