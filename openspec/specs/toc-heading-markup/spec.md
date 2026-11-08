@@ -34,7 +34,8 @@ HTML tags removed. The text inside link, image, formatting and inline HTML eleme
 GitHub renders them (`&amp;`, `&lt;`), and the spaces around a removed element SHALL
 stay as they are. Entries of headings without HTML tags SHALL NOT change. This SHALL
 apply to every input: stdin, a local file, a remote URL, several inputs, `--insert` and
-`--stdout`.
+`--stdout`. With `--keep-code`, the inline code of the heading SHALL be written as in
+`toc-keep-code`, and the rest of the text SHALL follow this requirement.
 
 #### Scenario: Escaped characters are not tags
 
