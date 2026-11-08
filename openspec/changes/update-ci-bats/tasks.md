@@ -15,7 +15,7 @@
 
 - [x] 2.1 Run `make test` locally with bats 1.14.0 and `GH_TOC_TOKEN` set; verify all
   tests pass
-- [ ] 2.2 After the branch is pushed and the PR is opened (each step on request), check
+- [x] 2.2 After the branch is pushed and the PR is opened (each step on request), check
   its CI run: "Setup bats" has `bats-version: 1.14.0` in its inputs and installs bats
   1.14.0, the run has no Node.js 20 annotation for `actions/checkout` or the bats step,
   and all tests pass
